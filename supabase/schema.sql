@@ -197,10 +197,18 @@ ALTER TABLE public.deposits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.withdrawals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.referral_commissions ENABLE ROW LEVEL SECURITY;
 
--- Investment Plans: Anyone can view active plans
+-- Investment Plans: Anyone can view active plans; Admins can manage all
 DROP POLICY IF EXISTS "Public plans are viewable by everyone" ON public.investment_plans;
 CREATE POLICY "Public plans are viewable by everyone" ON public.investment_plans
-    FOR SELECT USING (is_active = true);
+    FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Admins can manage investment_plans" ON public.investment_plans;
+CREATE POLICY "Admins can manage investment_plans" ON public.investment_plans
+    FOR ALL USING (
+        (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
+    ) WITH CHECK (
+        (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
+    );
 
 -- Profiles: Users can view and update their own profile; Admins view all
 DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;

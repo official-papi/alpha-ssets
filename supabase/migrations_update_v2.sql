@@ -235,6 +235,21 @@ VALUES
 ('Elites Package', 'Exclusive Tier', '15.5% weekly return. In elite packages you can get a loan from the company to buy a house and pay in installments.', 5000000.00, 20000000.00, 15.50, 168, 52, true, true)
 ON CONFLICT DO NOTHING;
 
+-- RLS POLICIES FOR INVESTMENT PLANS
+ALTER TABLE public.investment_plans ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public plans are viewable by everyone" ON public.investment_plans;
+CREATE POLICY "Public plans are viewable by everyone" ON public.investment_plans
+    FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Admins can manage investment_plans" ON public.investment_plans;
+CREATE POLICY "Admins can manage investment_plans" ON public.investment_plans
+    FOR ALL USING (
+        (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
+    ) WITH CHECK (
+        (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
+    );
+
 
 -- 3. ATOMIC INVESTMENT CREATION RPC (VALIDATES BALANCE, DEDUCTS WALLET, CREATES INVESTMENT)
 CREATE OR REPLACE FUNCTION public.process_investment_rpc(
