@@ -98,7 +98,7 @@ export default function AdminStaffPage() {
               required
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              placeholder="e.g. staff@hyipmax.io"
+              placeholder="e.g. staff@alpha-assets.com"
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
             />
           </div>

@@ -26,8 +26,8 @@ export default function ReferralSection() {
               Earn Lifetime Multi-Tier Referral Commissions
             </h2>
             
-            <p className="text-slate-600 text-sm font-medium leading-relaxed">
-              Invite friends, investors, and network partners to HYIP MAX using your unique referral URL. Earn recursive instant commission whenever your downline deposits into investment packages.
+            <p className="text-slate-600 text-sm mt-4 leading-relaxed font-medium">
+              Invite friends, investors, and network partners to Alpha Assets using your unique referral URL. Earn recursive instant commission whenever your downline deposits into investment packages.
             </p>
 
             <div className="space-y-4 pt-2">

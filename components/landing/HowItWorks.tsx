@@ -30,7 +30,7 @@ export default function HowItWorks() {
 
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-2">Simple 3-Step Process</div>
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900">How HYIP MAX Works</h2>
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900">How Alpha Assets Works</h2>
           <p className="text-slate-500 text-sm mt-3">Start building your passive income portfolio in 3 simple steps.</p>
         </div>
 

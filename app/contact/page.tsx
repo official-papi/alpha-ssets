@@ -70,7 +70,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-extrabold text-slate-900">Email Direct Support</h4>
-                    <p className="text-xs text-slate-500 font-mono">support@hyipmax.io</p>
+                    <p className="text-xs text-slate-500 font-mono">support@alpha-assets.com</p>
                   </div>
                 </div>
               </div>
@@ -83,7 +83,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-extrabold text-slate-900">24/7 VIP Telephone Line</h4>
-                    <p className="text-xs text-slate-500 font-mono">+1 (800) 555-HYIP</p>
+                    <p className="text-xs text-slate-500 font-mono">+1 (800) 555-ALPHA</p>
                   </div>
                 </div>
               </div>

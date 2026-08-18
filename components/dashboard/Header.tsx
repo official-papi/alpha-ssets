@@ -77,7 +77,7 @@ export default function DashboardHeader({
           </div>
           <div>
             <span className="text-xl font-black tracking-tight text-slate-900 flex items-center gap-1.5">
-              HYIP<span className="text-indigo-600">MAX</span>
+              Alpha<span className="text-indigo-600">@ssets</span>
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </span>
             <span className="block text-[10px] text-slate-400 font-bold tracking-widest uppercase">

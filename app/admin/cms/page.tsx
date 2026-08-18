@@ -12,19 +12,19 @@ export default function AdminCmsPage() {
   // CMS Content States
   const [cmsData, setCmsData] = useState<any>({
     hero_badge: "NEXT-GEN QUANTUM YIELD",
-    hero_title: "Automated High-Yield Crypto & Institutional Asset Platform",
-    hero_subtitle: "Experience institutional-grade automated trading strategies, transparent daily compound yields, and instant liquidity withdrawals.",
+    hero_title: "Automated AI Crypto & Institutional Asset Platform",
+    hero_subtitle: "Experience institutional-grade automated AI trading strategies, transparent weekly compound yields, and instant liquidity withdrawals.",
     hero_cta: "Explore Yield Plans",
     
     about_title: "Engineered for Institutional Growth",
-    about_text: "HYIP Max leverages multi-exchange arbitrage, automated liquidity farming, and high-frequency quantitative models to generate daily risk-managed returns.",
-    about_metric1: "$45M+ Assets Managed",
+    about_text: "Alpha Assets leverages AI multi-exchange arbitrage, automated liquidity farming, and high-frequency quantitative models to generate weekly risk-managed returns.",
+    about_metric1: "$256M+ Assets Managed",
     about_metric2: "99.98% Payout Accuracy",
 
     how_it_works: [
       { step: 1, title: "Create Investor Account", desc: "Sign up in under 60 seconds with instant email activation." },
-      { step: 2, title: "Select Yield Package", desc: "Choose your preferred daily return plan and fund your wallet." },
-      { step: 3, title: "Earn & Withdraw Yields", desc: "Collect automated daily ROI interest payouts directly to your wallet." },
+      { step: 2, title: "Select Yield Package", desc: "Choose your preferred weekly return plan and fund your wallet." },
+      { step: 3, title: "Earn & Withdraw Yields", desc: "Collect automated weekly ROI interest payouts directly to your wallet." },
     ],
 
     features: [
@@ -34,25 +34,25 @@ export default function AdminCmsPage() {
     ],
 
     testimonials: [
-      { id: 1, name: "Marcus Vance", role: "Crypto Asset Manager", review: "HYIP Max has consistently delivered reliable daily yields. The automated payout execution is flawless.", rating: 5 },
+      { id: 1, name: "Marcus Vance", role: "Crypto Asset Manager", review: "Alpha Assets has consistently delivered reliable weekly yields. The automated payout execution is flawless.", rating: 5 },
       { id: 2, name: "Elena Rostova", role: "Private Investor", review: "The platform transparency and instant withdrawal processing give me complete confidence.", rating: 5 },
     ],
 
     faqs: [
-      { id: 1, question: "What is the minimum deposit amount?", answer: "The minimum deposit to start investing is $50 via USDT, Bitcoin, or Bank Wire." },
-      { id: 2, question: "How often are interest yields credited?", answer: "Interest returns are credited automatically based on your selected plan interval (daily or hourly)." },
+      { id: 1, question: "What is the minimum deposit amount?", answer: "The minimum deposit to start investing is $500 via USDT, Bitcoin, or Bank Wire." },
+      { id: 2, question: "How often are interest yields credited?", answer: "Interest returns are credited automatically based on your selected plan interval (weekly)." },
       { id: 3, question: "Are withdrawals processed instantly?", answer: "Yes, approved withdrawal requests are dispatched instantly via automated payment gateways." },
     ],
 
-    support_email: "support@hyipmax.io",
-    support_phone: "+1 (800) 555-HYIP",
+    support_email: "support@alpha-assets.com",
+    support_phone: "+1 (800) 555-ALPHA",
     support_address: "75 Wall Street, Financial District, New York, NY 10005",
-    telegram_handle: "@hyipmax_official",
-    twitter_handle: "@hyipmax_io",
-    discord_link: "https://discord.gg/hyipmax",
+    telegram_handle: "@alphaassets_official",
+    twitter_handle: "@alphaassets_io",
+    discord_link: "https://discord.gg/alphaassets",
 
-    privacy_policy: "HYIP Max is committed to preserving strict data confidentiality and multi-layer encryption for all investor information...",
-    terms_of_service: "By accessing and registering an investor account on HYIP Max, you agree to comply with all platform terms...",
+    privacy_policy: "Alpha Assets is committed to preserving strict data confidentiality and multi-layer encryption for all investor information...",
+    terms_of_service: "By accessing and registering an investor account on Alpha Assets, you agree to comply with all platform terms...",
   });
 
   const [submitting, setSubmitting] = useState(false);

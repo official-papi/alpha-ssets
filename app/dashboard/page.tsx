@@ -175,8 +175,8 @@ export default function DashboardPage() {
   };
 
   const referralLink = typeof window !== "undefined"
-    ? `${window.location.origin}/register?ref=${profile?.referral_code || "HYIP789"}`
-    : `https://hyipmax.io/register?ref=${profile?.referral_code || "HYIP789"}`;
+    ? `${window.location.origin}/register?ref=${profile?.referral_code || "ALPHA789"}`
+    : `https://alpha-assets.com/register?ref=${profile?.referral_code || "ALPHA789"}`;
 
   const copyReferral = () => {
     navigator.clipboard.writeText(referralLink);

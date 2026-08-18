@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart2, ArrowRight, Menu, X, LayoutDashboard, Loader2 } from "lucide-react";
+import { BarChart2, ArrowRight, Menu, X, LayoutDashboard, Loader2, Home } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import TradingViewTicker from "@/components/landing/TradingViewTicker";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -39,7 +40,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
         {/* Brand */}
@@ -102,7 +103,7 @@ export default function Navbar() {
         {/* Mobile toggle */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+          className="md:hidden p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 cursor-pointer"
         >
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -110,7 +111,18 @@ export default function Navbar() {
 
       {/* Mobile drawer */}
       {open && (
-        <div className="md:hidden bg-white border-t border-slate-100 px-4 py-4 space-y-1">
+        <div className="md:hidden bg-white border-t border-slate-100 px-4 py-4 space-y-1 shadow-lg">
+          {pathname !== "/" && (
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 py-2 px-3 text-[13px] font-bold text-indigo-700 bg-indigo-50/90 rounded-lg mb-2 border border-indigo-100"
+            >
+              <Home className="w-4 h-4 text-indigo-600" />
+              <span>← Back to Site</span>
+            </Link>
+          )}
+
           {navItems.map(item => (
             <Link
               key={item.href}
@@ -118,7 +130,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className={`block py-2.5 px-3 text-[14px] font-medium rounded-lg ${
                 pathname === item.href
-                  ? "bg-indigo-50 text-indigo-700"
+                  ? "bg-indigo-50 text-indigo-700 font-bold"
                   : "text-slate-600 hover:bg-slate-50"
               }`}
             >
@@ -150,6 +162,9 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Integrated Sticky TradingView Ticker */}
+      <TradingViewTicker />
     </header>
   );
 }

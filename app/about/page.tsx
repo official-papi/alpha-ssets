@@ -22,9 +22,9 @@ export default function AboutPage() {
           icon={Building2}
           breadcrumb="About Us"
           stats={[
-            { label: "Assets Deposited", value: "$28.4M+" },
+            { label: "Assets Deposited", value: "$256M+" },
             { label: "Ledger Audit", value: "Verified" },
-            { label: "Active Investors", value: "124,500+" },
+            { label: "Active Investors", value: "90,000+" },
           ]}
           hudContent={
             <div className="space-y-3 py-1 text-xs">

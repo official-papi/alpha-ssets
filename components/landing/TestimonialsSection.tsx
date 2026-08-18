@@ -3,8 +3,8 @@
 import { Star } from "lucide-react";
 
 const REVIEWS = [
-  { name: "David K. Sterling",  role: "Private Equity Trader",  rating: 5, quote: "HYIP MAX provides consistent automated yield credits without delay. The platform stability and double-entry transaction ledgers offer complete peace of mind." },
-  { name: "Sarah L. Jenkins",   role: "Crypto Investor",        rating: 5, quote: "The 3-tier affiliate program and automated payout edge engine make this script unmatched. I've received instant withdrawals directly to my USDT wallet." },
+  { name: "David K. Sterling",  role: "Private Equity Trader",  rating: 5, quote: "Alpha Assets provides consistent automated yield credits without delay. The platform stability and double-entry transaction ledgers offer complete peace of mind." },
+  { name: "Sarah L. Jenkins",   role: "Crypto Investor",        rating: 5, quote: "The 3-tier affiliate program and automated payout edge engine make this platform unmatched. I've received instant withdrawals directly to my USDT wallet." },
   { name: "Viktor Petrov",      role: "Portfolio Manager",      rating: 5, quote: "Exceptional platform performance. Transparent package return cycles and real-time interest compounding calculators make capital allocation seamless." },
 ];
 

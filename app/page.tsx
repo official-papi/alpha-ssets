@@ -16,12 +16,12 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function Home() {
   const [cms, setCms] = useState({
-    hero_badge: "Automated Compounding Protocol",
-    hero_title: "Automated High Yield Investment Growth Engine",
-    hero_subtitle: "Deploy capital into algorithmic compounding strategies. Earn guaranteed daily interest payouts with double-entry database ledger security and instant liquidity.",
+    hero_badge: "Automated AI Compounding Protocol",
+    hero_title: "Automated AI Investment Growth Engine",
+    hero_subtitle: "Deploy capital into algorithmic AI compounding strategies. Earn guaranteed weekly interest payouts with double-entry database ledger security and instant liquidity.",
     hero_cta: "Get Started Now",
-    about_metric1: "$28.4M+",
-    about_metric2: "$19.2M+",
+    about_metric1: "$256M+",
+    about_metric2: "$734M+",
   });
 
   useEffect(() => {
@@ -56,7 +56,6 @@ export default function Home() {
         <span className="hidden sm:inline text-slate-900 font-black">24/7 Support Desk</span>
       </Link>
 
-      <TradingViewTicker />
       <Navbar />
 
       <main className="flex-1 relative z-10">
@@ -93,10 +92,10 @@ export default function Home() {
             {/* ── Glass Metrics ────────────────────────────────────── */}
             <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-5 max-w-5xl mx-auto">
               {[
-                { label: "Total Assets Deposited",  value: cms.about_metric1 || "$28.4M+", color: "text-slate-900" },
-                { label: "Total Payouts Sent",      value: cms.about_metric2 || "$19.2M+", color: "text-indigo-600" },
-                { label: "Active Investors",        value: "124,500+",                    color: "text-slate-900" },
-                { label: "Execution Uptime",        value: "100%",                        color: "text-emerald-600" },
+                { label: "Total Assets Deposited",  value: "$256M+", color: "text-slate-900" },
+                { label: "Total Payouts Sent",      value: "$734M+", color: "text-indigo-600" },
+                { label: "Active Investors",        value: "90,000+", color: "text-slate-900" },
+                { label: "Execution Uptime",        value: "100%",   color: "text-emerald-600" },
               ].map(m => (
                 <div key={m.label} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/15 to-violet-500/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />

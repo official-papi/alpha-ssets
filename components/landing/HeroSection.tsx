@@ -31,13 +31,13 @@ export default function HeroSection() {
         {/* Headline */}
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-5xl sm:text-7xl font-bold text-slate-900 leading-[1.08] tracking-tight">
-            Automated Yield{" "}
+            Automated AI Yield{" "}
             <span className="hm-gradient-text">Generation</span>
             <br />
             for Modern Investors
           </h1>
           <p className="mt-7 text-[17px] text-slate-500 max-w-2xl mx-auto leading-relaxed font-normal">
-            Invest with confidence in structured yield portfolios. Earn guaranteed daily returns with instant wallet withdrawals and multi-tier affiliate rewards.
+            Invest with confidence in AI-powered structured portfolios. Earn guaranteed weekly returns with instant wallet withdrawals and multi-tier affiliate rewards.
           </p>
 
           {/* CTAs */}
@@ -76,10 +76,10 @@ export default function HeroSection() {
         {/* Stats Grid */}
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
           {[
-            { icon: DollarSign, value: "$28.4M+", label: "Total Deposited" },
-            { icon: Award,      value: "$19.2M+", label: "Total Withdrawn" },
-            { icon: Users,      value: "124,500+", label: "Happy Investors" },
-            { icon: Lock,       value: "100%",     label: "SSL &amp; DDoS Protected" },
+            { icon: DollarSign, value: "$256M+", label: "Total Assets Deposited" },
+            { icon: Award,      value: "$734M+", label: "Total Payouts" },
+            { icon: Users,      value: "90,000+", label: "Active Investors" },
+            { icon: Lock,       value: "100%",   label: "SSL &amp; DDoS Protected" },
           ].map(({ icon: Icon, value, label }) => (
             <div key={label} className="hm-card p-6 text-center hover:shadow-md transition-all">
               <div className="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3">

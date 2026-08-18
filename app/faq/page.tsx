@@ -9,8 +9,8 @@ import { useState } from "react";
 const FAQ_ITEMS = [
   {
     category: "General Platform",
-    q: "What is HYIP MAX?",
-    a: "HYIP MAX is an automated compounding yield and high-yield investment platform that manages quantitative trading strategies and automated wallet distribution.",
+    q: "What is Alpha Assets?",
+    a: "Alpha Assets is an automated AI compounding yield and wealth management platform that executes algorithmic quantitative strategies and automated wallet disbursements.",
   },
   {
     category: "Deposits & Payouts",
