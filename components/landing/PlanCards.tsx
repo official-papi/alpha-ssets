@@ -146,7 +146,7 @@ export default function PlanCards() {
                       {plan.rate}
                     </span>
                     <span className={`text-[13px] font-medium ${plan.featured ? "text-indigo-200" : "text-slate-400"}`}>
-                      / day
+                      / week
                     </span>
                   </div>
                   <div className={`text-[12px] mt-1.5 font-medium ${plan.featured ? "text-indigo-200" : "text-slate-500"}`}>

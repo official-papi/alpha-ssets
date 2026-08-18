@@ -124,12 +124,12 @@ export default function LoginPage() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   id="email" type="email" required value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="investor@example.com"
-                  className="hm-input pl-10"
+                  className="hm-input hm-input-with-icon-left"
                 />
               </div>
             </div>
@@ -143,15 +143,15 @@ export default function LoginPage() {
                 <a href="#" className="text-[12px] text-indigo-600 hover:text-indigo-500 font-medium">Forgot password?</a>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   id="password" type={showPw ? "text" : "password"} required value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="hm-input pl-10 pr-10"
+                  className="hm-input hm-input-with-icon-left hm-input-with-icon-right"
                 />
                 <button type="button" onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer">
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>

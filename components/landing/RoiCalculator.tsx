@@ -5,25 +5,28 @@ import { Calculator, ArrowRight, TrendingUp, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 const PLANS = [
-  { id: "starter", name: "Starter Package", rate: 2.5, days: 30, min: 50,   max: 500   },
-  { id: "silver",  name: "Silver Growth",   rate: 3.8, days: 40, min: 500,  max: 2500  },
-  { id: "gold",    name: "Gold Executive",  rate: 5.0, days: 50, min: 2500, max: 10000 },
+  { id: "regular",  name: "Regular Package",  rate: 2.5,  weeks: 8,  min: 500,     max: 2000,     step: 100 },
+  { id: "silver",   name: "Silver Package",   rate: 4.0,  weeks: 12, min: 3000,    max: 5000,     step: 250 },
+  { id: "gold",     name: "Gold Package",     rate: 6.0,  weeks: 16, min: 10000,   max: 20000,    step: 1000 },
+  { id: "vip",      name: "VIP Package",      rate: 10.0, weeks: 24, min: 50000,   max: 200000,   step: 5000 },
+  { id: "ultimate", name: "Ultimate Package", rate: 12.0, weeks: 36, min: 500000,  max: 3000000,  step: 50000 },
+  { id: "elites",   name: "Elites Package",   rate: 15.5, weeks: 52, min: 5000000, max: 20000000, step: 250000 },
 ];
 
 export default function RoiCalculator() {
-  const [selected, setSelected] = useState(PLANS[1]);
+  const [selected, setSelected] = useState(PLANS[0]);
   const [amount, setAmount] = useState<number>(1000);
-  const [customDays, setCustomDays] = useState<number>(40);
+  const [customWeeks, setCustomWeeks] = useState<number>(8);
 
-  const dailyProfit = (amount * selected.rate) / 100;
-  const netProfit = dailyProfit * customDays;
+  const weeklyProfit = (amount * selected.rate) / 100;
+  const netProfit = weeklyProfit * customWeeks;
   const totalReturn = amount + netProfit;
 
   const changePlan = (id: string) => {
-    const p = PLANS.find(p => p.id === id) ?? PLANS[0];
+    const p = PLANS.find((item) => item.id === id) ?? PLANS[0];
     setSelected(p);
     setAmount(p.min);
-    setCustomDays(p.days);
+    setCustomWeeks(p.weeks);
   };
 
   return (
@@ -33,7 +36,7 @@ export default function RoiCalculator() {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="text-xs font-extrabold uppercase tracking-widest text-indigo-600 mb-2">Calculate Earnings</div>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900">Interactive Profit & Yield Simulator</h2>
-          <p className="text-slate-600 text-sm mt-3 font-medium">Drag the capital and duration sliders to preview your live compounding yield curve.</p>
+          <p className="text-slate-600 text-sm mt-3 font-medium">Select your package and drag the capital and duration sliders to preview your returns.</p>
         </div>
 
         <div className="relative group max-w-4xl mx-auto">
@@ -46,16 +49,19 @@ export default function RoiCalculator() {
               <div className="space-y-6">
                 <div>
                   <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-2">Select Investment Tier</label>
-                  <div className="space-y-2">
-                    {PLANS.map(p => (
+                  <div className="grid grid-cols-2 gap-2">
+                    {PLANS.map((p) => (
                       <button key={p.id} type="button" onClick={() => changePlan(p.id)}
-                        className={`w-full p-3.5 rounded-xl border text-left text-xs flex justify-between items-center transition-all cursor-pointer ${
+                        className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                           selected.id === p.id
                             ? "border-indigo-600 bg-indigo-50/80 text-indigo-700 font-extrabold shadow-xs"
                             : "border-slate-200/80 bg-white/60 text-slate-600 hover:border-indigo-300 hover:bg-white"
                         }`}>
-                        <span className="font-extrabold">{p.name} <span className="font-normal text-slate-400">({p.rate}%/day)</span></span>
-                        <span className={`font-mono font-bold ${selected.id === p.id ? "text-indigo-600" : "text-slate-400"}`}>{p.days} Days</span>
+                        <div className="font-extrabold truncate">{p.name}</div>
+                        <div className="flex justify-between items-center mt-1 text-[11px]">
+                          <span className="font-mono text-indigo-600 font-bold">{p.rate}%/wk</span>
+                          <span className="text-slate-400 font-mono">{p.weeks} Wks</span>
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -68,7 +74,7 @@ export default function RoiCalculator() {
                     <span className="text-sm font-mono font-black text-indigo-600">${amount.toLocaleString()}</span>
                   </div>
                   <input type="range"
-                    min={selected.min} max={selected.max} step={50}
+                    min={selected.min} max={selected.max} step={selected.step}
                     value={amount} onChange={e => setAmount(Number(e.target.value))}
                     className="w-full h-2 bg-slate-200/80 rounded-full appearance-none cursor-pointer accent-indigo-600"
                   />
@@ -81,12 +87,12 @@ export default function RoiCalculator() {
                 {/* Duration Slider */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <label className="text-xs font-extrabold text-slate-600 uppercase tracking-wider">Holding Period (Days)</label>
-                    <span className="text-sm font-mono font-black text-indigo-600">{customDays} Days</span>
+                    <label className="text-xs font-extrabold text-slate-600 uppercase tracking-wider">Holding Period (Weeks)</label>
+                    <span className="text-sm font-mono font-black text-indigo-600">{customWeeks} Weeks</span>
                   </div>
                   <input type="range"
-                    min={7} max={180} step={1}
-                    value={customDays} onChange={e => setCustomDays(Number(e.target.value))}
+                    min={1} max={52} step={1}
+                    value={customWeeks} onChange={e => setCustomWeeks(Number(e.target.value))}
                     className="w-full h-2 bg-slate-200/80 rounded-full appearance-none cursor-pointer accent-indigo-600"
                   />
                 </div>
@@ -101,7 +107,7 @@ export default function RoiCalculator() {
                   </div>
                   <div>
                     <h4 className="text-sm font-extrabold text-slate-900">Projected Yield Summary</h4>
-                    <p className="text-xs text-slate-500 font-medium">{customDays}-Day Automated Compounding</p>
+                    <p className="text-xs text-slate-500 font-medium">{customWeeks}-Week Automated Compounding</p>
                   </div>
                 </div>
 
@@ -134,11 +140,11 @@ export default function RoiCalculator() {
 
                 <div className="space-y-3 text-xs">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-500 font-medium">Daily Interest Yield:</span>
-                    <span className="font-mono font-extrabold text-emerald-600">+${dailyProfit.toFixed(2)}</span>
+                    <span className="text-slate-500 font-medium">Weekly Interest Yield:</span>
+                    <span className="font-mono font-extrabold text-emerald-600">+${weeklyProfit.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-500 font-medium">Net Profit ({customDays} Days):</span>
+                    <span className="text-slate-500 font-medium">Net Profit ({customWeeks} Weeks):</span>
                     <span className="font-mono font-extrabold text-indigo-600">+${netProfit.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center pt-3 border-t border-slate-200/80 text-sm">

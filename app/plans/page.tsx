@@ -18,12 +18,12 @@ export default function PlansPage() {
         <PageHero
           badge="High-Yield Investment Tiers"
           title="Transparent Investment Packages &"
-          titleHighlight="Guaranteed Daily Returns"
-          subtitle="Explore our structured compounding packages. Select a plan tailored to your budget and project your daily ROI and total principal refunds."
+          titleHighlight="Guaranteed Weekly Returns"
+          subtitle="Explore our 6 structured investment packages. Select a plan tailored to your budget and project your weekly ROI and total principal refunds."
           icon={TrendingUp}
           breadcrumb="Investment Plans"
           stats={[
-            { label: "Daily Yield", value: "2.5% - 7.5%" },
+            { label: "Weekly Yield", value: "2.5% - 15.5%" },
             { label: "Principal Back", value: "Guaranteed" },
             { label: "Withdrawal Fee", value: "0%" },
           ]}
@@ -31,23 +31,23 @@ export default function PlansPage() {
             <div className="space-y-3 py-1 text-xs">
               <div className="p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl space-y-1.5">
                 <div className="flex justify-between items-center text-[11px]">
-                  <span className="font-extrabold text-slate-900">Starter Tier Simulation</span>
-                  <span className="font-mono font-bold text-emerald-600">2.5% Daily</span>
+                  <span className="font-extrabold text-slate-900">Regular Package Simulation</span>
+                  <span className="font-mono font-bold text-emerald-600">2.5% Weekly</span>
                 </div>
                 <div className="flex justify-between text-[11px] text-slate-600">
                   <span>$1,000 Investment:</span>
-                  <span className="font-mono font-extrabold text-indigo-600">+$25.00 / Day</span>
+                  <span className="font-mono font-extrabold text-indigo-600">+$25.00 / Week</span>
                 </div>
               </div>
 
               <div className="p-3 bg-indigo-50/80 border border-indigo-200/80 rounded-xl space-y-1">
                 <div className="flex justify-between items-center text-[11px]">
-                  <span className="font-extrabold text-indigo-900">Silver Growth Tier</span>
-                  <span className="font-mono font-bold text-indigo-600">3.8% Daily</span>
+                  <span className="font-extrabold text-indigo-900">Gold Package Tier</span>
+                  <span className="font-mono font-bold text-indigo-600">6.0% Weekly</span>
                 </div>
                 <div className="flex justify-between text-[11px] text-indigo-700">
-                  <span>$5,000 Investment:</span>
-                  <span className="font-mono font-extrabold text-emerald-600">+$190.00 / Day</span>
+                  <span>$10,000 Investment:</span>
+                  <span className="font-mono font-extrabold text-emerald-600">+$600.00 / Week</span>
                 </div>
               </div>
             </div>

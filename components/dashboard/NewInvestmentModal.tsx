@@ -139,11 +139,11 @@ export default function NewInvestmentModal({
                   <p className="text-[13px] font-bold text-slate-900 truncate">{p.name}</p>
                   <div className="flex items-baseline gap-1 mt-1">
                     <span className="text-[14px] font-extrabold text-indigo-600 font-mono">{p.interest_rate}%</span>
-                    <span className="text-[10px] font-medium text-slate-400">/ day</span>
+                    <span className="text-[10px] font-medium text-slate-400">/ week</span>
                   </div>
                   <div className="text-[10px] text-slate-500 mt-1 flex justify-between">
-                    <span>{p.repeat_time} days</span>
-                    <span className="font-semibold text-slate-700">${p.min_amount}–${p.max_amount}</span>
+                    <span>{p.repeat_time} wks</span>
+                    <span className="font-semibold text-slate-700">${p.min_amount.toLocaleString()}–${p.max_amount.toLocaleString()}</span>
                   </div>
                 </button>
               ))}
@@ -197,13 +197,13 @@ export default function NewInvestmentModal({
             </div>
             <input
               type="number"
-              min={selectedPlan?.min_amount || 100}
-              max={selectedPlan?.max_amount || 10000}
+              min={selectedPlan?.min_amount || 500}
+              max={selectedPlan?.max_amount || 20000000}
               step="any"
               required
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="e.g. 500"
+              placeholder="e.g. 1000"
               className="hm-input"
             />
           </div>
@@ -216,11 +216,11 @@ export default function NewInvestmentModal({
                 Projected Returns
               </div>
               <div className="flex justify-between text-[13px]">
-                <span className="text-slate-500">Daily ROI:</span>
-                <span className="font-semibold text-indigo-700">${dailyRoi.toFixed(2)} / day</span>
+                <span className="text-slate-500">Weekly ROI:</span>
+                <span className="font-semibold text-indigo-700">${dailyRoi.toFixed(2)} / week</span>
               </div>
               <div className="flex justify-between text-[13px]">
-                <span className="text-slate-500">Total Return ({selectedPlan.repeat_time} days):</span>
+                <span className="text-slate-500">Total Return ({selectedPlan.repeat_time} weeks):</span>
                 <span className="font-bold text-slate-900">${(dailyRoi * selectedPlan.repeat_time).toFixed(2)}</span>
               </div>
             </div>

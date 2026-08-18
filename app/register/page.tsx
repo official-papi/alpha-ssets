@@ -9,7 +9,7 @@ import {
   CheckCircle2, Loader2, Eye, EyeOff, TrendingUp, ShieldCheck, Zap
 } from "lucide-react";
 
-const inputCls = "hm-input pl-10";
+const inputCls = "hm-input hm-input-with-icon-left";
 
 function RegisterForm() {
   const router = useRouter();
@@ -70,7 +70,7 @@ function RegisterForm() {
       <div>
         <label htmlFor="fullName" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Full Name</label>
         <div className="relative">
-          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input id="fullName" type="text" required value={fullName} onChange={e => setFullName(e.target.value)} placeholder="John Doe" className={inputCls} />
         </div>
       </div>
@@ -79,7 +79,7 @@ function RegisterForm() {
       <div>
         <label htmlFor="email" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Email Address</label>
         <div className="relative">
-          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input id="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="investor@example.com" className={inputCls} />
         </div>
       </div>
@@ -89,12 +89,12 @@ function RegisterForm() {
         <div>
           <label htmlFor="password" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Password</label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input id="password" type={showPw ? "text" : "password"} required value={password}
               onChange={e => setPassword(e.target.value)} placeholder="••••••••••"
-              className="hm-input pl-10 pr-10" />
+              className="hm-input hm-input-with-icon-left hm-input-with-icon-right" />
             <button type="button" onClick={() => setShowPw(!showPw)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer">
               {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
@@ -102,7 +102,7 @@ function RegisterForm() {
         <div>
           <label htmlFor="confirm" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Confirm</label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input id="confirm" type="password" required value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••••" className={inputCls} />
           </div>
@@ -115,7 +115,7 @@ function RegisterForm() {
           Referral Code <span className="text-slate-400 normal-case font-normal text-[11px]">(optional)</span>
         </label>
         <div className="relative">
-          <Share2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Share2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input id="referralCode" type="text" value={referralCode} onChange={e => setReferralCode(e.target.value)} placeholder="e.g. ALPHA789" className={inputCls} />
         </div>
       </div>
