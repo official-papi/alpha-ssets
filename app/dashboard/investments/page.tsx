@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import InvestmentsTable from "@/components/dashboard/InvestmentsTable";
 import NewInvestmentModal from "@/components/dashboard/NewInvestmentModal";
+import InvestmentDetailsModal from "@/components/dashboard/InvestmentDetailsModal";
 import { Plus, Calculator, TrendingUp, Sparkles, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -24,6 +25,7 @@ export default function InvestmentsPage() {
   const [depositWallet, setDepositWallet] = useState(0);
   const [interestWallet, setInterestWallet] = useState(0);
   const [isInvestOpen, setIsInvestOpen] = useState(false);
+  const [selectedInvForDetails, setSelectedInvForDetails] = useState<any | null>(null);
 
   // ROI Simulator States
   const [simAmount, setSimAmount] = useState<number>(1000);
@@ -31,11 +33,21 @@ export default function InvestmentsPage() {
 
   const [dbPlans, setDbPlans] = useState<any[]>(DEFAULT_PLANS);
 
+  const [syncingPayouts, setSyncingPayouts] = useState(false);
+
   const fetchInvestments = async () => {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       setUserEmail(user.email || "");
+
+      // Auto-process matured ROI payouts on DB
+      try {
+        await supabase.rpc("process_investment_payouts_rpc");
+      } catch (err) {
+        console.error("Auto payout RPC error:", err);
+      }
+
       const { data: profile } = await supabase.from("profiles").select("deposit_wallet, interest_wallet").eq("id", user.id).single();
       if (profile) {
         setDepositWallet(Number(profile.deposit_wallet || 0));
@@ -44,7 +56,7 @@ export default function InvestmentsPage() {
 
       const { data: invs } = await supabase
         .from("user_investments")
-        .select("*, investment_plans(name)")
+        .select("*, investment_plans(name, badge, capital_back)")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -52,14 +64,19 @@ export default function InvestmentsPage() {
         const formattedInvs = invs.map((inv: any) => ({
           id: inv.id,
           planName: inv.investment_plans?.name || "Active Tier",
+          badge: inv.investment_plans?.badge || "Active Package",
+          capital_back: inv.investment_plans?.capital_back ?? true,
           amount: Number(inv.invest_amount || inv.amount || 0),
           dailyReturn: Number(inv.payout_per_period || inv.daily_return || 0),
           totalPayouts: inv.total_payout_periods || inv.total_payouts || 30,
           completedPayouts: inv.paid_periods || inv.payouts_completed || 0,
+          total_profit_earned: Number(inv.total_profit_earned || 0),
+          next_payout_at: inv.next_payout_at,
           nextPayout: inv.next_payout_at
             ? new Date(inv.next_payout_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
             : "Active",
           status: inv.status,
+          created_at: inv.created_at,
         }));
         setInvestments(formattedInvs);
       }
@@ -81,8 +98,19 @@ export default function InvestmentsPage() {
     }
   };
 
+  const handleManualSync = async () => {
+    setSyncingPayouts(true);
+    await fetchInvestments();
+    setSyncingPayouts(false);
+  };
+
   useEffect(() => {
     fetchInvestments();
+    // 30s background auto-sync for live payouts
+    const timer = setInterval(() => {
+      fetchInvestments();
+    }, 30000);
+    return () => clearInterval(timer);
   }, []);
 
   const availablePlans = dbPlans.length > 0 ? dbPlans : DEFAULT_PLANS;
@@ -101,14 +129,26 @@ export default function InvestmentsPage() {
             <p className="text-xs text-slate-500 mt-1">Track your active yield compounding packages and test ROI projections.</p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsInvestOpen(true)}
-            className="minimal-btn-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 cursor-pointer shadow-md shadow-indigo-600/15 self-start sm:self-auto"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Invest In New Package</span>
-          </button>
+          <div className="flex items-center gap-2.5 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={handleManualSync}
+              disabled={syncingPayouts}
+              className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold flex items-center space-x-1.5 cursor-pointer shadow-xs"
+            >
+              <Sparkles className={`w-3.5 h-3.5 text-indigo-600 ${syncingPayouts ? "animate-spin" : ""}`} />
+              <span>{syncingPayouts ? "Syncing..." : "Sync Due Payouts"}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsInvestOpen(true)}
+              className="minimal-btn-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 cursor-pointer shadow-md shadow-indigo-600/15"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Invest In New Package</span>
+            </button>
+          </div>
         </div>
 
         {/* ROI Profit Simulator Card */}
@@ -133,7 +173,7 @@ export default function InvestmentsPage() {
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-indigo-600"
                 >
                   {availablePlans.map((p) => (
-                    <option key={p.id} value={p.id}>{p.name} ({p.interest_rate}% / wk)</option>
+                    <option key={p.id} value={p.id}>{p.name} ({p.interest_rate}% ROI)</option>
                   ))}
                 </select>
               </div>
@@ -154,27 +194,37 @@ export default function InvestmentsPage() {
 
             <div className="md:col-span-2 grid grid-cols-3 gap-4">
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between">
-                <div className="text-[10px] font-bold text-slate-500 uppercase">Estimated Daily Yield</div>
-                <div className="text-xl font-mono font-extrabold text-emerald-600 mt-1">+${simDailyYield.toFixed(2)}</div>
-                <div className="text-[9px] text-slate-400 mt-1">{activeSimPlan.interest_rate}% Daily ROI</div>
+                <div className="text-[10px] font-bold text-slate-500 uppercase">Estimated Yield / Period</div>
+                <div className="text-xl font-mono font-extrabold text-emerald-600 mt-1">
+                  +${simDailyYield.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
+                <div className="text-[9px] text-slate-400 mt-1">{activeSimPlan.interest_rate}% ROI / Payout</div>
               </div>
 
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between">
                 <div className="text-[10px] font-bold text-slate-500 uppercase">Total Net Profit</div>
-                <div className="text-xl font-mono font-extrabold text-indigo-600 mt-1">+${simTotalNetProfit.toFixed(2)}</div>
-                <div className="text-[9px] text-slate-400 mt-1">Over {activeSimPlan.repeat_time} Days</div>
+                <div className="text-xl font-mono font-extrabold text-indigo-600 mt-1">
+                  +${simTotalNetProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
+                <div className="text-[9px] text-slate-400 mt-1">Over {activeSimPlan.repeat_time} Payout Periods</div>
               </div>
 
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between">
                 <div className="text-[10px] font-bold text-slate-500 uppercase">Total Return (Principal + Profit)</div>
-                <div className="text-xl font-mono font-extrabold text-slate-900 mt-1">${simTotalReturn.toFixed(2)}</div>
+                <div className="text-xl font-mono font-extrabold text-slate-900 mt-1">
+                  ${simTotalReturn.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
                 <div className="text-[9px] text-slate-400 mt-1">Full Liquidity Unlocked</div>
               </div>
             </div>
           </div>
         </div>
 
-        <InvestmentsTable investments={investments} onOpenInvest={() => setIsInvestOpen(true)} />
+        <InvestmentsTable
+          investments={investments}
+          onOpenInvest={() => setIsInvestOpen(true)}
+          onSelectInvestment={(inv) => setSelectedInvForDetails(inv)}
+        />
 
         <NewInvestmentModal
           isOpen={isInvestOpen}
@@ -183,6 +233,12 @@ export default function InvestmentsPage() {
           interestBalance={interestWallet}
           plans={availablePlans}
           onSuccess={fetchInvestments}
+        />
+
+        <InvestmentDetailsModal
+          isOpen={!!selectedInvForDetails}
+          investment={selectedInvForDetails}
+          onClose={() => setSelectedInvForDetails(null)}
         />
 
       </div>

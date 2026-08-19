@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Clock, CheckCircle2, XCircle, Plus, TrendingUp } from "lucide-react";
+import { Clock, CheckCircle2, XCircle, Plus, TrendingUp, Eye, Sparkles } from "lucide-react";
+import { LivePayoutCounter } from "@/components/dashboard/InvestmentDetailsModal";
 
 interface InvestmentItem {
   id: string;
@@ -16,18 +17,20 @@ interface InvestmentItem {
   payout_per_period?: number;
   paid_periods?: number;
   total_payout_periods?: number;
-  investment_plans?: { name?: string };
+  investment_plans?: { name?: string; badge?: string; capital_back?: boolean };
   next_payout_at?: string;
 }
 
 interface InvestmentsTableProps {
   investments?: any[];
   onOpenInvest?: () => void;
+  onSelectInvestment?: (inv: any) => void;
 }
 
 export default function InvestmentsTable({
   investments = [],
   onOpenInvest,
+  onSelectInvestment,
 }: InvestmentsTableProps) {
   return (
     <div id="investments" className="hm-card overflow-hidden">
@@ -40,7 +43,7 @@ export default function InvestmentsTable({
           </div>
           <div>
             <h2 className="text-[15px] font-semibold text-slate-900">Active Investment Portfolio</h2>
-            <p className="text-[12px] text-slate-400">Real-time tracking for active yield-generating plans.</p>
+            <p className="text-[12px] text-slate-400">Real-time live countdowns and yield progress tracking.</p>
           </div>
         </div>
         <button
@@ -61,14 +64,15 @@ export default function InvestmentsTable({
               <th>Capital</th>
               <th>Yield / Period</th>
               <th>Progress</th>
-              <th>Next Payout</th>
+              <th>Next Payout Counter</th>
               <th>Status</th>
+              <th className="text-right">Action</th>
             </tr>
           </thead>
           <tbody>
             {investments.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-12 text-center">
+                <td colSpan={7} className="py-12 text-center">
                   <div className="flex flex-col items-center gap-2">
                     <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
                       <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -86,12 +90,12 @@ export default function InvestmentsTable({
                 const totalPayouts = Math.max(1, Number(inv.totalPayouts ?? inv.total_payout_periods ?? 1));
                 const progressPct = Math.min(100, Math.max(0, Math.round((completedPayouts / totalPayouts) * 100)));
                 const planName = inv.planName || inv.investment_plans?.name || "Investment Package";
-                const nextPayout = inv.nextPayout || (inv.next_payout_at ? new Date(inv.next_payout_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Active");
                 const isActive = inv.status === "active";
                 const invId = inv.id ? String(inv.id) : `inv-${idx}`;
+                const rawNextPayout = inv.next_payout_at || inv.nextPayoutAt;
 
                 return (
-                  <tr key={invId}>
+                  <tr key={invId} className="hover:bg-slate-50/60 transition-colors">
 
                     <td>
                       <div className="font-semibold text-slate-900 text-[13px]">{planName}</div>
@@ -106,12 +110,12 @@ export default function InvestmentsTable({
 
                     <td>
                       <span className="text-emerald-600 font-semibold font-mono text-[13px]">
-                        +${dailyReturn.toFixed(2)}
+                        +${dailyReturn.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                       <span className="text-slate-400 text-[11px] ml-1">/period</span>
                     </td>
 
-                    <td className="w-48">
+                    <td className="w-44">
                       <div className="flex justify-between text-[11px] text-slate-400 mb-1.5 font-medium">
                         <span>{completedPayouts}/{totalPayouts} payouts</span>
                         <span className="text-indigo-600 font-semibold">{progressPct}%</span>
@@ -125,10 +129,14 @@ export default function InvestmentsTable({
                     </td>
 
                     <td>
-                      <div className="flex items-center gap-1.5 text-[12px] text-slate-600 font-medium">
-                        <Clock className="w-3.5 h-3.5 text-indigo-500" />
-                        <span>{nextPayout}</span>
-                      </div>
+                      {isActive && rawNextPayout ? (
+                        <LivePayoutCounter targetDate={rawNextPayout} />
+                      ) : (
+                        <div className="flex items-center gap-1.5 text-[12px] text-slate-600 font-medium font-mono">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{inv.nextPayout || "Completed"}</span>
+                        </div>
+                      )}
                     </td>
 
                     <td>
@@ -147,6 +155,17 @@ export default function InvestmentsTable({
                           {inv.status || "Inactive"}
                         </span>
                       )}
+                    </td>
+
+                    <td className="text-right">
+                      <button
+                        type="button"
+                        onClick={() => onSelectInvestment?.(inv)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-[11px] border border-indigo-200/80 transition-colors cursor-pointer"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Overview</span>
+                      </button>
                     </td>
 
                   </tr>

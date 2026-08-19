@@ -7,6 +7,7 @@ import InvestmentsTable from "@/components/dashboard/InvestmentsTable";
 import DepositModal from "@/components/dashboard/DepositModal";
 import WithdrawModal from "@/components/dashboard/WithdrawModal";
 import NewInvestmentModal from "@/components/dashboard/NewInvestmentModal";
+import InvestmentDetailsModal from "@/components/dashboard/InvestmentDetailsModal";
 import { Copy, Check, Sparkles, RefreshCw, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -43,6 +44,7 @@ export default function DashboardPage() {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isInvestOpen, setIsInvestOpen] = useState(false);
   const [isReinvestOpen, setIsReinvestOpen] = useState(false);
+  const [selectedInvForDetails, setSelectedInvForDetails] = useState<any | null>(null);
 
   // Reinvest Form state
   const [reinvestAmount, setReinvestAmount] = useState("");
@@ -66,7 +68,7 @@ export default function DashboardPage() {
 
     const [profileRes, investRes, withdrawRes, plansRes, gatewaysRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", targetUserId).single(),
-      supabase.from("user_investments").select("*, investment_plans(name)").eq("user_id", targetUserId),
+      supabase.from("user_investments").select("*, investment_plans(name, badge, capital_back)").eq("user_id", targetUserId),
       supabase.from("withdrawals").select("net_amount").eq("user_id", targetUserId).eq("status", "approved"),
       supabase.from("investment_plans").select("*").eq("is_active", true),
       supabase.from("gateways").select("*").eq("status", true),
@@ -109,12 +111,17 @@ export default function DashboardPage() {
         investRes.data.map((inv: any) => ({
           id: inv.id,
           planName: inv.investment_plans?.name || "Active Tier",
+          badge: inv.investment_plans?.badge || "Active Package",
+          capital_back: inv.investment_plans?.capital_back ?? true,
           amount: Number(inv.invest_amount || inv.amount || 0),
           dailyReturn: Number(inv.payout_per_period || inv.daily_return || 0),
           totalPayouts: inv.total_payout_periods || inv.total_payouts || 30,
           completedPayouts: inv.paid_periods || inv.payouts_completed || 0,
+          total_profit_earned: Number(inv.total_profit_earned || 0),
+          next_payout_at: inv.next_payout_at,
           nextPayout: inv.next_payout_at ? new Date(inv.next_payout_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Active",
           status: inv.status,
+          created_at: inv.created_at,
         }))
       );
     } else {
@@ -263,6 +270,7 @@ export default function DashboardPage() {
         <InvestmentsTable
           investments={investments}
           onOpenInvest={() => setIsInvestOpen(true)}
+          onSelectInvestment={(inv) => setSelectedInvForDetails(inv)}
         />
 
         {/* Reinvest / Internal Transfer Modal */}
@@ -342,6 +350,12 @@ export default function DashboardPage() {
           plans={dbPlans.length > 0 ? dbPlans : DEFAULT_PLANS}
           onClose={() => setIsInvestOpen(false)}
           onSuccess={fetchDashboardData}
+        />
+
+        <InvestmentDetailsModal
+          isOpen={!!selectedInvForDetails}
+          investment={selectedInvForDetails}
+          onClose={() => setSelectedInvForDetails(null)}
         />
       </div>
     </DashboardLayout>

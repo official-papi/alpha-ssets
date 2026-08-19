@@ -6,8 +6,17 @@ export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
 
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: "Unauthorized cron execution" }, { status: 401 });
+    // Support both Vercel Cron secret & authenticated Supabase client headers
+    if (cronSecret && authHeader && authHeader !== `Bearer ${cronSecret}`) {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+      const tempClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: { user } } = await tempClient.auth.getUser();
+      if (!user) {
+        return NextResponse.json({ error: "Unauthorized cron execution" }, { status: 401 });
+      }
     }
 
     const supabaseUrl =

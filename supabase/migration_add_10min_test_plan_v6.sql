@@ -1,10 +1,10 @@
 -- ==============================================================================
--- ALPHA ASSETS - 10-MINUTE TEST PLAN & DYNAMIC PAYOUT INTERVAL RPC (v6)
+-- ALPHA ASSETS - 10-MINUTE TEST PLAN & DYNAMIC PAYOUT ENGINE (v6)
 -- File: supabase/migration_add_10min_test_plan_v6.sql
 -- Run this in your Supabase SQL Editor (Dashboard -> SQL Editor -> New Query)
 -- ==============================================================================
 
--- 1. Update process_investment_rpc to use plan.payout_interval_hours for initial next_payout_at
+-- 1. Update process_investment_rpc to dynamically use payout_interval_hours
 CREATE OR REPLACE FUNCTION public.process_investment_rpc(
     p_user_id UUID,
     p_plan_id TEXT,
@@ -56,7 +56,7 @@ BEGIN
     END IF;
 
     v_payout_per_period := p_amount * v_daily_rate;
-    v_next_payout := NOW() + (v_interval_hours || ' hours')::INTERVAL;
+    v_next_payout := NOW() + (v_interval_hours * INTERVAL '1 hour');
 
     -- Deduct balance atomically
     IF p_wallet_type = 'deposit_wallet' THEN
@@ -77,7 +77,7 @@ BEGIN
         total_payout_periods, paid_periods, next_payout_at, status
     ) VALUES (
         p_user_id, v_target_plan_id, p_amount, v_payout_per_period,
-        v_repeat_time, 0, v_next_payout, 'active'
+        v_repeat_time, 0, v_next_payout, 'active'::investment_status
     ) RETURNING id INTO v_investment_id;
 
     -- Log transaction ledger
@@ -99,7 +99,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
--- 2. Update process_investment_payouts_rpc to dynamically use payout_interval_hours for subsequent next_payout_at
+-- 2. Update process_investment_payouts_rpc to dynamically use plan interval with enum cast
 CREATE OR REPLACE FUNCTION public.process_investment_payouts_rpc()
 RETURNS JSONB AS $$
 DECLARE
@@ -132,11 +132,12 @@ BEGIN
         WHERE id = v_inv.user_id
         RETURNING interest_wallet INTO v_new_bal;
 
-        -- Update investment period counter & status
+        -- Update investment period counter & next payout timestamp
         UPDATE public.user_investments
         SET paid_periods = v_new_paid,
-            next_payout_at = CASE WHEN v_is_completed THEN NULL ELSE NOW() + (v_interval || ' hours')::INTERVAL END,
-            status = CASE WHEN v_is_completed THEN 'completed' ELSE 'active' END,
+            total_profit_earned = COALESCE(total_profit_earned, 0) + v_inv.payout_per_period,
+            next_payout_at = CASE WHEN v_is_completed THEN NULL ELSE NOW() + (v_interval * INTERVAL '1 hour') END,
+            status = CASE WHEN v_is_completed THEN 'completed'::investment_status ELSE 'active'::investment_status END,
             updated_at = NOW()
         WHERE id = v_inv.id;
 
@@ -161,19 +162,35 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
--- 3. Insert Temporary 10-Minute High Capital Test Package
+-- 3. Upsert the 10-Minute High Capital Test Package (0.1667 hours = 10 mins)
+UPDATE public.investment_plans 
+SET payout_interval_hours = 0.1667,
+    roi_percentage = 10.00,
+    min_amount = 100000.00,
+    max_amount = 100000000.00,
+    total_payout_periods = 6,
+    is_active = true
+WHERE name = '10-Minute Test Plan';
+
 INSERT INTO public.investment_plans 
 (name, badge, description, min_amount, max_amount, roi_percentage, payout_interval_hours, total_payout_periods, capital_back, is_active)
-VALUES 
-(
+SELECT 
   '10-Minute Test Plan', 
   '⚡ Test Mode', 
   'Temporary 10-minute payout testing package requiring high capital ($100,000+).', 
   100000.00, 
   100000000.00, 
   10.00, 
-  0.1667, -- 0.1667 hours = 10 minutes
-  6,       -- 6 payouts of 10% = 60% total profit in 1 hour
+  0.1667,
+  6,
   true, 
   true
-);
+WHERE NOT EXISTS (SELECT 1 FROM public.investment_plans WHERE name = '10-Minute Test Plan');
+
+
+-- 4. IMMEDIATE RELEASE FOR ACTIVE TEST INVESTMENTS:
+UPDATE public.user_investments
+SET next_payout_at = NOW() - INTERVAL '1 minute'
+WHERE status = 'active';
+
+SELECT public.process_investment_payouts_rpc();
