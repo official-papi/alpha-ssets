@@ -42,8 +42,27 @@ export default function InvestmentsPage() {
         setInterestWallet(Number(profile.interest_wallet || 0));
       }
 
-      const { data: invs } = await supabase.from("user_investments").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
-      if (invs) setInvestments(invs);
+      const { data: invs } = await supabase
+        .from("user_investments")
+        .select("*, investment_plans(name)")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (invs) {
+        const formattedInvs = invs.map((inv: any) => ({
+          id: inv.id,
+          planName: inv.investment_plans?.name || "Active Tier",
+          amount: Number(inv.invest_amount || inv.amount || 0),
+          dailyReturn: Number(inv.payout_per_period || inv.daily_return || 0),
+          totalPayouts: inv.total_payout_periods || inv.total_payouts || 30,
+          completedPayouts: inv.paid_periods || inv.payouts_completed || 0,
+          nextPayout: inv.next_payout_at
+            ? new Date(inv.next_payout_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+            : "Active",
+          status: inv.status,
+        }));
+        setInvestments(formattedInvs);
+      }
 
       const { data: livePlans } = await supabase.from("investment_plans").select("*").eq("is_active", true);
       if (livePlans && livePlans.length > 0) {
@@ -53,7 +72,7 @@ export default function InvestmentsPage() {
           min_amount: Number(p.min_amount),
           max_amount: Number(p.max_amount),
           interest_rate: Number(p.roi_percentage),
-          return_type: "daily",
+          return_type: "weekly",
           repeat_time: p.total_payout_periods,
         }));
         setDbPlans(formattedPlans);
@@ -67,9 +86,9 @@ export default function InvestmentsPage() {
   }, []);
 
   const availablePlans = dbPlans.length > 0 ? dbPlans : DEFAULT_PLANS;
-  const activeSimPlan = availablePlans.find((p) => p.id === selectedPlanId) || availablePlans[0];
-  const simDailyYield = (simAmount * activeSimPlan.interest_rate) / 100;
-  const simTotalNetProfit = simDailyYield * activeSimPlan.repeat_time;
+  const activeSimPlan = availablePlans.find((p) => p.id === selectedPlanId) || availablePlans[0] || DEFAULT_PLANS[0];
+  const simDailyYield = activeSimPlan ? (simAmount * activeSimPlan.interest_rate) / 100 : 0;
+  const simTotalNetProfit = activeSimPlan ? simDailyYield * activeSimPlan.repeat_time : 0;
   const simTotalReturn = simAmount + simTotalNetProfit;
 
   return (
@@ -113,8 +132,8 @@ export default function InvestmentsPage() {
                   onChange={(e) => setSelectedPlanId(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-indigo-600"
                 >
-                  {DEFAULT_PLANS.map((p) => (
-                    <option key={p.id} value={p.id}>{p.name} ({p.interest_rate}% Daily)</option>
+                  {availablePlans.map((p) => (
+                    <option key={p.id} value={p.id}>{p.name} ({p.interest_rate}% / wk)</option>
                   ))}
                 </select>
               </div>
@@ -124,8 +143,8 @@ export default function InvestmentsPage() {
                 <input
                   type="number"
                   step="50"
-                  min={activeSimPlan.min_amount}
-                  max={activeSimPlan.max_amount}
+                  min={activeSimPlan?.min_amount || 500}
+                  max={activeSimPlan?.max_amount || 20000000}
                   value={simAmount}
                   onChange={(e) => setSimAmount(Number(e.target.value))}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-indigo-600 focus:outline-none focus:border-indigo-600"

@@ -5,17 +5,23 @@ import { Clock, CheckCircle2, XCircle, Plus, TrendingUp } from "lucide-react";
 
 interface InvestmentItem {
   id: string;
-  planName: string;
-  amount: number;
-  dailyReturn: number;
-  completedPayouts: number;
-  totalPayouts: number;
-  nextPayout: string;
+  planName?: string;
+  amount?: number;
+  dailyReturn?: number;
+  completedPayouts?: number;
+  totalPayouts?: number;
+  nextPayout?: string;
   status: string;
+  invest_amount?: number;
+  payout_per_period?: number;
+  paid_periods?: number;
+  total_payout_periods?: number;
+  investment_plans?: { name?: string };
+  next_payout_at?: string;
 }
 
 interface InvestmentsTableProps {
-  investments?: InvestmentItem[];
+  investments?: any[];
   onOpenInvest?: () => void;
 }
 
@@ -73,33 +79,41 @@ export default function InvestmentsTable({
                 </td>
               </tr>
             ) : (
-              investments.map((inv) => {
-                const progressPct = Math.min(100, Math.round((inv.completedPayouts / inv.totalPayouts) * 100));
+              investments.map((inv, idx) => {
+                const amount = Number(inv.amount ?? inv.invest_amount ?? 0);
+                const dailyReturn = Number(inv.dailyReturn ?? inv.payout_per_period ?? 0);
+                const completedPayouts = Number(inv.completedPayouts ?? inv.paid_periods ?? 0);
+                const totalPayouts = Math.max(1, Number(inv.totalPayouts ?? inv.total_payout_periods ?? 1));
+                const progressPct = Math.min(100, Math.max(0, Math.round((completedPayouts / totalPayouts) * 100)));
+                const planName = inv.planName || inv.investment_plans?.name || "Investment Package";
+                const nextPayout = inv.nextPayout || (inv.next_payout_at ? new Date(inv.next_payout_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Active");
                 const isActive = inv.status === "active";
+                const invId = inv.id ? String(inv.id) : `inv-${idx}`;
+
                 return (
-                  <tr key={inv.id}>
+                  <tr key={invId}>
 
                     <td>
-                      <div className="font-semibold text-slate-900 text-[13px]">{inv.planName}</div>
-                      <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate max-w-[140px]">{inv.id.slice(0, 8)}…</div>
+                      <div className="font-semibold text-slate-900 text-[13px]">{planName}</div>
+                      <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate max-w-[140px]">{invId.slice(0, 8)}…</div>
                     </td>
 
                     <td>
                       <span className="font-semibold text-slate-900 font-mono text-[13px]">
-                        ${inv.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        ${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </span>
                     </td>
 
                     <td>
                       <span className="text-emerald-600 font-semibold font-mono text-[13px]">
-                        +${inv.dailyReturn.toFixed(2)}
+                        +${dailyReturn.toFixed(2)}
                       </span>
-                      <span className="text-slate-400 text-[11px] ml-1">/day</span>
+                      <span className="text-slate-400 text-[11px] ml-1">/period</span>
                     </td>
 
                     <td className="w-48">
                       <div className="flex justify-between text-[11px] text-slate-400 mb-1.5 font-medium">
-                        <span>{inv.completedPayouts}/{inv.totalPayouts} payouts</span>
+                        <span>{completedPayouts}/{totalPayouts} payouts</span>
                         <span className="text-indigo-600 font-semibold">{progressPct}%</span>
                       </div>
                       <div className="hm-progress-track">
@@ -113,7 +127,7 @@ export default function InvestmentsTable({
                     <td>
                       <div className="flex items-center gap-1.5 text-[12px] text-slate-600 font-medium">
                         <Clock className="w-3.5 h-3.5 text-indigo-500" />
-                        <span>{inv.nextPayout}</span>
+                        <span>{nextPayout}</span>
                       </div>
                     </td>
 
@@ -130,7 +144,7 @@ export default function InvestmentsTable({
                       ) : (
                         <span className="hm-badge hm-badge-danger">
                           <XCircle className="w-3 h-3" />
-                          {inv.status}
+                          {inv.status || "Inactive"}
                         </span>
                       )}
                     </td>

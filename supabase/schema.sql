@@ -167,15 +167,28 @@ ON CONFLICT DO NOTHING;
 -- ==============================================================================
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+    v_referrer_id UUID := NULL;
+    v_ref_code TEXT;
 BEGIN
-    INSERT INTO public.profiles (id, email, full_name, username, avatar_url, role)
+    v_ref_code := NEW.raw_user_meta_data->>'referred_by_code';
+
+    IF v_ref_code IS NOT NULL AND v_ref_code != '' THEN
+        SELECT id INTO v_referrer_id 
+        FROM public.profiles 
+        WHERE referral_code = v_ref_code 
+        LIMIT 1;
+    END IF;
+
+    INSERT INTO public.profiles (id, email, full_name, username, avatar_url, role, referred_by)
     VALUES (
         NEW.id,
         NEW.email,
         COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
         COALESCE(NEW.raw_user_meta_data->>'username', split_part(NEW.email, '@', 1) || '_' || substring(md5(random()::text) from 1 for 4)),
         NEW.raw_user_meta_data->>'avatar_url',
-        COALESCE((NEW.raw_user_meta_data->>'role')::public.user_role, 'user'::public.user_role)
+        COALESCE((NEW.raw_user_meta_data->>'role')::public.user_role, 'user'::public.user_role),
+        v_referrer_id
     );
     RETURN NEW;
 END;
@@ -210,10 +223,14 @@ CREATE POLICY "Admins can manage investment_plans" ON public.investment_plans
         (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
     );
 
--- Profiles: Users can view and update their own profile; Admins view all
+-- Profiles: Users can view their own profile and downline profiles; Admins view all
 DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile" ON public.profiles
-    FOR SELECT USING (auth.uid() = id OR (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin');
+    FOR SELECT USING (
+        auth.uid() = id
+        OR auth.uid() = referred_by
+        OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+    );
 
 DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile" ON public.profiles

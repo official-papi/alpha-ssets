@@ -454,6 +454,7 @@ DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile" ON public.profiles
     FOR SELECT USING (
         auth.uid() = id
+        OR auth.uid() = referred_by
         OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
     );
 
