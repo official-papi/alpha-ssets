@@ -18,20 +18,48 @@ export default function AdminEmailPage() {
     setSubmitting(true);
     setStatusMsg(null);
 
-    const supabase = createClient();
-    const { data: users } = await supabase.from("profiles").select("email");
-    const recipientCount = users?.length || 0;
+    try {
+      const supabase = createClient();
+      let query = supabase.from("profiles").select("id, email");
 
-    // Simulate batch email queue broadcast
-    setTimeout(() => {
-      setStatusMsg({
-        text: `Broadcast queued successfully for ${recipientCount} registered investors!`,
-        type: "success",
-      });
-      setSubject("");
-      setMessage("");
+      if (targetAudience === "kyc_approved") {
+        query = query.eq("is_kyc_verified", true);
+      }
+
+      const { data: users, error: fetchErr } = await query;
+
+      if (fetchErr || !users || users.length === 0) {
+        setStatusMsg({ text: "No target users found for selected audience.", type: "error" });
+        setSubmitting(false);
+        return;
+      }
+
+      // Insert broadcast entries into notifications table for target users
+      const notificationRows = users.map((u: any) => ({
+        user_id: u.id,
+        title: subject,
+        message: message,
+        type: "info",
+        is_read: false,
+      }));
+
+      const { error: insertErr } = await supabase.from("notifications").insert(notificationRows);
+
+      if (insertErr) {
+        setStatusMsg({ text: insertErr.message, type: "error" });
+      } else {
+        setStatusMsg({
+          text: `Broadcast sent successfully to ${users.length} investor account${users.length > 1 ? "s" : ""}!`,
+          type: "success",
+        });
+        setSubject("");
+        setMessage("");
+      }
+    } catch (err: any) {
+      setStatusMsg({ text: err.message || "Failed to dispatch broadcast.", type: "error" });
+    } finally {
       setSubmitting(false);
-    }, 1200);
+    }
   };
 
   return (

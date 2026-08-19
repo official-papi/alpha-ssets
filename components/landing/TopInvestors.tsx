@@ -4,17 +4,17 @@ import { useState } from "react";
 import { Trophy, ArrowDownRight, ArrowUpRight, ShieldCheck } from "lucide-react";
 
 const TOP_INVESTORS = [
-  { rank: "1st", name: "Alexander Wright", amount: "$48,500.00", badge: "VIP Platinum", flag: "🇺🇸" },
-  { rank: "2nd", name: "Sophia Chen",       amount: "$32,100.00", badge: "Gold Executive", flag: "🇸🇬" },
-  { rank: "3rd", name: "Marcus Vance",      amount: "$27,450.00", badge: "Gold Executive", flag: "🇬🇧" },
-  { rank: "4th", name: "Elena Rostova",     amount: "$19,800.00", badge: "Silver Growth",   flag: "🇩🇪" },
+  { rank: "1st", name: "Alexander Wright", amount: "$486,000.00", badge: "VIP Platinum", flag: "🇺🇸" },
+  { rank: "2nd", name: "Sophia Chen",       amount: "$400,000.00", badge: "Gold Executive", flag: "🇸🇬" },
+  { rank: "3rd", name: "Marcus Vance",      amount: "$287,000.00", badge: "Gold Executive", flag: "🇬🇧" },
+  { rank: "4th", name: "Elena Rostova",     amount: "$250,000.00", badge: "Silver Growth",   flag: "🇩🇪" },
 ];
 
 const RECENT_TRANSACTIONS = [
-  { type: "deposit", user: "0x7f...3a9", amount: "$5,000.00", method: "USDT TRC20", flag: "🇺🇸", time: "2 mins ago" },
-  { type: "withdrawal", user: "0x3b...9d1", amount: "$1,250.00", method: "Bitcoin BTC", flag: "🇬🇧", time: "5 mins ago" },
-  { type: "deposit", user: "0x9e...1f4", amount: "$2,500.00", method: "Ethereum ETH", flag: "🇩🇪", time: "11 mins ago" },
-  { type: "withdrawal", user: "0x5c...4a2", amount: "$850.00", method: "USDT TRC20", flag: "🇯🇵", time: "18 mins ago" },
+  { type: "deposit", user: "0x7f...3a9", amount: "$85,000.00", method: "USDT TRC20", flag: "🇺🇸", time: "2 mins ago" },
+  { type: "withdrawal", user: "0x3b...9d1", amount: "$24,500.00", method: "Bitcoin BTC", flag: "🇬🇧", time: "5 mins ago" },
+  { type: "deposit", user: "0x9e...1f4", amount: "$50,000.00", method: "Ethereum ETH", flag: "🇩🇪", time: "11 mins ago" },
+  { type: "withdrawal", user: "0x5c...4a2", amount: "$18,200.00", method: "USDT TRC20", flag: "🇯🇵", time: "18 mins ago" },
 ];
 
 export default function TopInvestors() {

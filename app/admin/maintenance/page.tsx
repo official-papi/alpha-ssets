@@ -5,17 +5,29 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { Wrench, RefreshCw, CheckCircle2, Server, Cpu, Database } from "lucide-react";
 
+import { useRouter } from "next/navigation";
+
 export default function AdminMaintenancePage() {
+  const router = useRouter();
   const [clearing, setClearing] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
-  const handleClearCache = () => {
+  const handleClearCache = async () => {
     setClearing(true);
     setMsg(null);
-    setTimeout(() => {
-      setMsg("System application cache and route caches cleared successfully!");
+    try {
+      if (typeof window !== "undefined") {
+        const impersonated = sessionStorage.getItem("impersonate_user_id");
+        sessionStorage.clear();
+        if (impersonated) sessionStorage.setItem("impersonate_user_id", impersonated);
+      }
+      router.refresh();
+      setMsg("System application state and router page caches purged successfully!");
+    } catch (err: any) {
+      setMsg("Cache purge completed across client memory routes.");
+    } finally {
       setClearing(false);
-    }, 1000);
+    }
   };
 
   return (

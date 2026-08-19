@@ -169,42 +169,44 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="py-3 font-mono font-bold text-slate-900">${Number(user.deposit_wallet || 0).toFixed(2)}</td>
                     <td className="py-3 font-mono font-bold text-indigo-600">${Number(user.interest_wallet || 0).toFixed(2)}</td>
-                    <td className="py-3 text-right space-x-1.5">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenStatement(user)}
-                        className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px] font-bold transition-all cursor-pointer"
-                        title="View Financial Audit Statement"
-                      >
-                        Statement
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleFreezeUser(user.id, user.is_banned)}
-                        className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                          user.is_banned ? "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100" : "bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100"
-                        }`}
-                      >
-                        {user.is_banned ? "Unfreeze" : "Freeze"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          sessionStorage.setItem("impersonate_user_id", user.id);
-                          window.location.href = "/dashboard";
-                        }}
-                        className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px] font-bold transition-all cursor-pointer"
-                        title="Impersonate & view dashboard as this user"
-                      >
-                        Login as User
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleOpenBalanceModal(user)}
-                        className="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 text-[11px] font-bold transition-all cursor-pointer shadow-xs"
-                      >
-                        Adjust
-                      </button>
+                    <td className="py-3 text-right">
+                      <div className="flex flex-wrap items-center justify-end gap-1.5 min-w-[260px]">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenStatement(user)}
+                          className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px] font-bold transition-all cursor-pointer whitespace-nowrap"
+                          title="View Financial Audit Statement"
+                        >
+                          Statement
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleFreezeUser(user.id, user.is_banned)}
+                          className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer whitespace-nowrap ${
+                            user.is_banned ? "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100" : "bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100"
+                          }`}
+                        >
+                          {user.is_banned ? "Unfreeze" : "Freeze"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            sessionStorage.setItem("impersonate_user_id", user.id);
+                            window.location.href = "/dashboard";
+                          }}
+                          className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px] font-bold transition-all cursor-pointer whitespace-nowrap"
+                          title="Impersonate & view dashboard as this user"
+                        >
+                          Login as User
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenBalanceModal(user)}
+                          className="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 text-[11px] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                        >
+                          Adjust
+                        </button>
+                      </div>
                     </td>
 
                   </tr>

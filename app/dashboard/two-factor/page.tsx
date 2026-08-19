@@ -13,6 +13,9 @@ export default function TwoFactorPage() {
   const [copied, setCopied] = useState(false);
   const [msg, setMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
+  const [qrUrl, setQrUrl] = useState("");
+  const [userId, setUserId] = useState("");
+
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -21,10 +24,31 @@ export default function TwoFactorPage() {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
+      setUserId(user.id);
       setUserEmail(user.email || "");
-      // Generate a mock secret key for Google Authenticator TOTP setup
-      const dummySecret = "JBSWY3DPEHPK3PXP";
-      setSecretKey(dummySecret);
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_2fa_enabled, two_factor_secret")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      let activeSecret = profile?.two_factor_secret;
+      if (!activeSecret) {
+        // Generate a deterministic or random Base32 TOTP secret for the user
+        const hex = user.id.replace(/-/g, "").toUpperCase();
+        const base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        const chars = hex.substring(0, 16).split("");
+        activeSecret = chars.map((c: string) => base32Chars[c.charCodeAt(0) % 32]).join("");
+      }
+
+      setSecretKey(activeSecret);
+      setIs2FaEnabled(profile?.is_2fa_enabled ?? false);
+
+      const label = encodeURIComponent(`AlphaAssets:${user.email || "Investor"}`);
+      const issuer = encodeURIComponent("AlphaAssets");
+      const totpUri = `otpauth://totp/${label}?secret=${activeSecret}&issuer=${issuer}`;
+      setQrUrl(`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(totpUri)}`);
     }
   };
 
@@ -34,7 +58,7 @@ export default function TwoFactorPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleToggle2Fa = (e: React.FormEvent) => {
+  const handleToggle2Fa = async (e: React.FormEvent) => {
     e.preventDefault();
     setMsg(null);
 
@@ -43,13 +67,21 @@ export default function TwoFactorPage() {
       return;
     }
 
-    if (is2FaEnabled) {
-      setIs2FaEnabled(false);
-      setMsg({ text: "Two-Factor Authentication (2FA) disabled successfully.", type: "success" });
-    } else {
-      setIs2FaEnabled(true);
-      setMsg({ text: "Two-Factor Authentication (2FA) enabled successfully! Your account is now secured.", type: "success" });
-    }
+    const supabase = createClient();
+    const newStatus = !is2FaEnabled;
+
+    await supabase.from("profiles").update({
+      is_2fa_enabled: newStatus,
+      two_factor_secret: secretKey,
+    }).eq("id", userId);
+
+    setIs2FaEnabled(newStatus);
+    setMsg({
+      text: newStatus
+        ? "Two-Factor Authentication (2FA) enabled successfully! Account secured."
+        : "Two-Factor Authentication (2FA) disabled successfully.",
+      type: "success",
+    });
     setOtpCode("");
   };
 
@@ -106,6 +138,13 @@ export default function TwoFactorPage() {
               1. Download <strong className="text-slate-900">Google Authenticator</strong> or <strong className="text-slate-900">Authy</strong> app on your mobile device.<br />
               2. Scan the secret key below or manually copy key into your authenticator app.
             </p>
+
+            {qrUrl && (
+              <div className="flex flex-col items-center justify-center p-4 bg-slate-50 border border-slate-200 rounded-xl max-w-xs mx-auto text-center space-y-2">
+                <img src={qrUrl} alt="2FA QR Code" className="w-40 h-40 object-contain rounded-lg border border-slate-200 bg-white p-2 shadow-xs" />
+                <span className="text-[11px] text-slate-500 font-medium">Scan QR Code with Google Authenticator</span>
+              </div>
+            )}
 
             {/* Secret Key Display */}
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between">

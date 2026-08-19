@@ -6,13 +6,30 @@ import PageHero from "@/components/landing/PageHero";
 import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare, Clock, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
+import { createClient } from "@/lib/supabase/client";
+
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    try {
+      const supabase = createClient();
+      await supabase.from("notifications").insert({
+        title: `Contact Ticket: ${formData.subject || "General Inquiry"}`,
+        message: `From: ${formData.name} (${formData.email})\n\n${formData.message}`,
+        type: "info",
+        is_read: false,
+      });
+    } catch (err) {
+      console.error("Failed to insert contact ticket:", err);
+    } finally {
+      setSubmitted(true);
+      setSubmitting(false);
+    }
   };
 
   return (

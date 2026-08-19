@@ -101,14 +101,20 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
 
       {/* ── Mobile Top Bar ── */}
       <div className="md:hidden bg-white border-b border-slate-100 px-4 h-14 flex items-center justify-between flex-shrink-0 z-50 sticky top-0">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
-            <Wallet className="w-3.5 h-3.5 text-white" />
-          </div>
-          <span className="text-[15px] font-bold tracking-tight text-slate-900">
-            Alpha<span className="text-indigo-600">@</span>ssets
-          </span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/" className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-1 text-[11px] font-bold mr-1">
+            <Globe className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Site</span>
+          </Link>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
+              <Wallet className="w-3.5 h-3.5 text-white" />
+            </div>
+            <span className="text-[15px] font-bold tracking-tight text-slate-900">
+              Alpha<span className="text-indigo-600">@</span>ssets
+            </span>
+          </Link>
+        </div>
         <button
           type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -120,11 +126,11 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
 
       {/* ── Sidebar ── */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-60 bg-white border-r border-slate-100 flex flex-col flex-shrink-0 transition-transform duration-200 md:static md:translate-x-0 md:h-screen
+        fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-100 flex flex-col flex-shrink-0 transition-transform duration-200 md:static md:translate-x-0 md:h-screen
         ${mobileOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"}
       `}>
-        {/* Logo */}
-        <div className="h-14 px-5 flex items-center border-b border-slate-100 flex-shrink-0">
+        {/* Logo Header */}
+        <div className="h-14 px-5 flex items-center justify-between border-b border-slate-100 flex-shrink-0">
           <Link href="/dashboard" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
               <Wallet className="w-4 h-4 text-white" />
@@ -136,6 +142,9 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
               <div className="text-[10px] text-slate-400 font-medium mt-0.5">Investor Portal</div>
             </div>
           </Link>
+          <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 text-slate-400 hover:text-slate-700">
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Nav */}
@@ -166,9 +175,19 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
 
         {/* Footer */}
         <div className="border-t border-slate-100 p-3 space-y-1 flex-shrink-0">
+          <Link
+            href="/"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-semibold text-indigo-700 bg-indigo-50/80 border border-indigo-100 hover:bg-indigo-100 transition-colors"
+          >
+            <Globe className="w-4 h-4 text-indigo-600" />
+            <span>Back to Main Site</span>
+          </Link>
+
           {isAdmin && (
             <Link
               href="/admin"
+              onClick={() => setMobileOpen(false)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-semibold text-amber-700 bg-amber-50 border border-amber-100 hover:bg-amber-100 transition-colors"
             >
               <ShieldAlert className="w-4 h-4 text-amber-600" />

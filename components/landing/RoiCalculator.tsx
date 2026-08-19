@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calculator, ArrowRight, TrendingUp, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
-const PLANS = [
+const DEFAULT_PLANS = [
   { id: "regular",  name: "Regular Package",  rate: 2.5,  weeks: 8,  min: 500,     max: 2000,     step: 100 },
   { id: "silver",   name: "Silver Package",   rate: 4.0,  weeks: 12, min: 3000,    max: 5000,     step: 250 },
   { id: "gold",     name: "Gold Package",     rate: 6.0,  weeks: 16, min: 10000,   max: 20000,    step: 1000 },
@@ -14,16 +15,52 @@ const PLANS = [
 ];
 
 export default function RoiCalculator() {
-  const [selected, setSelected] = useState(PLANS[0]);
+  const [plansList, setPlansList] = useState<any[]>(DEFAULT_PLANS);
+  const [selected, setSelected] = useState(DEFAULT_PLANS[0]);
   const [amount, setAmount] = useState<number>(1000);
   const [customWeeks, setCustomWeeks] = useState<number>(8);
+
+  useEffect(() => {
+    (async () => {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("investment_plans")
+        .select("*")
+        .eq("is_active", true)
+        .order("min_amount", { ascending: true });
+
+      if (data && data.length > 0) {
+        const formatted = data.map((p: any) => {
+          const isWeekly = Number(p.payout_interval_hours) === 168 || (p.description || "").toLowerCase().includes("week");
+          const rate = Number(p.roi_percentage || 0);
+          const weeks = isWeekly ? Number(p.total_payout_periods || 8) : Math.max(1, Math.round(Number(p.total_payout_periods || 30) / 7));
+          const min = Number(p.min_amount || 100);
+          const max = Number(p.max_amount || 10000);
+          const step = Math.max(10, Math.round((max - min) / 20));
+          return {
+            id: p.id,
+            name: p.name,
+            rate,
+            weeks,
+            min,
+            max,
+            step,
+          };
+        });
+        setPlansList(formatted);
+        setSelected(formatted[0]);
+        setAmount(formatted[0].min);
+        setCustomWeeks(formatted[0].weeks);
+      }
+    })();
+  }, []);
 
   const weeklyProfit = (amount * selected.rate) / 100;
   const netProfit = weeklyProfit * customWeeks;
   const totalReturn = amount + netProfit;
 
   const changePlan = (id: string) => {
-    const p = PLANS.find((item) => item.id === id) ?? PLANS[0];
+    const p = plansList.find((item) => item.id === id) ?? plansList[0];
     setSelected(p);
     setAmount(p.min);
     setCustomWeeks(p.weeks);
@@ -50,7 +87,7 @@ export default function RoiCalculator() {
                 <div>
                   <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-2">Select Investment Tier</label>
                   <div className="grid grid-cols-2 gap-2">
-                    {PLANS.map((p) => (
+                    {plansList.map((p) => (
                       <button key={p.id} type="button" onClick={() => changePlan(p.id)}
                         className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                           selected.id === p.id

@@ -129,7 +129,7 @@ export default function AdminCmsPage() {
       )}
 
       {/* CMS Navigation Tabs */}
-      <div className="flex items-center space-x-2 overflow-x-auto border-b border-slate-200 pb-2">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 overflow-x-auto border-b border-slate-200 pb-2">
         {[
           { id: "hero", label: "Hero Banner", icon: Sparkles },
           { id: "about", label: "About Platform", icon: Globe },

@@ -183,10 +183,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile top bar */}
       <div className="md:hidden bg-white border-b border-slate-100 px-4 h-14 flex items-center justify-between sticky top-0 z-50 flex-shrink-0">
         <div className="flex items-center gap-2">
+          <Link href="/" className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-1 text-[11px] font-bold mr-1">
+            <Globe className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Site</span>
+          </Link>
           <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
             <ShieldAlert className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="text-[15px] font-bold text-slate-900 tracking-tight">
+          <span className="text-[14px] font-bold text-slate-900 tracking-tight">
             Alpha<span className="text-indigo-600">@</span>ssets <span className="text-slate-400 font-medium">Admin</span>
           </span>
         </div>
@@ -198,22 +202,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* ADMIN SIDEBAR */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-100
+        fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-100
         flex flex-col flex-shrink-0 transition-transform duration-200
         md:static md:translate-x-0 md:h-screen
         ${mobileOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"}
       `}>
-        {/* Logo */}
-        <div className="hidden md:flex items-center gap-2.5 px-5 h-14 border-b border-slate-100 flex-shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-amber-500 flex items-center justify-center">
-            <ShieldAlert className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <div className="text-[15px] font-bold text-slate-900 tracking-tight leading-none">
-              Alpha<span className="text-indigo-600">@</span>ssets
+        {/* Logo Header (Visible on Desktop & Mobile Drawer) */}
+        <div className="flex items-center justify-between px-5 h-14 border-b border-slate-100 flex-shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-500 flex items-center justify-center">
+              <ShieldAlert className="w-4 h-4 text-white" />
             </div>
-            <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Admin Control Panel</div>
+            <div>
+              <div className="text-[15px] font-bold text-slate-900 tracking-tight leading-none">
+                Alpha<span className="text-indigo-600">@</span>ssets
+              </div>
+              <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Admin Control Panel</div>
+            </div>
           </div>
+          <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 text-slate-400 hover:text-slate-700">
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Nav list */}
@@ -235,12 +244,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        {/* Bottom */}
+        {/* Bottom Actions */}
         <div className="px-3 pb-4 pt-3 border-t border-slate-100 space-y-1 flex-shrink-0">
-          <Link href="/dashboard"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-            <ArrowLeft className="w-4 h-4 text-indigo-500" />
-            <span>Return to User View</span>
+          <Link href="/" onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-semibold text-indigo-700 bg-indigo-50/80 border border-indigo-100 hover:bg-indigo-100 transition-colors">
+            <Globe className="w-4 h-4 text-indigo-600" />
+            <span>Back to Main Site</span>
+          </Link>
+
+          <Link href="/dashboard" onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+            <ArrowLeft className="w-4 h-4 text-slate-500" />
+            <span>Return to Investor Dashboard</span>
           </Link>
 
           <div className="px-3 py-2">

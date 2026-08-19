@@ -70,24 +70,27 @@ export default function AdminDashboardPage() {
     setCronResult(null);
 
     try {
-      await fetch("/api/cron/process-payouts", { method: "POST" });
-      setTimeout(() => {
+      const res = await fetch("/api/cron/payouts", { method: "POST" });
+      const json = await res.json();
+      if (res.ok && json.success) {
         setCronResult({
-          text: `Daily yield payout processed successfully! Active investments updated.`,
+          text: json.message || `Daily yield payout processed successfully! Active investments updated.`,
           type: "success",
         });
-        setCronRunning(false);
-        fetchAdminStats();
-      }, 1200);
-    } catch {
-      setTimeout(() => {
+      } else {
         setCronResult({
-          text: "Daily yield payout executed cleanly across active plans.",
-          type: "success",
+          text: json.message || json.error || "Failed to process payouts engine.",
+          type: "error",
         });
-        setCronRunning(false);
-        fetchAdminStats();
-      }, 1000);
+      }
+    } catch (err: any) {
+      setCronResult({
+        text: `Error executing payout engine: ${err.message || "Network error"}`,
+        type: "error",
+      });
+    } finally {
+      setCronRunning(false);
+      fetchAdminStats();
     }
   };
 
