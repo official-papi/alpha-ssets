@@ -62,6 +62,11 @@ export default function DashboardPage() {
       return;
     }
 
+    // Process any due investment payouts in the background
+    try {
+      await fetch("/api/cron/payouts", { method: "POST" });
+    } catch {}
+
     const impersonatedId = typeof window !== "undefined" ? sessionStorage.getItem("impersonate_user_id") : null;
     const targetUserId = impersonatedId || user.id;
     if (impersonatedId) setIsImpersonating(true);
