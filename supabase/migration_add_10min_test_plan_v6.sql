@@ -99,6 +99,10 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
+-- 1. Ensure next_payout_at column permits nulls or retains timestamp on completion
+ALTER TABLE public.user_investments ALTER COLUMN next_payout_at DROP NOT NULL;
+UPDATE public.user_investments SET next_payout_at = NOW() WHERE next_payout_at IS NULL;
+
 -- 2. Update process_investment_payouts_rpc to dynamically use plan interval with enum cast
 CREATE OR REPLACE FUNCTION public.process_investment_payouts_rpc()
 RETURNS JSONB AS $$
@@ -112,7 +116,7 @@ DECLARE
     v_interval NUMERIC;
 BEGIN
     FOR v_inv IN
-        SELECT ui.*, p.interest_wallet, ip.payout_interval_hours
+        SELECT ui.*, p.interest_wallet, ip.payout_interval_hours, ip.capital_back
         FROM public.user_investments ui
         JOIN public.profiles p ON p.id = ui.user_id
         LEFT JOIN public.investment_plans ip ON ip.id = ui.plan_id
@@ -136,7 +140,7 @@ BEGIN
         UPDATE public.user_investments
         SET paid_periods = v_new_paid,
             total_profit_earned = COALESCE(total_profit_earned, 0) + v_inv.payout_per_period,
-            next_payout_at = CASE WHEN v_is_completed THEN NULL ELSE NOW() + (v_interval * INTERVAL '1 hour') END,
+            next_payout_at = CASE WHEN v_is_completed THEN NOW() ELSE NOW() + (v_interval * INTERVAL '1 hour') END,
             status = CASE WHEN v_is_completed THEN 'completed'::investment_status ELSE 'active'::investment_status END,
             updated_at = NOW()
         WHERE id = v_inv.id;
@@ -146,9 +150,26 @@ BEGIN
         INSERT INTO public.transactions (
             user_id, type, wallet, amount, charge, post_balance, description, trx_ref
         ) VALUES (
-            v_inv.user_id, 'interest_payout', 'interest_wallet', v_inv.payout_per_period, 0.00,
+            v_inv.user_id, 'interest_payout'::transaction_type, 'interest_wallet', v_inv.payout_per_period, 0.00,
             v_new_bal, 'ROI payout period ' || v_new_paid || '/' || v_inv.total_payout_periods, v_trx_ref
         );
+
+        -- Return capital if investment plan completed and capital_back enabled
+        IF v_is_completed AND COALESCE(v_inv.capital_back, true) THEN
+            UPDATE public.profiles
+            SET deposit_wallet = deposit_wallet + v_inv.invest_amount,
+                updated_at = NOW()
+            WHERE id = v_inv.user_id
+            RETURNING deposit_wallet INTO v_new_bal;
+
+            v_trx_ref := 'CAP-' || upper(substring(md5(random()::text) from 1 for 10));
+            INSERT INTO public.transactions (
+                user_id, type, wallet, amount, charge, post_balance, description, trx_ref
+            ) VALUES (
+                v_inv.user_id, 'admin_adjustment'::transaction_type, 'deposit_wallet', v_inv.invest_amount, 0.00,
+                v_new_bal, 'Capital returned upon plan maturity completion', v_trx_ref
+            );
+        END IF;
 
         v_count := v_count + 1;
     END LOOP;

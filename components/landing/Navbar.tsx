@@ -6,9 +6,12 @@ import { BarChart2, ArrowRight, Menu, X, LayoutDashboard, Loader2, Home } from "
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import TradingViewTicker from "@/components/landing/TradingViewTicker";
+import LanguageSelector from "@/components/common/LanguageSelector";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -31,17 +34,17 @@ export default function Navbar() {
   }, []);
 
   const navItems = [
-    { label: "Home",         href: "/" },
-    { label: "About",        href: "/about" },
-    { label: "Plans",        href: "/plans" },
-    { label: "How It Works", href: "/how-it-works" },
-    { label: "FAQ",          href: "/faq" },
-    { label: "Contact",      href: "/contact" },
+    { label: t.nav.home,         href: "/" },
+    { label: t.nav.about,        href: "/about" },
+    { label: t.nav.plans,        href: "/plans" },
+    { label: t.nav.howItWorks,   href: "/how-it-works" },
+    { label: t.nav.faq,          href: "/faq" },
+    { label: t.nav.contact,      href: "/contact" },
   ];
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5">
@@ -70,8 +73,10 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Desktop CTAs */}
+        {/* Desktop CTAs & Language Selector */}
         <div className="hidden md:flex items-center gap-3">
+          <LanguageSelector variant="default" />
+
           {authLoading ? (
             <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
           ) : user ? (
@@ -81,32 +86,35 @@ export default function Navbar() {
               className="hm-btn hm-btn-primary text-[13px] px-4 py-2"
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
-              My Dashboard
+              {t.nav.myDashboard}
             </Link>
           ) : (
             /* ── Guest ── */
             <>
               <Link href="/login" className="text-[13px] font-medium text-slate-500 hover:text-slate-900 transition-colors px-3 py-2">
-                Sign In
+                {t.nav.signIn}
               </Link>
               <Link
                 href="/register"
                 className="hm-btn hm-btn-primary text-[13px] px-4 py-2"
               >
-                Open Account
+                {t.nav.openAccount}
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </>
           )}
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 cursor-pointer"
-        >
-          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        {/* Mobile Actions: Language + Toggle */}
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSelector variant="compact" />
+          <button
+            onClick={() => setOpen(!open)}
+            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 cursor-pointer"
+          >
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}
@@ -119,7 +127,7 @@ export default function Navbar() {
               className="flex items-center gap-2 py-2 px-3 text-[13px] font-bold text-indigo-700 bg-indigo-50/90 rounded-lg mb-2 border border-indigo-100"
             >
               <Home className="w-4 h-4 text-indigo-600" />
-              <span>← Back to Site</span>
+              <span>← {t.nav.backToSite}</span>
             </Link>
           )}
 
@@ -145,17 +153,17 @@ export default function Navbar() {
                 className="flex-1 hm-btn hm-btn-primary py-2.5 text-[13px] text-center justify-center"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                My Dashboard
+                {t.nav.myDashboard}
               </Link>
             ) : (
               <>
                 <Link href="/login" onClick={() => setOpen(false)}
                   className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-[13px] font-medium text-slate-700 hover:bg-slate-50 transition-all">
-                  Sign In
+                  {t.nav.signIn}
                 </Link>
                 <Link href="/register" onClick={() => setOpen(false)}
                   className="flex-1 hm-btn hm-btn-primary py-2.5 text-[13px] text-center justify-center">
-                  Open Account
+                  {t.nav.openAccount}
                 </Link>
               </>
             )}

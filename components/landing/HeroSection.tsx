@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, TrendingUp, DollarSign, Users, Award, Lock, Zap } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function HeroSection() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative pt-20 pb-28 overflow-hidden hm-hero-bg border-b border-slate-100">
 
@@ -24,20 +27,18 @@ export default function HeroSection() {
         <div className="flex justify-center mb-8">
           <div className="hm-section-label">
             <ShieldCheck className="w-3.5 h-3.5" />
-            Regulated &amp; Audited Investment Platform
+            {t.hero.badge}
           </div>
         </div>
 
         {/* Headline */}
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-5xl sm:text-7xl font-bold text-slate-900 leading-[1.08] tracking-tight">
-            Automated AI Yield{" "}
-            <span className="hm-gradient-text">Generation</span>
-            <br />
-            for Modern Investors
+            {t.hero.titleStart}{" "}
+            <span className="hm-gradient-text">{t.hero.titleHighlight}</span>
           </h1>
           <p className="mt-7 text-[17px] text-slate-500 max-w-2xl mx-auto leading-relaxed font-normal">
-            Invest with confidence in AI-powered structured portfolios. Earn guaranteed weekly returns with instant wallet withdrawals and multi-tier affiliate rewards.
+            {t.hero.subtitle}
           </p>
 
           {/* CTAs */}
@@ -46,7 +47,7 @@ export default function HeroSection() {
               href="/register"
               className="hm-btn hm-btn-primary px-8 py-3.5 text-[15px] rounded-xl w-full sm:w-auto"
             >
-              <span>Create Free Account</span>
+              <span>{t.hero.startInvesting}</span>
               <ArrowRight className="w-4.5 h-4.5" />
             </Link>
             <a
@@ -54,7 +55,7 @@ export default function HeroSection() {
               className="hm-btn hm-btn-secondary px-8 py-3.5 text-[15px] rounded-xl w-full sm:w-auto"
             >
               <TrendingUp className="w-4.5 h-4.5 text-indigo-600" />
-              <span>Explore Plans</span>
+              <span>{t.hero.explorePlans}</span>
             </a>
           </div>
 
@@ -62,8 +63,8 @@ export default function HeroSection() {
           <div className="mt-8 flex items-center justify-center gap-6 flex-wrap">
             {[
               { icon: ShieldCheck, label: "256-bit SSL" },
-              { icon: Zap, label: "Instant Payouts" },
-              { icon: Lock, label: "Cold Storage Custody" },
+              { icon: Zap, label: t.plans.instantPayouts },
+              { icon: Lock, label: t.hero.securityAudited },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-1.5 text-[12px] font-medium text-slate-400">
                 <Icon className="w-3.5 h-3.5 text-indigo-500" />
@@ -76,9 +77,9 @@ export default function HeroSection() {
         {/* Stats Grid */}
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
           {[
-            { icon: DollarSign, value: "$256M+", label: "Total Assets Deposited" },
-            { icon: Award,      value: "$734M+", label: "Total Payouts" },
-            { icon: Users,      value: "90,000+", label: "Active Investors" },
+            { icon: DollarSign, value: "$256M+", label: t.hero.totalDeposited },
+            { icon: Award,      value: "$734M+", label: t.hero.paidOut },
+            { icon: Users,      value: "90,000+", label: t.hero.activeInvestors },
             { icon: Lock,       value: "100%",   label: "SSL &amp; DDoS Protected" },
           ].map(({ icon: Icon, value, label }) => (
             <div key={label} className="hm-card p-6 text-center hover:shadow-md transition-all">

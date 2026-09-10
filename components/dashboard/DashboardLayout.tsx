@@ -9,6 +9,8 @@ import {
   LogOut, TrendingUp, Menu, X, Bell, Globe, Sparkles
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import LanguageSelector from "@/components/common/LanguageSelector";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -18,6 +20,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children, userEmail }: DashboardLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useLanguage();
   const [isAdmin, setIsAdmin] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -83,15 +86,15 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
   };
 
   const navItems = [
-    { label: "Overview",         href: "/dashboard",              icon: LayoutDashboard },
-    { label: "My Investments",   href: "/dashboard/investments",  icon: TrendingUp },
-    { label: "Deposit Funds",    href: "/dashboard/deposit",      icon: ArrowDownRight },
-    { label: "Withdraw Funds",   href: "/dashboard/withdraw",     icon: ArrowUpRight },
-    { label: "Transactions",     href: "/dashboard/transactions", icon: History },
-    { label: "Referral Network", href: "/dashboard/referral",     icon: Users },
-    { label: "My Profile",       href: "/dashboard/profile",      icon: User },
-    { label: "KYC Verification", href: "/dashboard/kyc",          icon: ShieldCheck },
-    { label: "2FA Security",     href: "/dashboard/two-factor",   icon: Key },
+    { label: t.dashboard.overview,         href: "/dashboard",              icon: LayoutDashboard },
+    { label: t.dashboard.investments,      href: "/dashboard/investments",  icon: TrendingUp },
+    { label: t.dashboard.depositFunds,     href: "/dashboard/deposit",      icon: ArrowDownRight },
+    { label: t.dashboard.withdrawFunds,    href: "/dashboard/withdraw",     icon: ArrowUpRight },
+    { label: t.dashboard.transactions,     href: "/dashboard/transactions", icon: History },
+    { label: t.dashboard.referrals,        href: "/dashboard/referral",     icon: Users },
+    { label: t.dashboard.accountSettings,  href: "/dashboard/profile",      icon: User },
+    { label: t.dashboard.kycVerification,  href: "/dashboard/kyc",          icon: ShieldCheck },
+    { label: t.dashboard.twoFactor,        href: "/dashboard/two-factor",   icon: Key },
   ];
 
   const userInitial = (fullName || userEmail || "U").charAt(0).toUpperCase();
@@ -115,13 +118,16 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
             </span>
           </Link>
         </div>
-        <button
-          type="button"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
-        >
-          {mobileOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageSelector variant="compact" />
+          <button
+            type="button"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+          >
+            {mobileOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
+          </button>
+        </div>
       </div>
 
       {/* ── Sidebar ── */}
@@ -139,7 +145,7 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
               <div className="text-[15px] font-bold tracking-tight text-slate-900 leading-none">
                 Alpha<span className="text-indigo-600">@</span>ssets
               </div>
-              <div className="text-[10px] text-slate-400 font-medium mt-0.5">Investor Portal</div>
+              <div className="text-[10px] text-slate-400 font-medium mt-0.5">{t.dashboard.investorWorkspace}</div>
             </div>
           </Link>
           <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 text-slate-400 hover:text-slate-700">
@@ -181,7 +187,7 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-semibold text-indigo-700 bg-indigo-50/80 border border-indigo-100 hover:bg-indigo-100 transition-colors"
           >
             <Globe className="w-4 h-4 text-indigo-600" />
-            <span>Back to Main Site</span>
+            <span>{t.nav.backToSite}</span>
           </Link>
 
           {isAdmin && (
@@ -191,7 +197,7 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-semibold text-amber-700 bg-amber-50 border border-amber-100 hover:bg-amber-100 transition-colors"
             >
               <ShieldAlert className="w-4 h-4 text-amber-600" />
-              <span>Admin Portal</span>
+              <span>{t.dashboard.adminPortal}</span>
             </Link>
           )}
           <div className="px-3 py-2">
@@ -204,7 +210,7 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
+            <span>{t.dashboard.signOut}</span>
           </button>
         </div>
       </aside>
@@ -220,16 +226,18 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
               className="flex items-center gap-1.5 text-[13px] font-medium text-slate-500 hover:text-slate-900 transition-colors"
             >
               <Globe className="w-3.5 h-3.5" />
-              <span>Back to site</span>
+              <span>{t.nav.backToSite}</span>
             </Link>
             <span className="text-slate-200">|</span>
             <div className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-700">
               <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-              <span>Investor Workspace</span>
+              <span>{t.dashboard.investorWorkspace}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector variant="default" />
+
             {/* Notification Bell */}
             <div className="relative">
               <button

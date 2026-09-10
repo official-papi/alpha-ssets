@@ -381,8 +381,8 @@ BEGIN
         -- Update investment period counter & status
         UPDATE public.user_investments
         SET paid_periods = v_new_paid,
-            next_payout_at = CASE WHEN v_is_completed THEN NULL ELSE NOW() + INTERVAL '1 day' END,
-            status = CASE WHEN v_is_completed THEN 'completed' ELSE 'active' END,
+            next_payout_at = CASE WHEN v_is_completed THEN NOW() ELSE NOW() + INTERVAL '1 day' END,
+            status = CASE WHEN v_is_completed THEN 'completed'::investment_status ELSE 'active'::investment_status END,
             updated_at = NOW()
         WHERE id = v_inv.id;
 

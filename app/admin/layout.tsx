@@ -12,9 +12,13 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import LanguageSelector from "@/components/common/LanguageSelector";
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname  = usePathname();
   const router    = useRouter();
+  const { t }     = useLanguage();
   const [ready,      setReady]      = useState(false);
   const [adminEmail, setAdminEmail] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -133,22 +137,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   const navItems = [
-    { label: "Dashboard",         href: "/admin",                  icon: LayoutDashboard },
-    { label: "User Management",   href: "/admin/users",            icon: Users },
-    { label: "Deposit Requests",  href: "/admin/deposits",         icon: ArrowDownRight },
-    { label: "Payment Gateways",  href: "/admin/gateways",         icon: CreditCard },
-    { label: "Withdraw Requests", href: "/admin/withdrawals",      icon: ArrowUpRight },
-    { label: "Withdraw Methods",  href: "/admin/withdraw-methods", icon: Wallet },
-    { label: "Investment Plans",  href: "/admin/plans",            icon: TrendingUp },
-    { label: "Referral Levels",   href: "/admin/referrals",        icon: Share2 },
-    { label: "KYC Documents",     href: "/admin/kyc",              icon: FileCheck },
-    { label: "Financial Reports", href: "/admin/reports",          icon: FileText },
-    { label: "Blog & News CMS",   href: "/admin/blogs",            icon: Newspaper },
-    { label: "Landing Page CMS",  href: "/admin/cms",              icon: Layout },
-    { label: "Email Broadcast",   href: "/admin/email",            icon: Mail },
-    { label: "Staff & Roles",     href: "/admin/staff",            icon: ShieldCheck },
-    { label: "System Maintenance",href: "/admin/maintenance",      icon: Wrench },
-    { label: "System Settings",   href: "/admin/settings",         icon: Settings },
+    { label: t.admin.dashboard,         href: "/admin",                  icon: LayoutDashboard },
+    { label: t.admin.userManagement,   href: "/admin/users",            icon: Users },
+    { label: t.admin.depositRequests,  href: "/admin/deposits",         icon: ArrowDownRight },
+    { label: t.admin.paymentGateways,  href: "/admin/gateways",         icon: CreditCard },
+    { label: t.admin.withdrawRequests, href: "/admin/withdrawals",      icon: ArrowUpRight },
+    { label: t.admin.withdrawMethods,  href: "/admin/withdraw-methods", icon: Wallet },
+    { label: t.admin.investmentPlans,  href: "/admin/plans",            icon: TrendingUp },
+    { label: t.admin.referralLevels,   href: "/admin/referrals",        icon: Share2 },
+    { label: t.admin.kycDocuments,     href: "/admin/kyc",              icon: FileCheck },
+    { label: t.admin.financialReports, href: "/admin/reports",          icon: FileText },
+    { label: t.admin.blogNewsCms,   href: "/admin/blogs",            icon: Newspaper },
+    { label: t.admin.landingPageCms,  href: "/admin/cms",              icon: Layout },
+    { label: t.admin.emailBroadcast,   href: "/admin/email",            icon: Mail },
+    { label: t.admin.staffRoles,     href: "/admin/staff",            icon: ShieldCheck },
+    { label: t.admin.systemMaintenance,href: "/admin/maintenance",      icon: Wrench },
+    { label: t.admin.systemSettings,   href: "/admin/settings",         icon: Settings },
   ];
 
   const adminInitial = (adminEmail || "A").charAt(0).toUpperCase();
@@ -194,10 +198,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             Alpha<span className="text-indigo-600">@</span>ssets <span className="text-slate-400 font-medium">Admin</span>
           </span>
         </div>
-        <button onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50">
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageSelector variant="compact" />
+          <button onClick={() => setMobileOpen(!mobileOpen)}
+            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50">
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* ADMIN SIDEBAR */}
@@ -217,7 +224,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="text-[15px] font-bold text-slate-900 tracking-tight leading-none">
                 Alpha<span className="text-indigo-600">@</span>ssets
               </div>
-              <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Admin Control Panel</div>
+              <div className="text-[10px] text-amber-600 font-semibold mt-0.5">{t.admin.adminControlPanel}</div>
             </div>
           </div>
           <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 text-slate-400 hover:text-slate-700">
@@ -249,27 +256,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/" onClick={() => setMobileOpen(false)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-semibold text-indigo-700 bg-indigo-50/80 border border-indigo-100 hover:bg-indigo-100 transition-colors">
             <Globe className="w-4 h-4 text-indigo-600" />
-            <span>Back to Main Site</span>
+            <span>{t.admin.backToSite}</span>
           </Link>
 
           <Link href="/dashboard" onClick={() => setMobileOpen(false)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
             <ArrowLeft className="w-4 h-4 text-slate-500" />
-            <span>Return to Investor Dashboard</span>
+            <span>{t.admin.returnToDashboard}</span>
           </Link>
 
           <div className="px-3 py-2">
             <div className="text-[13px] font-semibold text-slate-900 truncate">{adminEmail}</div>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-              <span className="text-[11px] text-amber-600 font-semibold">Administrator</span>
+              <span className="text-[11px] text-amber-600 font-semibold">{t.admin.administrator}</span>
             </div>
           </div>
 
           <button onClick={handleLogout}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer">
             <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
+            <span>{t.dashboard.signOut}</span>
           </button>
         </div>
       </aside>
@@ -286,7 +293,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               className="hm-btn hm-btn-secondary text-[12px] py-1.5 px-3"
             >
               <Globe className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Back to Site</span>
+              <span>{t.admin.backToSite}</span>
             </Link>
             <button
               onClick={() => setSpotlightOpen(true)}
@@ -294,23 +301,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4" />
-                <span>Search investors, transactions…</span>
+                <span>{t.admin.searchPlaceholder}</span>
               </div>
               <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 text-slate-500 rounded text-[10px] font-mono">Ctrl K</kbd>
             </button>
           </div>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector variant="default" />
+
             <div className="flex items-center gap-1.5 text-[12px] text-amber-700 font-semibold bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span>System Live</span>
+              <span>{t.admin.systemLive}</span>
             </div>
             <div className="flex items-center gap-2.5 pl-3 border-l border-slate-100">
               <div className="w-7 h-7 rounded-full bg-amber-500 text-white font-bold text-[12px] flex items-center justify-center">
                 {adminInitial}
               </div>
               <div className="hidden lg:block text-left">
-                <div className="text-[13px] font-semibold text-slate-900 leading-tight">Administrator</div>
+                <div className="text-[13px] font-semibold text-slate-900 leading-tight">{t.admin.administrator}</div>
                 <div className="text-[11px] text-slate-400 truncate max-w-[120px]">{adminEmail}</div>
               </div>
             </div>

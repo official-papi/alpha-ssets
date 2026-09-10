@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: "High-performance automated yield generation and investor portal. Earn daily returns with full transparency.",
 };
 
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import GoogleTranslateBridge from "@/components/common/GoogleTranslateBridge";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -21,7 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${jakarta.variable} h-full`}
     >
       <body className="min-h-full flex flex-col font-[family-name:var(--font-jakarta)] antialiased">
-        {children}
+        <LanguageProvider>
+          <GoogleTranslateBridge />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

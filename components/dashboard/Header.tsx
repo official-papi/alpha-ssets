@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { TrendingUp, LogOut, ArrowDownRight, ArrowUpRight, Plus, ShieldAlert, Wallet } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import LanguageSelector from "@/components/common/LanguageSelector";
 
 interface DashboardHeaderProps {
   userEmail?: string;
@@ -26,6 +28,7 @@ export default function DashboardHeader({
   onOpenInvest,
 }: DashboardHeaderProps) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -81,7 +84,7 @@ export default function DashboardHeader({
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </span>
             <span className="block text-[10px] text-slate-400 font-bold tracking-widest uppercase">
-              Investor Workspace
+              {t.dashboard.investorWorkspace}
             </span>
           </div>
         </Link>
@@ -91,14 +94,14 @@ export default function DashboardHeader({
           <div className="flex items-center space-x-2 pr-3 border-r border-slate-200">
             <Wallet className="w-3.5 h-3.5 text-indigo-600" />
             <div>
-              <span className="text-[10px] text-slate-500 font-bold block uppercase">Deposit Wallet</span>
+              <span className="text-[10px] text-slate-500 font-bold block uppercase">{t.dashboard.depositWallet}</span>
               <span className="font-mono font-bold text-slate-900">${depositBalance.toFixed(2)}</span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
             <div>
-              <span className="text-[10px] text-slate-500 font-bold block uppercase">Interest Wallet</span>
+              <span className="text-[10px] text-slate-500 font-bold block uppercase">{t.dashboard.interestWallet}</span>
               <span className="font-mono font-bold text-emerald-600">${interestBalance.toFixed(2)}</span>
             </div>
           </div>
@@ -107,6 +110,9 @@ export default function DashboardHeader({
         {/* Quick Actions & Admin Switcher Button */}
         <div className="flex items-center gap-3">
 
+          {/* Language Selector */}
+          <LanguageSelector variant="default" />
+
           {/* Prominent Admin Switcher Button for Admins */}
           {isAdmin && (
             <Link
@@ -114,7 +120,7 @@ export default function DashboardHeader({
               className="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-700 font-extrabold text-xs flex items-center space-x-1.5 hover:bg-amber-100 transition-all shadow-sm cursor-pointer"
             >
               <ShieldAlert className="w-4 h-4 text-amber-600" />
-              <span className="hidden sm:inline">Admin Portal</span>
+              <span className="hidden sm:inline">{t.dashboard.adminPortal}</span>
             </Link>
           )}
 
@@ -124,7 +130,7 @@ export default function DashboardHeader({
               className="minimal-btn-primary px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 cursor-pointer shadow-md shadow-indigo-600/10"
             >
               <Plus className="w-4 h-4" />
-              <span>Invest Now</span>
+              <span>{t.dashboard.investNow}</span>
             </button>
 
             <button
@@ -132,7 +138,7 @@ export default function DashboardHeader({
               className="px-3.5 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center space-x-1 hover:bg-emerald-100 transition-all cursor-pointer"
             >
               <ArrowDownRight className="w-4 h-4" />
-              <span>Deposit</span>
+              <span>{t.dashboard.deposit}</span>
             </button>
 
             <button
@@ -140,7 +146,7 @@ export default function DashboardHeader({
               className="px-3.5 py-2 rounded-xl border border-sky-300 bg-sky-50 text-sky-700 font-bold text-xs flex items-center space-x-1 hover:bg-sky-100 transition-all cursor-pointer"
             >
               <ArrowUpRight className="w-4 h-4" />
-              <span>Withdraw</span>
+              <span>{t.dashboard.withdraw}</span>
             </button>
           </div>
 
@@ -155,7 +161,7 @@ export default function DashboardHeader({
             </div>
             <button
               onClick={handleLogout}
-              title="Sign Out"
+              title={t.dashboard.signOut}
               className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-slate-100 transition-all cursor-pointer"
             >
               <LogOut className="w-4.5 h-4.5" />
