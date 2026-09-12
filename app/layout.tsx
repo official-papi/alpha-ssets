@@ -22,8 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       className={`${jakarta.variable} h-full`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-jakarta)] antialiased">
+      <body
+        className="min-h-full flex flex-col font-[family-name:var(--font-jakarta)] antialiased"
+        suppressHydrationWarning
+      >
         <LanguageProvider>
           <GoogleTranslateBridge />
           {children}
