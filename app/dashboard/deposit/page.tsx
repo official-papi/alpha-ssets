@@ -7,6 +7,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import DepositModal from "@/components/dashboard/DepositModal";
 import { ArrowDownRight, Wallet, History, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 export default function DepositPage() {
   const [userEmail, setUserEmail] = useState("");
@@ -17,12 +18,12 @@ export default function DepositPage() {
 
   const fetchDepositData = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserEmail(user.email || "");
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setUserEmail(activeUser.email);
       const [profileRes, logsRes, gatewaysRes] = await Promise.all([
-        supabase.from("profiles").select("deposit_wallet").eq("id", user.id).single(),
-        supabase.from("deposits").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
+        supabase.from("profiles").select("deposit_wallet").eq("id", activeUser.id).single(),
+        supabase.from("deposits").select("*").eq("user_id", activeUser.id).order("created_at", { ascending: false }),
         supabase.from("gateways").select("*").eq("status", true),
       ]);
       if (profileRes.data) setDepositWallet(Number(profileRes.data.deposit_wallet || 0));

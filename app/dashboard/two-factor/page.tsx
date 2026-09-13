@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Key, ShieldCheck, Copy, Check, QrCode, AlertCircle, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 export default function TwoFactorPage() {
   const [userEmail, setUserEmail] = useState("");
@@ -22,21 +23,21 @@ export default function TwoFactorPage() {
 
   const fetchUserData = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserId(user.id);
-      setUserEmail(user.email || "");
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setUserId(activeUser.id);
+      setUserEmail(activeUser.email || "");
 
       const { data: profile } = await supabase
         .from("profiles")
         .select("is_2fa_enabled, two_factor_secret")
-        .eq("id", user.id)
+        .eq("id", activeUser.id)
         .maybeSingle();
 
       let activeSecret = profile?.two_factor_secret;
       if (!activeSecret) {
         // Generate a deterministic or random Base32 TOTP secret for the user
-        const hex = user.id.replace(/-/g, "").toUpperCase();
+        const hex = activeUser.id.replace(/-/g, "").toUpperCase();
         const base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         const chars = hex.substring(0, 16).split("");
         activeSecret = chars.map((c: string) => base32Chars[c.charCodeAt(0) % 32]).join("");
@@ -45,7 +46,7 @@ export default function TwoFactorPage() {
       setSecretKey(activeSecret);
       setIs2FaEnabled(profile?.is_2fa_enabled ?? false);
 
-      const label = encodeURIComponent(`AlphaAssets:${user.email || "Investor"}`);
+      const label = encodeURIComponent(`AlphaAssets:${activeUser.email || "Investor"}`);
       const issuer = encodeURIComponent("AlphaAssets");
       const totpUri = `otpauth://totp/${label}?secret=${activeSecret}&issuer=${issuer}`;
       setQrUrl(`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(totpUri)}`);

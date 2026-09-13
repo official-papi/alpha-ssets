@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { X, ArrowUpRight, AlertCircle, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 interface WithdrawModalProps {
   isOpen: boolean;
@@ -60,11 +61,11 @@ export default function WithdrawModal({
     setError(null);
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setError("Session expired."); setLoading(false); return; }
+    const activeUser = await getActiveUser(supabase);
+    if (!activeUser) { setError("Session expired."); setLoading(false); return; }
 
     const { data: rpcResult, error: rpcError } = await supabase.rpc("request_withdrawal_rpc", {
-      p_user_id: user.id,
+      p_user_id: activeUser.id,
       p_wallet_type: walletType,
       p_amount: numAmount,
       p_method_name: selectedMethod.name,
@@ -77,7 +78,7 @@ export default function WithdrawModal({
       const totalCharge = fixedCharge + percentCharge;
       const netAmount = numAmount - totalCharge;
       const { error: insertError } = await supabase.from("withdrawals").insert({
-        user_id: user.id, amount: numAmount, charge: totalCharge, net_amount: netAmount,
+        user_id: activeUser.id, amount: numAmount, charge: totalCharge, net_amount: netAmount,
         method_name: selectedMethod.name, account_details: { details: accountDetails }, status: "pending",
       });
       if (insertError) { setError(insertError.message || rpcResult?.message || "Failed to submit request."); setLoading(false); return; }

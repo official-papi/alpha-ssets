@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { User, Mail, Phone, Lock, CheckCircle2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeUserId, setActiveUserId] = useState("");
+  const [isImpersonating, setIsImpersonating] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
@@ -25,13 +28,15 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserEmail(user.email || "");
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setActiveUserId(activeUser.id);
+      setIsImpersonating(activeUser.isImpersonating);
+      setUserEmail(activeUser.email);
       const { data: profile } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq("id", activeUser.id)
         .single();
 
       if (profile) {
@@ -49,9 +54,7 @@ export default function ProfilePage() {
     setProfileMsg(null);
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
+    if (!activeUserId) {
       setProfileMsg({ text: "Authentication error", type: "error" });
       setSaving(false);
       return;
@@ -65,7 +68,7 @@ export default function ProfilePage() {
         phone,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", user.id);
+      .eq("id", activeUserId);
 
     if (error) {
       setProfileMsg({ text: error.message, type: "error" });
@@ -78,6 +81,11 @@ export default function ProfilePage() {
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPasswordMsg(null);
+
+    if (isImpersonating) {
+      setPasswordMsg({ text: "Password changes in Impersonation mode are disabled. Manage user passwords in Admin Panel.", type: "error" });
+      return;
+    }
 
     if (newPassword.length < 6) {
       setPasswordMsg({ text: "Password must be at least 6 characters long.", type: "error" });

@@ -7,6 +7,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import WithdrawModal from "@/components/dashboard/WithdrawModal";
 import { ArrowUpRight, History, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 export default function WithdrawPage() {
   const [userEmail, setUserEmail] = useState("");
@@ -17,16 +18,16 @@ export default function WithdrawPage() {
 
   const fetchWithdrawData = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserEmail(user.email || "");
-      const { data: profile } = await supabase.from("profiles").select("deposit_wallet, interest_wallet").eq("id", user.id).single();
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setUserEmail(activeUser.email);
+      const { data: profile } = await supabase.from("profiles").select("deposit_wallet, interest_wallet").eq("id", activeUser.id).single();
       if (profile) {
         setDepositWallet(Number(profile.deposit_wallet || 0));
         setInterestWallet(Number(profile.interest_wallet || 0));
       }
 
-      const { data: logs } = await supabase.from("withdrawals").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+      const { data: logs } = await supabase.from("withdrawals").select("*").eq("user_id", activeUser.id).order("created_at", { ascending: false });
       if (logs) setWithdrawLogs(logs);
     }
   };

@@ -102,8 +102,8 @@ export default function DashboardPage() {
     if (profileRes.data) {
       setProfile({
         id: profileRes.data.id,
-        email: user.email,
-        full_name: profileRes.data.full_name || user.user_metadata?.full_name || "Investor",
+        email: profileRes.data.email || (typeof window !== "undefined" ? sessionStorage.getItem("impersonate_user_email") : "") || user.email,
+        full_name: profileRes.data.full_name || (impersonatedId ? "Investor" : user.user_metadata?.full_name) || "Investor",
         deposit_wallet: Number(profileRes.data.deposit_wallet || 0),
         interest_wallet: Number(profileRes.data.interest_wallet || 0),
         referral_code: profileRes.data.referral_code || "REF-789",
@@ -201,25 +201,6 @@ export default function DashboardPage() {
   return (
     <DashboardLayout userEmail={profile?.email}>
       <div className="space-y-8">
-
-        {isImpersonating && (
-          <div className="bg-amber-50/80 backdrop-blur-md border border-amber-200/80 rounded-2xl p-4 flex items-center justify-between shadow-xs">
-            <div className="flex items-center space-x-2 text-amber-900 text-xs font-bold">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-              <span>Admin Mode: You are viewing this dashboard as investor ({profile?.email})</span>
-            </div>
-            <button
-              onClick={() => {
-                sessionStorage.removeItem("impersonate_user_id");
-                window.location.href = "/admin/users";
-              }}
-              className="px-3 py-1.5 rounded-xl bg-amber-600 text-white text-xs font-bold hover:bg-amber-700 transition-colors cursor-pointer"
-            >
-              Exit to Admin
-            </button>
-          </div>
-        )}
-
         {/* Glassmorphism Command Banner */}
         <div className="relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-emerald-500/20 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />

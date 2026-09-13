@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, TrendingUp, AlertCircle, Loader2, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 interface InvestmentPlan {
   id: string;
@@ -58,11 +59,11 @@ export default function NewInvestmentModal({
     setError(null);
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setError("Session expired. Please log in again."); setLoading(false); return; }
+    const activeUser = await getActiveUser(supabase);
+    if (!activeUser) { setError("Session expired. Please log in again."); setLoading(false); return; }
 
     const { data: rpcResult, error: rpcError } = await supabase.rpc("process_investment_rpc", {
-      p_user_id: user.id,
+      p_user_id: activeUser.id,
       p_plan_id: selectedPlan.id,
       p_amount: numAmount,
       p_wallet_type: walletType,

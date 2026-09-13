@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Users, Copy, Check, Share2, Award } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 export default function ReferralPage() {
   const [userEmail, setUserEmail] = useState("");
@@ -15,14 +16,14 @@ export default function ReferralPage() {
 
   const fetchReferralData = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserEmail(user.email || "");
-      const { data: profile } = await supabase.from("profiles").select("referral_code").eq("id", user.id).single();
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setUserEmail(activeUser.email);
+      const { data: profile } = await supabase.from("profiles").select("referral_code").eq("id", activeUser.id).single();
       if (profile) setRefCode(profile.referral_code || "");
 
       // Query level 1 referrals
-      const { data: refs } = await supabase.from("profiles").select("id, full_name, created_at").eq("referred_by", user.id);
+      const { data: refs } = await supabase.from("profiles").select("id, full_name, created_at").eq("referred_by", activeUser.id);
       if (refs) setReferralTree(refs);
     }
   };

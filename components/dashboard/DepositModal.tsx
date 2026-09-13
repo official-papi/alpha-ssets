@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, ArrowDownRight, Copy, Check, AlertCircle, Loader2, QrCode } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 interface DepositModalProps {
   isOpen: boolean;
@@ -52,8 +53,8 @@ export default function DepositModal({ isOpen, gateways, onClose, onSuccess }: D
     setError(null);
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setError("Session expired. Please log in again."); setLoading(false); return; }
+    const activeUser = await getActiveUser(supabase);
+    if (!activeUser) { setError("Session expired. Please log in again."); setLoading(false); return; }
 
     let finalProofUrl = proofUrlInput;
     if (proofFile) {
@@ -67,7 +68,7 @@ export default function DepositModal({ isOpen, gateways, onClose, onSuccess }: D
         setLoading(false); return;
       }
       const fileExt = proofFile.name.split(".").pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      const fileName = `${activeUser.id}/${Date.now()}.${fileExt}`;
       const { data: uploadData, error: uploadErr } = await supabase.storage
         .from("deposit-proofs")
         .upload(fileName, proofFile, { upsert: true });
@@ -83,7 +84,7 @@ export default function DepositModal({ isOpen, gateways, onClose, onSuccess }: D
     const finalAmount = numAmount - totalCharge;
 
     const { error: insertError } = await supabase.from("deposits").insert({
-      user_id: user.id,
+      user_id: activeUser.id,
       amount: numAmount,
       charge: totalCharge,
       final_amount: finalAmount,

@@ -192,9 +192,10 @@ export default function AdminUsersPage() {
                           type="button"
                           onClick={() => {
                             sessionStorage.setItem("impersonate_user_id", user.id);
+                            sessionStorage.setItem("impersonate_user_email", user.email || "");
                             window.location.href = "/dashboard";
                           }}
-                          className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px] font-bold transition-all cursor-pointer whitespace-nowrap"
+                          className="px-2 py-1 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 text-[11px] font-bold transition-all cursor-pointer whitespace-nowrap"
                           title="Impersonate & view dashboard as this user"
                         >
                           Login as User

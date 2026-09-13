@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { ShieldCheck, Upload, CheckCircle2, AlertCircle, Clock, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 export default function KycPage() {
   const [userEmail, setUserEmail] = useState("");
@@ -21,13 +22,13 @@ export default function KycPage() {
 
   const fetchKycData = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserEmail(user.email || "");
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setUserEmail(activeUser.email);
       const { data: requests } = await supabase
         .from("kyc_requests")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", activeUser.id)
         .order("submitted_at", { ascending: false });
 
       if (requests) setKycRequests(requests);
@@ -43,8 +44,8 @@ export default function KycPage() {
     setMsg(null);
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const activeUser = await getActiveUser(supabase);
+    if (!activeUser) {
       setMsg({ text: "Authentication error. Please log in again.", type: "error" });
       setSubmitting(false);
       return;
@@ -67,7 +68,7 @@ export default function KycPage() {
       }
 
       const fileExt = frontFile.name.split(".").pop();
-      const fileName = `${user.id}/front_${Date.now()}.${fileExt}`;
+      const fileName = `${activeUser.id}/front_${Date.now()}.${fileExt}`;
       const { data: uploadData, error: uploadErr } = await supabase.storage
         .from("kyc-documents")
         .upload(fileName, frontFile, { upsert: true });
@@ -91,7 +92,7 @@ export default function KycPage() {
       }
 
       const fileExt = backFile.name.split(".").pop();
-      const fileName = `${user.id}/back_${Date.now()}.${fileExt}`;
+      const fileName = `${activeUser.id}/back_${Date.now()}.${fileExt}`;
       const { data: uploadData, error: uploadErr } = await supabase.storage
         .from("kyc-documents")
         .upload(fileName, backFile, { upsert: true });
@@ -109,7 +110,7 @@ export default function KycPage() {
     }
 
     const { error } = await supabase.from("kyc_requests").insert({
-      user_id: user.id,
+      user_id: activeUser.id,
       document_type: docType,
       document_number: docNumber,
       document_front_url: finalFrontUrl,

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { History, Filter, FileText, Printer, X, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 export default function TransactionsPage() {
   const [userEmail, setUserEmail] = useState("");
@@ -15,10 +16,10 @@ export default function TransactionsPage() {
 
   const fetchTransactions = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserEmail(user.email || "");
-      let query = supabase.from("wallet_transactions").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setUserEmail(activeUser.email);
+      let query = supabase.from("wallet_transactions").select("*").eq("user_id", activeUser.id).order("created_at", { ascending: false });
       if (filterType !== "all") {
         query = query.eq("type", filterType);
       }

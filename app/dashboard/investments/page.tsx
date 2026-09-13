@@ -9,6 +9,7 @@ import NewInvestmentModal from "@/components/dashboard/NewInvestmentModal";
 import InvestmentDetailsModal from "@/components/dashboard/InvestmentDetailsModal";
 import { Plus, Calculator, TrendingUp, Sparkles, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getActiveUser } from "@/lib/auth/activeUser";
 
 const DEFAULT_PLANS = [
   { id: "plan-1", name: "Regular Package", min_amount: 500, max_amount: 2000, interest_rate: 2.5, return_type: "weekly", repeat_time: 8 },
@@ -37,9 +38,9 @@ export default function InvestmentsPage() {
 
   const fetchInvestments = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserEmail(user.email || "");
+    const activeUser = await getActiveUser(supabase);
+    if (activeUser) {
+      setUserEmail(activeUser.email);
 
       // Auto-process matured ROI payouts on DB
       try {
@@ -48,7 +49,7 @@ export default function InvestmentsPage() {
         console.error("Auto payout RPC error:", err);
       }
 
-      const { data: profile } = await supabase.from("profiles").select("deposit_wallet, interest_wallet").eq("id", user.id).single();
+      const { data: profile } = await supabase.from("profiles").select("deposit_wallet, interest_wallet").eq("id", activeUser.id).single();
       if (profile) {
         setDepositWallet(Number(profile.deposit_wallet || 0));
         setInterestWallet(Number(profile.interest_wallet || 0));
@@ -57,7 +58,7 @@ export default function InvestmentsPage() {
       const { data: invs } = await supabase
         .from("user_investments")
         .select("*, investment_plans(name, badge, capital_back)")
-        .eq("user_id", user.id)
+        .eq("user_id", activeUser.id)
         .order("created_at", { ascending: false });
 
       if (invs) {

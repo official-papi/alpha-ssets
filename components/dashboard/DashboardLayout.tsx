@@ -11,19 +11,22 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSelector from "@/components/common/LanguageSelector";
+import { getActiveUser, exitImpersonation } from "@/lib/auth/activeUser";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
   userEmail?: string;
 }
 
-export default function DashboardLayout({ children, userEmail }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, userEmail: initialEmail }: DashboardLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useLanguage();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isImpersonating, setIsImpersonating] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [fullName, setFullName] = useState("");
+  const [userEmail, setUserEmail] = useState(initialEmail || "");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [notifications, setNotifications] = useState<any[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -32,29 +35,33 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
   useEffect(() => {
     const fetchUserData = async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("full_name, role, avatar_url")
-          .eq("id", user.id)
-          .single();
+      const activeUser = await getActiveUser(supabase);
+      if (activeUser) {
+        setUserEmail(activeUser.email);
+        setFullName(activeUser.full_name);
+        setAvatarUrl(activeUser.avatar_url || "");
+        setIsImpersonating(activeUser.isImpersonating);
 
-        if (profile) {
-          setFullName(profile.full_name || user.user_metadata?.full_name || "");
-          setAvatarUrl(profile.avatar_url || "");
-        }
-
-        // Check JWT metadata first (no RLS dependency), then DB role
-        const metaRole = user.user_metadata?.role as string | undefined;
-        if (metaRole === "admin" || profile?.role === "admin") {
+        // Check if logged-in user is admin
+        const adminUser = activeUser.adminUser;
+        const metaRole = adminUser?.user_metadata?.role as string | undefined;
+        if (metaRole === "admin") {
           setIsAdmin(true);
+        } else {
+          const { data: adminProfile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", adminUser.id)
+            .single();
+          if (adminProfile?.role === "admin") {
+            setIsAdmin(true);
+          }
         }
 
         const { data: notifs } = await supabase
           .from("notifications")
           .select("*")
-          .eq("user_id", user.id)
+          .eq("user_id", activeUser.id)
           .order("created_at", { ascending: false })
           .limit(10);
 
@@ -65,7 +72,7 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
       }
     };
     fetchUserData();
-  }, []);
+  }, [initialEmail]);
 
   const handleMarkNotificationsRead = async () => {
     setNotifOpen(!notifOpen);
@@ -294,6 +301,27 @@ export default function DashboardLayout({ children, userEmail }: DashboardLayout
             </Link>
           </div>
         </header>
+
+        {isImpersonating && (
+          <div className="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2.5 sm:px-6 flex flex-wrap items-center justify-between gap-3 text-xs text-amber-900 flex-shrink-0 z-30">
+            <div className="flex items-center gap-2 font-medium">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+              </span>
+              <span>
+                <strong>Admin Impersonation Mode:</strong> Viewing as <strong>{fullName || "Investor"}</strong> ({userEmail})
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={exitImpersonation}
+              className="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
+            >
+              Exit to Admin
+            </button>
+          </div>
+        )}
 
         <main className="flex-1 min-w-0 overflow-y-auto p-5 md:p-8">
           {children}
