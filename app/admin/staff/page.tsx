@@ -45,13 +45,26 @@ export default function AdminStaffPage() {
       return;
     }
 
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ role: "admin" })
-      .eq("id", user.id);
+    // Try RPC first for complete JWT metadata & profile synchronization
+    const { data: rpcData, error: rpcError } = await supabase.rpc("admin_set_user_role_rpc", {
+      p_user_id: user.id,
+      p_role: "admin",
+    });
 
-    if (updateError) {
-      setMsg({ text: updateError.message, type: "error" });
+    if (rpcError || (rpcData && !rpcData.success)) {
+      // Fallback direct update
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ role: "admin" })
+        .eq("id", user.id);
+
+      if (updateError) {
+        setMsg({ text: updateError.message, type: "error" });
+      } else {
+        setMsg({ text: `${user.email} promoted to Admin role successfully!`, type: "success" });
+        setNewEmail("");
+        fetchAdmins();
+      }
     } else {
       setMsg({ text: `${user.email} promoted to Admin role successfully!`, type: "success" });
       setNewEmail("");
@@ -62,7 +75,13 @@ export default function AdminStaffPage() {
 
   const handleDemoteAdmin = async (userId: string) => {
     const supabase = createClient();
-    await supabase.from("profiles").update({ role: "user" }).eq("id", userId);
+    const { error: rpcError } = await supabase.rpc("admin_set_user_role_rpc", {
+      p_user_id: userId,
+      p_role: "user",
+    });
+    if (rpcError) {
+      await supabase.from("profiles").update({ role: "user" }).eq("id", userId);
+    }
     fetchAdmins();
   };
 
