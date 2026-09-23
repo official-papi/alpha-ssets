@@ -73,12 +73,12 @@ export default function LanguageSelector({
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
           aria-label="Select Language"
-          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 font-medium text-xs transition-all cursor-pointer"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#093A3E]/70 hover:bg-[#093A3E] border border-[#3AAFB9]/40 text-[#d9eef0] font-medium text-xs transition-all cursor-pointer shadow-xs"
         >
-          <Globe className="w-3.5 h-3.5 text-indigo-400" />
+          <Globe className="w-3.5 h-3.5 text-[#3AAFB9]" />
           <span className="text-sm leading-none">{currentLang.flag}</span>
           <span>{currentLang.nativeName}</span>
-          <ChevronDown className={`w-3 h-3 text-slate-400 ml-1 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+          <ChevronDown className={`w-3 h-3 text-[#3AAFB9] ml-1 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
         </button>
       )}
 

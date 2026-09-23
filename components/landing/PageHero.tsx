@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronRight, Sparkles, LucideIcon, ArrowRight, ShieldCheck, Zap } from "lucide-react";
 
 interface StatItem {
@@ -38,14 +39,23 @@ export default function PageHero({
   hudContent,
 }: PageHeroProps) {
   return (
-    <section className="relative py-16 sm:py-24 overflow-hidden border-b border-white/80">
+    <section className="relative py-16 sm:py-24 overflow-hidden border-b border-zinc-200/70 bg-[#fafafa]">
       
-      {/* Geometric Grid Canvas Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+      {/* Background Architectural Texture Image */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+        <Image
+          src="/images/subpage-hero-bg.jpg"
+          alt="Architectural Backdrop"
+          fill
+          priority
+          className="object-cover object-center opacity-25 mix-blend-luminosity filter contrast-125"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fafafa] via-[#fafafa]/90 to-[#fafafa]/75" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#fafafa]/50 to-[#fafafa]" />
+      </div>
 
-      {/* Ambient Glass Blur Orbs */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Geometric Grid Canvas Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(#e4e4e7_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -55,51 +65,51 @@ export default function PageHero({
             
             {/* Breadcrumb & Live Status Bar */}
             <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-white/90 text-xs text-slate-500 font-bold shadow-2xs">
-                <Link href="/" className="hover:text-indigo-600 transition-colors">Home</Link>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                <span className="text-indigo-600 font-extrabold">{breadcrumb}</span>
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white border border-zinc-200 text-xs text-zinc-500 font-medium shadow-xs">
+                <Link href="/" className="hover:text-zinc-950 transition-colors">Home</Link>
+                <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+                <span className="text-zinc-950 font-semibold">{breadcrumb}</span>
               </div>
 
-              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-50/80 backdrop-blur-md border border-emerald-200/80 text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider">
+              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[10px] font-semibold text-emerald-700 uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Live System V2.4</span>
               </div>
             </div>
 
             {/* Category Identity Badge */}
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-indigo-50/80 backdrop-blur-md border border-indigo-200/80 text-indigo-700 text-xs font-extrabold uppercase tracking-wider shadow-2xs">
-              <Icon className="w-4 h-4 text-indigo-600" />
+            <div className="hm-section-label">
+              <Icon className="w-3.5 h-3.5 text-zinc-900" />
               <span>{badge}</span>
             </div>
 
             {/* Main Architectural H1 Title */}
-            <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.12]">
+            <h1 className="text-3xl sm:text-5xl font-bold text-zinc-950 tracking-tight leading-[1.12]">
               {title}{" "}
               {titleHighlight && (
-                <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-800 bg-clip-text text-transparent">
+                <span className="hm-gradient-text">
                   {titleHighlight}
                 </span>
               )}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-zinc-600 font-normal leading-relaxed max-w-xl">
               {subtitle}
             </p>
 
             {/* Action Bar */}
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <Link
                 href={ctaHref}
-                className="minimal-btn-primary px-7 py-3.5 rounded-xl text-xs font-extrabold flex items-center space-x-2 shadow-lg shadow-indigo-600/20 cursor-pointer"
+                className="minimal-btn-primary px-7 py-3 rounded-xl text-xs font-medium flex items-center space-x-2 shadow-xs cursor-pointer"
               >
                 <span>{ctaText}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/plans"
-                className="px-6 py-3.5 rounded-xl text-xs font-extrabold bg-white/80 backdrop-blur-md border border-slate-200/80 text-slate-800 hover:bg-white transition-all shadow-2xs"
+                className="px-6 py-3 rounded-xl text-xs font-medium bg-white border border-zinc-200 text-zinc-800 hover:bg-zinc-50 transition-all shadow-xs"
               >
                 View Investment Tiers
               </Link>
@@ -107,11 +117,11 @@ export default function PageHero({
 
             {/* Institutional Stats Counter Bar */}
             {stats && stats.length > 0 && (
-              <div className="pt-6 border-t border-slate-200/80 grid grid-cols-3 gap-4 max-w-lg">
+              <div className="pt-6 border-t border-zinc-200/80 grid grid-cols-3 gap-4 max-w-lg">
                 {stats.map((s, i) => (
-                  <div key={i} className="bg-white/60 backdrop-blur-md border border-white/80 rounded-xl p-3 shadow-2xs">
-                    <div className="text-base font-black font-mono text-slate-900">{s.value}</div>
-                    <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mt-0.5">{s.label}</div>
+                  <div key={i} className="bg-white border border-zinc-200/80 rounded-xl p-3 shadow-xs">
+                    <div className="text-base font-bold font-mono text-zinc-950">{s.value}</div>
+                    <div className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider mt-0.5">{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -121,22 +131,19 @@ export default function PageHero({
 
           {/* RIGHT ARCHITECTURAL HUD COLUMN (5 Columns) */}
           <div className="lg:col-span-5 relative">
-            
-            {/* Ambient Background Halo */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-emerald-500/20 rounded-3xl blur-xl opacity-80" />
 
-            {/* Frosted Glass HUD Container */}
-            <div className="relative bg-white/80 backdrop-blur-2xl border border-white/90 rounded-2xl p-6 shadow-2xl shadow-slate-900/10 space-y-4">
+            {/* Frosted HUD Container */}
+            <div className="relative bg-white border border-zinc-200 rounded-2xl p-6 shadow-xs space-y-4">
               
               {/* HUD Header */}
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
                 <div className="flex items-center space-x-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
-                  <span className="text-[10px] font-mono font-extrabold text-slate-400 uppercase ml-2">ARCHITECTURAL HUD</span>
+                  <div className="w-2 h-2 rounded-full bg-zinc-300 inline-block" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-300 inline-block" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-300 inline-block" />
+                  <span className="text-[10px] font-mono font-medium text-zinc-400 uppercase ml-2">SYSTEM HUD</span>
                 </div>
-                <span className="text-[10px] font-extrabold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-full border border-indigo-200/80">
+                <span className="text-[10px] font-medium text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-full border border-zinc-200">
                   REALTIME SECURE
                 </span>
               </div>
@@ -145,29 +152,29 @@ export default function PageHero({
               {hudContent ? (
                 hudContent
               ) : (
-                <div className="space-y-3 py-2 text-xs">
-                  <div className="p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl flex items-center justify-between">
-                    <span className="text-slate-500 font-medium">Protocol Encryption</span>
-                    <span className="font-mono font-extrabold text-emerald-600">256-Bit SSL</span>
+                <div className="space-y-2 py-2 text-xs">
+                  <div className="p-3 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center justify-between">
+                    <span className="text-zinc-500 font-normal">Protocol Encryption</span>
+                    <span className="font-mono font-semibold text-emerald-600">256-Bit SSL</span>
                   </div>
-                  <div className="p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl flex items-center justify-between">
-                    <span className="text-slate-500 font-medium">Execution Engine</span>
-                    <span className="font-mono font-extrabold text-indigo-600">Automated Edge</span>
+                  <div className="p-3 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center justify-between">
+                    <span className="text-zinc-500 font-normal">Execution Engine</span>
+                    <span className="font-mono font-semibold text-zinc-950">Automated Edge</span>
                   </div>
-                  <div className="p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl flex items-center justify-between">
-                    <span className="text-slate-500 font-medium">Payout Guarantee</span>
-                    <span className="font-mono font-extrabold text-slate-900">Double-Entry Ledger</span>
+                  <div className="p-3 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center justify-between">
+                    <span className="text-zinc-500 font-normal">Payout Guarantee</span>
+                    <span className="font-mono font-semibold text-zinc-950">Double-Entry Ledger</span>
                   </div>
                 </div>
               )}
 
               {/* HUD Footer Seal */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-extrabold text-slate-500">
+              <div className="pt-3 border-t border-zinc-100 flex items-center justify-between text-[10px] font-medium text-zinc-500">
                 <div className="flex items-center space-x-1.5 text-emerald-600">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Audited Smart Protocol</span>
                 </div>
-                <span className="font-mono text-slate-400">ALPHA-ASSETS</span>
+                <span className="font-mono text-zinc-400">ALPHA-ASSETS</span>
               </div>
 
             </div>

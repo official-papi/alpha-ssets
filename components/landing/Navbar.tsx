@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { BarChart2, ArrowRight, Menu, X, LayoutDashboard, Loader2, Home } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import TradingViewTicker from "@/components/landing/TradingViewTicker";
 import LanguageSelector from "@/components/common/LanguageSelector";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -43,16 +42,16 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-100">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#d4e7e9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center">
-            <BarChart2 className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-xl bg-[#093A3E] flex items-center justify-center shadow-xs">
+            <BarChart2 className="w-4 h-4 text-[#3AAFB9]" />
           </div>
-          <span className="text-[17px] font-bold tracking-tight text-slate-900">
-            Alpha<span className="text-indigo-600">@</span>ssets
+          <span className="text-[16px] font-extrabold tracking-tight text-[#001011]">
+            Alpha<span className="text-[#3AAFB9]">@</span>ssets
           </span>
         </Link>
 
@@ -64,8 +63,8 @@ export default function Navbar() {
               href={item.href}
               className={`text-[13px] font-medium transition-colors ${
                 pathname === item.href
-                  ? "text-indigo-600 font-semibold"
-                  : "text-slate-500 hover:text-slate-900"
+                  ? "text-zinc-950 font-semibold"
+                  : "text-zinc-500 hover:text-zinc-900"
               }`}
             >
               {item.label}
@@ -78,7 +77,7 @@ export default function Navbar() {
           <LanguageSelector variant="default" />
 
           {authLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+            <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
           ) : user ? (
             /* ── Logged In ── */
             <Link
@@ -91,7 +90,7 @@ export default function Navbar() {
           ) : (
             /* ── Guest ── */
             <>
-              <Link href="/login" className="text-[13px] font-medium text-slate-500 hover:text-slate-900 transition-colors px-3 py-2">
+              <Link href="/login" className="text-[13px] font-medium text-zinc-600 hover:text-zinc-950 transition-colors px-3 py-2">
                 {t.nav.signIn}
               </Link>
               <Link
@@ -110,7 +109,7 @@ export default function Navbar() {
           <LanguageSelector variant="compact" />
           <button
             onClick={() => setOpen(!open)}
-            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 cursor-pointer"
+            className="p-1.5 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-50 cursor-pointer"
           >
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -119,14 +118,14 @@ export default function Navbar() {
 
       {/* Mobile drawer */}
       {open && (
-        <div className="md:hidden bg-white border-t border-slate-100 px-4 py-4 space-y-1 shadow-lg">
+        <div className="md:hidden bg-white border-t border-zinc-200/70 px-4 py-4 space-y-1 shadow-lg">
           {pathname !== "/" && (
             <Link
               href="/"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2 py-2 px-3 text-[13px] font-bold text-indigo-700 bg-indigo-50/90 rounded-lg mb-2 border border-indigo-100"
+              className="flex items-center gap-2 py-2 px-3 text-[13px] font-semibold text-zinc-900 bg-zinc-100 rounded-lg mb-2 border border-zinc-200"
             >
-              <Home className="w-4 h-4 text-indigo-600" />
+              <Home className="w-4 h-4 text-zinc-700" />
               <span>← {t.nav.backToSite}</span>
             </Link>
           )}
@@ -138,14 +137,14 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className={`block py-2.5 px-3 text-[14px] font-medium rounded-lg ${
                 pathname === item.href
-                  ? "bg-indigo-50 text-indigo-700 font-bold"
-                  : "text-slate-600 hover:bg-slate-50"
+                  ? "bg-zinc-100 text-zinc-950 font-semibold"
+                  : "text-zinc-600 hover:bg-zinc-50"
               }`}
             >
               {item.label}
             </Link>
           ))}
-          <div className="pt-3 flex gap-2 border-t border-slate-100 mt-2">
+          <div className="pt-3 flex gap-2 border-t border-zinc-100 mt-2">
             {user ? (
               <Link
                 href="/dashboard"
@@ -158,7 +157,7 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login" onClick={() => setOpen(false)}
-                  className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-[13px] font-medium text-slate-700 hover:bg-slate-50 transition-all">
+                  className="flex-1 text-center py-2.5 rounded-xl border border-zinc-200 text-[13px] font-medium text-zinc-800 hover:bg-zinc-50 transition-all">
                   {t.nav.signIn}
                 </Link>
                 <Link href="/register" onClick={() => setOpen(false)}
@@ -170,9 +169,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-
-      {/* Integrated Sticky TradingView Ticker */}
-      <TradingViewTicker />
     </header>
   );
 }

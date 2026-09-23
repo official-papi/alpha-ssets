@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Check, ArrowRight, Zap } from "lucide-react";
+import { Check, ArrowRight, Zap, ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 const DEFAULT_PLANS = [
@@ -45,6 +45,17 @@ const DEFAULT_PLANS = [
 
 export default function PlanCards() {
   const [plans, setPlans] = useState<any[]>(DEFAULT_PLANS);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (dir: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 360;
+      scrollRef.current.scrollBy({
+        left: dir === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -90,110 +101,137 @@ export default function PlanCards() {
   }, []);
 
   return (
-    <section id="plans" className="py-24 bg-[#f8fafc] border-b border-slate-100">
+    <section id="plans" className="py-24 border-b border-[#d4e7e9] relative bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="flex justify-center mb-4">
-            <div className="hm-section-label">
-              <Zap className="w-3.5 h-3.5" />
-              Investment Opportunities
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border border-[#c8e2e5] bg-[#f0f8f9] text-[#093A3E] mb-3 shadow-2xs">
+              <Zap className="w-3.5 h-3.5 text-[#3AAFB9]" />
+              <span>Investment Opportunities</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#001011] tracking-tight">
+              Choose Your <span className="text-[#093A3E]">Investment Plan</span>
+            </h2>
+            <p className="text-[#2f494c] text-sm mt-2 font-normal max-w-xl">
+              Select a tailored investment strategy that fits your budget and earning goals.
+            </p>
+          </div>
+
+          {/* Carousel Navigation Controls */}
+          <div className="flex items-center gap-3 self-start md:self-end">
+            <span className="text-xs text-[#5e7e83] font-medium hidden sm:inline">
+              Swipe or use controls to explore tiers →
+            </span>
+            <div className="flex items-center space-x-1.5 bg-[#f0f8f9] p-1 rounded-xl border border-[#c8e2e5]">
+              <button
+                type="button"
+                onClick={() => handleScroll("left")}
+                aria-label="Scroll left"
+                className="w-8 h-8 rounded-lg bg-white text-[#093A3E] flex items-center justify-center border border-[#d4e7e9] shadow-2xs hover:bg-[#f0f8f9] transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleScroll("right")}
+                aria-label="Scroll right"
+                className="w-8 h-8 rounded-lg bg-white text-[#093A3E] flex items-center justify-center border border-[#d4e7e9] shadow-2xs hover:bg-[#f0f8f9] transition-colors cursor-pointer"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight">
-            Choose Your{" "}
-            <span className="hm-gradient-text">Investment Plan</span>
-          </h2>
-          <p className="text-slate-500 text-[15px] mt-4 leading-relaxed">
-            Select a tailored investment strategy that fits your budget and earning goals.
-          </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {/* Horizontal Scrolling Cards Container */}
+        <div
+          ref={scrollRef}
+          className="flex gap-5 overflow-x-auto pb-6 pt-3 px-1 scroll-smooth snap-x snap-mandatory scrollbar-none"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           {plans.map((plan, i) => (
             <div
               key={i}
-              className={`relative rounded-2xl p-8 flex flex-col transition-all duration-200 ${
+              className={`w-[300px] sm:w-[340px] flex-shrink-0 snap-start relative rounded-2xl p-7 flex flex-col justify-between transition-all duration-200 ${
                 plan.featured
-                  ? "bg-indigo-600 shadow-2xl shadow-indigo-600/25 scale-[1.02] border border-indigo-500"
-                  : "bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-200"
+                  ? "bg-[#001011] text-white shadow-xl border border-[#093A3E]"
+                  : "bg-white border border-[#d4e7e9] shadow-xs hover:border-[#3AAFB9]"
               }`}
             >
               {/* Badge */}
               {plan.featured && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-white text-indigo-700 font-bold text-[11px] uppercase tracking-widest px-4 py-1.5 rounded-full shadow-md border border-indigo-100">
+                <div className="absolute -top-3 left-6 bg-[#093A3E] text-[#3AAFB9] font-bold text-[10px] uppercase tracking-wider px-3 py-0.5 rounded-full shadow-xs border border-[#3AAFB9]/40">
                   ⚡ {plan.badge}
                 </div>
               )}
               {!plan.featured && (
                 <div className="absolute top-5 right-5">
-                  <span className={`hm-badge hm-badge-brand text-[10px]`}>{plan.badge}</span>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#f0f8f9] text-[#093A3E] border border-[#c8e2e5]">{plan.badge}</span>
                 </div>
               )}
 
-              {/* Plan Name */}
-              <div className="mb-6">
-                <h3 className={`text-[18px] font-bold mb-4 ${plan.featured ? "text-white" : "text-slate-900"}`}>
+              {/* Plan Name & Rate */}
+              <div>
+                <h3 className={`text-[17px] font-bold mb-3 ${plan.featured ? "text-white" : "text-[#001011]"}`}>
                   {plan.name}
                 </h3>
 
-                {/* Rate */}
-                <div className={`rounded-xl p-4 ${plan.featured ? "bg-white/15 border border-white/20" : "bg-slate-50 border border-slate-100"}`}>
+                <div className={`rounded-xl p-3.5 mb-5 ${plan.featured ? "bg-[#041819] border border-[#093A3E]" : "bg-[#f8fcfc] border border-[#d4e7e9]"}`}>
                   <div className="flex items-baseline gap-1">
-                    <span className={`text-5xl font-bold font-mono ${plan.featured ? "text-white" : "text-indigo-600"}`}>
+                    <span className={`text-3xl sm:text-4xl font-black font-mono tracking-tight ${plan.featured ? "text-[#3AAFB9]" : "text-[#001011]"}`}>
                       {plan.rate}
                     </span>
-                    <span className={`text-[13px] font-medium ${plan.featured ? "text-indigo-200" : "text-slate-400"}`}>
-                      / week
+                    <span className={`text-xs font-medium ${plan.featured ? "text-[#b5dfe3]" : "text-[#5e7e83]"}`}>
+                      / {plan.interval?.toLowerCase() || "week"}
                     </span>
                   </div>
-                  <div className={`text-[12px] mt-1.5 font-medium ${plan.featured ? "text-indigo-200" : "text-slate-500"}`}>
+                  <div className={`text-[11px] mt-1 font-normal ${plan.featured ? "text-[#b5dfe3]" : "text-[#5e7e83]"}`}>
                     {plan.cycle} · Capital Returned ✓
                   </div>
                 </div>
-              </div>
 
-              {/* Min/Max */}
-              <div className={`space-y-1.5 mb-6 text-[13px] font-mono ${plan.featured ? "text-indigo-200" : "text-slate-500"}`}>
-                <div className={`flex justify-between py-1.5 border-b ${plan.featured ? "border-white/15" : "border-slate-100"}`}>
-                  <span>Min. Deposit</span>
-                  <span className={`font-semibold ${plan.featured ? "text-white" : "text-slate-900"}`}>{plan.min}</span>
+                {/* Min/Max */}
+                <div className={`space-y-1 mb-5 text-xs font-mono tabular-nums ${plan.featured ? "text-[#b5dfe3]" : "text-[#2f494c]"}`}>
+                  <div className={`flex justify-between py-1 border-b ${plan.featured ? "border-[#093A3E]" : "border-[#d4e7e9]/60"}`}>
+                    <span>Min. Deposit</span>
+                    <span className={`font-bold ${plan.featured ? "text-white" : "text-[#001011]"}`}>{plan.min}</span>
+                  </div>
+                  <div className={`flex justify-between py-1 border-b ${plan.featured ? "border-[#093A3E]" : "border-[#d4e7e9]/60"}`}>
+                    <span>Max. Deposit</span>
+                    <span className={`font-bold ${plan.featured ? "text-white" : "text-[#001011]"}`}>{plan.max}</span>
+                  </div>
                 </div>
-                <div className={`flex justify-between py-1.5 border-b ${plan.featured ? "border-white/15" : "border-slate-100"}`}>
-                  <span>Max. Deposit</span>
-                  <span className={`font-semibold ${plan.featured ? "text-white" : "text-slate-900"}`}>{plan.max}</span>
-                </div>
-              </div>
 
-              {/* Features */}
-              <ul className="space-y-2.5 mb-8 flex-1">
-                {plan.features.map((feat: string, idx: number) => (
-                  <li key={idx} className="flex items-center gap-2.5">
-                    <div className={`w-4.5 h-4.5 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      plan.featured ? "bg-white/20 text-white" : "bg-indigo-50 text-indigo-600"
-                    }`}>
-                      <Check className="w-2.5 h-2.5" />
-                    </div>
-                    <span className={`text-[13px] ${plan.featured ? "text-indigo-100" : "text-slate-600"}`}>
-                      {feat}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                {/* Features */}
+                <ul className="space-y-2 mb-6">
+                  {plan.features.map((feat: string, idx: number) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        plan.featured ? "bg-[#093A3E] text-[#3AAFB9]" : "bg-[#f0f8f9] text-[#093A3E] border border-[#c8e2e5]"
+                      }`}>
+                        <Check className="w-2.5 h-2.5" />
+                      </div>
+                      <span className={`text-xs ${plan.featured ? "text-[#d9eef0]" : "text-[#2f494c]"}`}>
+                        {feat}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
               {/* CTA */}
               <Link
                 href="/register"
-                className={`w-full py-3.5 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                   plan.featured
-                    ? "bg-white text-indigo-700 hover:bg-indigo-50"
-                    : "hm-btn-primary bg-indigo-600 text-white hover:bg-indigo-700"
+                    ? "bg-gradient-to-r from-[#3AAFB9] to-[#278e98] hover:from-[#5cb4be] hover:to-[#3AAFB9] text-[#001011] shadow-md shadow-[#3AAFB9]/20"
+                    : "bg-[#093A3E] text-white hover:bg-[#001011]"
                 }`}
               >
                 <span>Invest Now</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           ))}

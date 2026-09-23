@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BarChart2, ShieldCheck, Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { BarChart2, ShieldCheck, Mail, Phone, MapPin, ArrowRight, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSelector from "@/components/common/LanguageSelector";
@@ -25,34 +25,41 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-white border-t border-slate-100 py-14 text-[13px] text-slate-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[#001011] border-t border-[#093A3E] py-16 text-[13px] text-[#b5dfe3] relative overflow-hidden">
+      
+      {/* Ambient background glow in Dark Teal */}
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#093A3E]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-10 w-80 h-80 bg-[#3AAFB9]/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-          {/* Brand */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-14">
+
+          {/* Brand Column */}
           <div className="space-y-4 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center">
-                <BarChart2 className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-xl bg-[#093A3E] border border-[#3AAFB9]/40 flex items-center justify-center shadow-xs">
+                <BarChart2 className="w-4 h-4 text-[#3AAFB9]" />
               </div>
-              <span className="text-[17px] font-bold tracking-tight text-slate-900">
-                Alpha<span className="text-indigo-600">@</span>ssets
+              <span className="text-[17px] font-extrabold tracking-tight text-white">
+                Alpha<span className="text-[#3AAFB9]">@</span>ssets
               </span>
             </Link>
-            <p className="text-slate-400 leading-relaxed text-[13px]">
+            
+            <p className="text-[#86cbd1] leading-relaxed text-[13px] font-normal">
               {t.footer.description}
             </p>
-            <div className="flex items-center gap-1.5 hm-badge hm-badge-success w-fit">
-              <ShieldCheck className="w-3 h-3" />
+            
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#093A3E]/80 border border-[#3AAFB9]/40 text-[#3AAFB9] text-xs font-semibold shadow-xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#3AAFB9]" />
               <span>{t.hero.securityAudited}</span>
             </div>
           </div>
 
-          {/* Platform */}
+          {/* Quick Links Column */}
           <div>
-            <h4 className="text-[11px] font-semibold text-slate-900 uppercase tracking-widest mb-4">
-              {t.footer.quickLinks}
+            <h4 className="text-[11px] font-bold text-[#3AAFB9] uppercase tracking-widest mb-4 flex items-center gap-1.5">
+              <span>{t.footer.quickLinks}</span>
             </h4>
             <ul className="space-y-2.5">
               {[
@@ -60,57 +67,63 @@ export default function Footer() {
                 { label: t.nav.about,        href: "/about" },
                 { label: t.nav.plans,        href: "/plans" },
                 { label: t.nav.howItWorks,   href: "/how-it-works" },
+                { label: t.nav.faq,          href: "/faq" },
+                { label: t.nav.contact,      href: "/contact" },
               ].map(l => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-slate-400 hover:text-indigo-600 transition-colors font-medium flex items-center gap-1.5">
-                    <ArrowRight className="w-3 h-3 opacity-50" />
-                    {l.label}
+                  <Link
+                    href={l.href}
+                    className="text-[#d9eef0]/80 hover:text-white transition-colors font-medium flex items-center gap-1.5 group"
+                  >
+                    <ArrowRight className="w-3 h-3 text-[#3AAFB9] opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    <span>{l.label}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Support Column */}
           <div>
-            <h4 className="text-[11px] font-semibold text-slate-900 uppercase tracking-widest mb-4">
+            <h4 className="text-[11px] font-bold text-[#3AAFB9] uppercase tracking-widest mb-4">
               {t.footer.support}
             </h4>
-            <ul className="space-y-3 text-slate-400">
-              <li className="flex items-center gap-2 font-medium">
-                <Mail className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+            <ul className="space-y-3 text-[#d9eef0]/80 text-[13px]">
+              <li className="flex items-center gap-2 font-normal hover:text-white transition-colors">
+                <Mail className="w-3.5 h-3.5 text-[#3AAFB9] shrink-0" />
                 <span>{cms.support_email}</span>
               </li>
-              <li className="flex items-center gap-2 font-medium">
-                <Phone className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+              <li className="flex items-center gap-2 font-normal hover:text-white transition-colors">
+                <Phone className="w-3.5 h-3.5 text-[#3AAFB9] shrink-0" />
                 <span>{cms.support_phone}</span>
               </li>
-              <li className="flex items-start gap-2">
-                <MapPin className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
+              <li className="flex items-start gap-2 leading-snug">
+                <MapPin className="w-3.5 h-3.5 text-[#3AAFB9] shrink-0 mt-0.5" />
                 <span>{cms.support_address}</span>
               </li>
             </ul>
           </div>
 
-          {/* Language & Security */}
+          {/* Language & Regulatory Disclaimer Column */}
           <div className="space-y-4">
-            <h4 className="text-[11px] font-semibold text-slate-900 uppercase tracking-widest mb-2">
+            <h4 className="text-[11px] font-bold text-[#3AAFB9] uppercase tracking-widest mb-2">
               {t.footer.selectLanguage}
             </h4>
-            <LanguageSelector variant="default" dropDirection="up" />
-            <p className="text-slate-400 leading-relaxed text-[12px] pt-2">
+            <LanguageSelector variant="footer" dropDirection="up" />
+            <p className="text-[#5cb4be]/70 leading-relaxed text-[12px] pt-2 font-normal">
               {t.footer.disclaimerText}
             </p>
           </div>
 
         </div>
 
-        <div className="pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-slate-400">
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-[#093A3E]/70 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-[#5cb4be]/80">
           <span>© {new Date().getFullYear()} Alpha@ssets Inc. {t.footer.allRightsReserved}</span>
           <div className="flex gap-6 font-medium">
-            <Link href="/faq" className="hover:text-slate-600 transition-colors">{t.footer.privacyPolicy}</Link>
-            <Link href="/faq" className="hover:text-slate-600 transition-colors">{t.footer.termsOfService}</Link>
-            <Link href="/contact" className="hover:text-slate-600 transition-colors">{t.footer.support}</Link>
+            <Link href="/faq" className="hover:text-[#3AAFB9] transition-colors">{t.footer.privacyPolicy}</Link>
+            <Link href="/faq" className="hover:text-[#3AAFB9] transition-colors">{t.footer.termsOfService}</Link>
+            <Link href="/contact" className="hover:text-[#3AAFB9] transition-colors">{t.footer.support}</Link>
           </div>
         </div>
 

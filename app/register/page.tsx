@@ -8,6 +8,7 @@ import {
   BarChart2, Lock, Mail, User, Share2, ArrowRight, AlertCircle,
   CheckCircle2, Loader2, Eye, EyeOff, TrendingUp, ShieldCheck, Zap
 } from "lucide-react";
+import Image from "next/image";
 
 const inputCls = "hm-input hm-input-with-icon-left";
 
@@ -68,18 +69,18 @@ function RegisterForm() {
 
       {/* Full Name */}
       <div>
-        <label htmlFor="fullName" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Full Name</label>
+        <label htmlFor="fullName" className="block text-[11px] font-semibold text-zinc-700 mb-1.5 uppercase tracking-wider">Full Name</label>
         <div className="relative">
-          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
           <input id="fullName" type="text" required value={fullName} onChange={e => setFullName(e.target.value)} placeholder="John Doe" className={inputCls} />
         </div>
       </div>
 
       {/* Email */}
       <div>
-        <label htmlFor="email" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Email Address</label>
+        <label htmlFor="email" className="block text-[11px] font-semibold text-zinc-700 mb-1.5 uppercase tracking-wider">Email Address</label>
         <div className="relative">
-          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
           <input id="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="investor@example.com" className={inputCls} />
         </div>
       </div>
@@ -87,22 +88,22 @@ function RegisterForm() {
       {/* Passwords */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label htmlFor="password" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Password</label>
+          <label htmlFor="password" className="block text-[11px] font-semibold text-zinc-700 mb-1.5 uppercase tracking-wider">Password</label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
             <input id="password" type={showPw ? "text" : "password"} required value={password}
               onChange={e => setPassword(e.target.value)} placeholder="••••••••••"
               className="hm-input hm-input-with-icon-left hm-input-with-icon-right" />
             <button type="button" onClick={() => setShowPw(!showPw)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer">
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 cursor-pointer">
               {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
         </div>
         <div>
-          <label htmlFor="confirm" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">Confirm</label>
+          <label htmlFor="confirm" className="block text-[11px] font-semibold text-zinc-700 mb-1.5 uppercase tracking-wider">Confirm</label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
             <input id="confirm" type="password" required value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••••" className={inputCls} />
           </div>
@@ -111,17 +112,17 @@ function RegisterForm() {
 
       {/* Referral */}
       <div>
-        <label htmlFor="referralCode" className="block text-[12px] font-semibold text-slate-600 mb-1.5 uppercase tracking-widest">
-          Referral Code <span className="text-slate-400 normal-case font-normal text-[11px]">(optional)</span>
+        <label htmlFor="referralCode" className="block text-[11px] font-semibold text-zinc-700 mb-1.5 uppercase tracking-wider">
+          Referral Code <span className="text-zinc-400 normal-case font-normal text-[11px]">(optional)</span>
         </label>
         <div className="relative">
-          <Share2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <Share2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
           <input id="referralCode" type="text" value={referralCode} onChange={e => setReferralCode(e.target.value)} placeholder="e.g. ALPHA789" className={inputCls} />
         </div>
       </div>
 
       <button type="submit" disabled={loading}
-        className="hm-btn hm-btn-primary w-full py-3.5 text-[14px] mt-2 cursor-pointer">
+        className="hm-btn hm-btn-primary w-full py-3 text-xs mt-2 cursor-pointer font-medium">
         {loading ? (
           <><Loader2 className="w-4.5 h-4.5 animate-spin" /><span>Creating Account…</span></>
         ) : (
@@ -129,10 +130,10 @@ function RegisterForm() {
         )}
       </button>
 
-      <div className="pt-4 border-t border-slate-100 text-center">
-        <p className="text-[13px] text-slate-500">
+      <div className="pt-4 border-t border-zinc-200 text-center">
+        <p className="text-xs text-zinc-500 font-normal">
           Already registered?{" "}
-          <Link href="/login" className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">Sign In Here</Link>
+          <Link href="/login" className="font-semibold text-zinc-950 hover:underline transition-colors">Sign In Here</Link>
         </p>
       </div>
     </form>
@@ -144,29 +145,37 @@ export default function RegisterPage() {
     <div className="min-h-screen flex">
 
       {/* ── Left Brand Panel ── */}
-      <div className="hidden lg:flex w-[42%] bg-indigo-600 flex-col justify-between p-12 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+      <div className="hidden lg:flex w-[42%] bg-zinc-950 flex-col justify-between p-12 relative overflow-hidden border-r border-zinc-800">
+        
+        {/* Ambient fintech geometric artwork */}
+        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+          <Image
+            src="/images/auth-bg.jpg"
+            alt="Fintech telemetry background"
+            fill
+            priority
+            className="object-cover object-center opacity-30 mix-blend-screen"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-zinc-950/50" />
+        </div>
+
+        <div className="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
         <div className="relative z-10 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-            <BarChart2 className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+            <BarChart2 className="w-4.5 h-4.5 text-white" />
           </div>
-          <span className="text-[20px] font-bold text-white tracking-tight">
-            Alpha<span className="text-indigo-200">@</span>ssets
+          <span className="text-[18px] font-bold text-white tracking-tight">
+            Alpha<span className="text-zinc-500">@</span>ssets
           </span>
         </div>
 
         <div className="relative z-10 space-y-8">
           <div>
-            <h2 className="text-4xl font-bold text-white leading-snug tracking-tight">
+            <h2 className="text-3xl font-bold text-white leading-tight tracking-tight">
               Start Building<br />Your Yield<br />Portfolio Today.
             </h2>
-            <p className="text-indigo-200 text-[15px] mt-4 leading-relaxed">
+            <p className="text-zinc-400 text-sm mt-4 leading-relaxed font-normal">
               Open your account in 60 seconds and start earning automated daily returns.
             </p>
           </div>
@@ -177,43 +186,43 @@ export default function RegisterPage() {
               { icon: Zap,         label: "Instant payouts to any wallet" },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-white" />
+                <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center flex-shrink-0 text-zinc-300">
+                  <Icon className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-indigo-100 text-[14px] font-medium">{label}</span>
+                <span className="text-zinc-300 text-xs font-normal">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="relative z-10 pt-8 border-t border-white/20">
-          <div className="flex items-center gap-2 text-indigo-200 text-[12px] font-medium">
-            <ShieldCheck className="w-3.5 h-3.5" />
+        <div className="relative z-10 pt-6 border-t border-zinc-850">
+          <div className="flex items-center gap-2 text-zinc-400 text-xs font-normal">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
             <span>Regulated platform · 124,500+ active investors</span>
           </div>
         </div>
       </div>
 
       {/* ── Right Form Panel ── */}
-      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 bg-[#f8fafc] overflow-y-auto">
-        <div className="w-full max-w-[460px]">
+      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 bg-[#fafafa] overflow-y-auto">
+        <div className="w-full max-w-[420px]">
 
           <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-zinc-950 flex items-center justify-center">
               <BarChart2 className="w-4 h-4 text-white" />
             </div>
-            <span className="text-[17px] font-bold tracking-tight text-slate-900">
-              Alpha<span className="text-indigo-600">@</span>ssets
+            <span className="text-[16px] font-bold tracking-tight text-zinc-950">
+              Alpha<span className="text-zinc-500">@</span>ssets
             </span>
           </Link>
 
           <div className="mb-8">
-            <h1 className="text-[28px] font-bold text-slate-900 tracking-tight">Create your account</h1>
-            <p className="text-slate-500 text-[14px] mt-1.5">Start building your automated yield portfolio</p>
+            <h1 className="text-2xl font-bold text-zinc-950 tracking-tight">Create your account</h1>
+            <p className="text-zinc-500 text-xs mt-1.5 font-normal">Start building your automated yield portfolio</p>
           </div>
 
           <Suspense fallback={
-            <div className="flex justify-center items-center py-12 text-slate-400">
+            <div className="flex justify-center items-center py-12 text-zinc-400">
               <Loader2 className="w-6 h-6 animate-spin mr-2" /> Loading…
             </div>
           }>
