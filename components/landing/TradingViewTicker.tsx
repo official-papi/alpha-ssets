@@ -27,7 +27,7 @@ export default function TradingViewTicker() {
       showSymbolLogo: true,
       isTransparent: true,
       displayMode: "adaptive",
-      colorTheme: "light",
+      colorTheme: "dark",
       locale: "en"
     });
 
@@ -44,19 +44,19 @@ export default function TradingViewTicker() {
   ];
 
   return (
-    <div className="w-full bg-white/80 backdrop-blur-md border-b border-zinc-200/80 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] relative z-30">
+    <div className="w-full bg-[#001011] border-b border-[#093A3E] py-2 shadow-inner relative z-30">
       {useFallback ? (
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto text-xs space-x-6">
-          <div className="flex items-center space-x-1.5 text-[10px] font-semibold text-zinc-900 bg-zinc-100 px-2.5 py-0.5 rounded-full border border-zinc-200 shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="flex items-center space-x-1.5 text-[10px] font-semibold text-[#3AAFB9] bg-[#093A3E] px-2.5 py-0.5 rounded-full border border-[#3AAFB9]/40 shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] animate-pulse" />
             <span>LIVE MARKETS</span>
           </div>
           {fallbackCoins.map((c) => (
             <div key={c.symbol} className="flex items-center space-x-2 font-mono tabular-nums font-medium shrink-0">
-              <span className="text-zinc-500 text-[11px]">{c.symbol}</span>
-              <span className="text-zinc-950 text-xs font-semibold">{c.price}</span>
+              <span className="text-[#86cbd1] text-[11px]">{c.symbol}</span>
+              <span className="text-white text-xs font-bold">{c.price}</span>
               <span className={`flex items-center text-[10px] px-1.5 py-0.5 rounded-md font-semibold ${
-                c.up ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-rose-50 text-rose-700 border border-rose-200"
+                c.up ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800" : "bg-rose-950/80 text-rose-400 border border-rose-800"
               }`}>
                 {c.up ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                 <span>{c.change}</span>

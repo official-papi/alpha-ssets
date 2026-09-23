@@ -9,7 +9,7 @@ import { TrendingUp, Calculator, Sparkles } from "lucide-react";
 
 export default function PlansPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-100 text-slate-800 flex flex-col font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#fafafa] text-zinc-600 flex flex-col font-sans relative overflow-hidden">
       <Navbar />
 
       <main className="flex-1 relative z-10 pb-16">
@@ -36,16 +36,16 @@ export default function PlansPage() {
                 </div>
                 <div className="flex justify-between text-[11px] text-slate-600">
                   <span>$1,000 Investment:</span>
-                  <span className="font-mono font-extrabold text-indigo-600">+$25.00 / Week</span>
+                  <span className="font-mono font-extrabold text-[#093A3E]">+$25.00 / Week</span>
                 </div>
               </div>
 
-              <div className="p-3 bg-indigo-50/80 border border-indigo-200/80 rounded-xl space-y-1">
+              <div className="p-3 bg-[#093A3E]/5 border border-[#3AAFB9]/30 rounded-xl space-y-1">
                 <div className="flex justify-between items-center text-[11px]">
-                  <span className="font-extrabold text-indigo-900">Gold Package Tier</span>
-                  <span className="font-mono font-bold text-indigo-600">6.0% Weekly</span>
+                  <span className="font-extrabold text-[#001011]">Gold Package Tier</span>
+                  <span className="font-mono font-bold text-[#093A3E]">6.0% Weekly</span>
                 </div>
-                <div className="flex justify-between text-[11px] text-indigo-700">
+                <div className="flex justify-between text-[11px] text-slate-600">
                   <span>$10,000 Investment:</span>
                   <span className="font-mono font-extrabold text-emerald-600">+$600.00 / Week</span>
                 </div>

@@ -60,8 +60,8 @@ export function LivePayoutCounter({ targetDate }: { targetDate: string | Date | 
   const format2 = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <div className="inline-flex items-center gap-1.5 font-mono font-bold text-xs text-indigo-600 bg-indigo-50/90 border border-indigo-200/80 px-2.5 py-1 rounded-xl shadow-2xs">
-      <Clock className="w-3.5 h-3.5 text-indigo-600 animate-spin shrink-0" style={{ animationDuration: "4s" }} />
+    <div className="inline-flex items-center gap-2 font-mono font-bold text-xs text-[#093A3E] bg-[#093A3E]/8 border border-[#3AAFB9]/40 px-3 py-1.5 rounded-xl shadow-2xs">
+      <Clock className="w-3.5 h-3.5 text-[#3AAFB9] animate-spin shrink-0" style={{ animationDuration: "4s" }} />
       <span>
         {timeLeft.days > 0 ? `${format2(timeLeft.days)}d ` : ""}
         {format2(timeLeft.hours)}h {format2(timeLeft.minutes)}m {format2(timeLeft.seconds)}s
@@ -98,7 +98,7 @@ export default function InvestmentDetailsModal({
       <div className="hm-modal max-w-2xl overflow-hidden p-0 bg-white">
         
         {/* Header Banner */}
-        <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 p-6 text-white relative">
+        <div className="bg-gradient-to-r from-[#001011] via-[#093A3E] to-[#001011] p-6 text-white relative border-b border-[#3AAFB9]/30">
           <button
             onClick={onClose}
             className="absolute top-5 right-5 p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors cursor-pointer"
@@ -107,12 +107,12 @@ export default function InvestmentDetailsModal({
           </button>
 
           <div className="flex items-center gap-2 mb-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 text-[11px] font-bold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#3AAFB9]/20 border border-[#3AAFB9]/40 text-[#3AAFB9] text-[11px] font-extrabold uppercase tracking-wider">
               {badge}
             </span>
             {isActive ? (
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[11px] font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> Active Compounding
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] animate-ping" /> Active Compounding
               </span>
             ) : (
               <span className="px-2.5 py-0.5 rounded-full bg-slate-500/20 border border-slate-400/30 text-slate-300 text-[11px] font-bold">
@@ -121,9 +121,9 @@ export default function InvestmentDetailsModal({
             )}
           </div>
 
-          <h2 className="text-2xl font-black tracking-tight">{planName}</h2>
-          <p className="text-indigo-200/80 text-xs mt-1 font-mono">
-            Investment ID: {investment.id}
+          <h2 className="text-2xl font-black tracking-tight text-white">{planName}</h2>
+          <p className="text-slate-300 text-xs mt-1 font-mono">
+            Contract Ledger ID: <span className="text-[#3AAFB9] font-bold">{investment.id}</span>
           </p>
         </div>
 
@@ -133,7 +133,7 @@ export default function InvestmentDetailsModal({
           <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
               <div>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Current Yield Earned</span>
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Current Yield Realized</span>
                 <div className="text-3xl font-mono font-black text-emerald-600 mt-0.5">
                   +${totalEarnedSoFar.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </div>
@@ -141,7 +141,7 @@ export default function InvestmentDetailsModal({
 
               <div className="sm:text-right">
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Return at Maturity</span>
-                <div className="text-xl font-mono font-black text-slate-900 mt-0.5">
+                <div className="text-xl font-mono font-black text-[#001011] mt-0.5">
                   ${totalReturnAtMaturity.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </div>
               </div>
@@ -151,11 +151,11 @@ export default function InvestmentDetailsModal({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-semibold">
                 <span className="text-slate-600">Payout Progress ({completedPayouts}/{totalPayouts})</span>
-                <span className="text-indigo-600 font-mono font-bold">{progressPct}%</span>
+                <span className="text-[#093A3E] font-mono font-bold">{progressPct}%</span>
               </div>
               <div className="h-3 w-full bg-slate-200/80 rounded-full overflow-hidden p-0.5">
                 <div
-                  className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-[#093A3E] to-[#3AAFB9] rounded-full transition-all duration-500"
                   style={{ width: `${progressPct}%` }}
                 />
               </div>
@@ -164,21 +164,21 @@ export default function InvestmentDetailsModal({
 
           {/* Live Payout Countdown Banner */}
           {isActive && (
-            <div className="bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 border border-indigo-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="bg-[#001011] border border-[#093A3E] rounded-2xl p-4.5 flex flex-col sm:flex-row items-center justify-between gap-4 text-white shadow-md">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-indigo-600/20">
+                <div className="w-10 h-10 rounded-xl bg-[#093A3E] border border-[#3AAFB9]/30 text-[#3AAFB9] flex items-center justify-center flex-shrink-0 shadow-xs">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-extrabold text-indigo-950 uppercase tracking-wider">Next ROI Payout Counter</h4>
-                  <p className="text-[11px] text-indigo-700/80 font-medium">Automatic yield release to Interest Wallet</p>
+                  <h4 className="text-xs font-extrabold text-white uppercase tracking-wider">Next Scheduled ROI Payout</h4>
+                  <p className="text-[11px] text-slate-300 font-medium">Automatic execution direct to Interest Wallet</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <div className="text-right hidden sm:block">
                   <div className="text-[10px] font-bold text-slate-400 uppercase">Per Period Yield</div>
-                  <div className="text-sm font-mono font-black text-emerald-600">+${dailyReturn.toFixed(2)}</div>
+                  <div className="text-sm font-mono font-black text-emerald-400">+${dailyReturn.toFixed(2)}</div>
                 </div>
                 <LivePayoutCounter targetDate={rawNextPayout} />
               </div>
@@ -203,7 +203,7 @@ export default function InvestmentDetailsModal({
 
             <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Completed Payouts</span>
-              <span className="text-sm font-mono font-extrabold text-indigo-600 mt-1 block">
+              <span className="text-sm font-mono font-extrabold text-[#093A3E] mt-1 block">
                 {completedPayouts} / {totalPayouts}
               </span>
             </div>
@@ -226,7 +226,7 @@ export default function InvestmentDetailsModal({
           {/* Payout Schedule Breakdown Table */}
           <div className="space-y-3">
             <h4 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <Layers className="w-4 h-4 text-indigo-600" />
+              <Layers className="w-4 h-4 text-[#093A3E]" />
               <span>Investment Yield Schedule Breakdown</span>
             </h4>
 
@@ -246,9 +246,9 @@ export default function InvestmentDetailsModal({
                     const isNext = periodNum === completedPayouts + 1 && isActive;
 
                     return (
-                      <tr key={idx} className={isNext ? "bg-indigo-50/50 font-bold" : ""}>
+                      <tr key={idx} className={isNext ? "bg-[#093A3E]/6 font-bold" : ""}>
                         <td className="py-2.5 px-3 font-medium text-slate-700">
-                          Period #{periodNum} {isNext && <span className="text-[10px] text-indigo-600 font-sans font-bold ml-1">(Next Up)</span>}
+                          Period #{periodNum} {isNext && <span className="text-[10px] text-[#093A3E] font-sans font-bold ml-1">(Next Up)</span>}
                         </td>
                         <td className="py-2.5 px-3 text-emerald-600 font-bold">
                           +${dailyReturn.toFixed(2)}
@@ -259,8 +259,8 @@ export default function InvestmentDetailsModal({
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Paid
                             </span>
                           ) : isNext ? (
-                            <span className="text-indigo-600 font-sans text-[11px] font-bold flex items-center gap-1">
-                              <Clock className="w-3.5 h-3.5 text-indigo-600 animate-spin" /> Pending Payout
+                            <span className="text-[#093A3E] font-sans text-[11px] font-bold flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5 text-[#3AAFB9] animate-spin" /> Pending Payout
                             </span>
                           ) : (
                             <span className="text-slate-400 font-sans text-[11px]">Scheduled</span>

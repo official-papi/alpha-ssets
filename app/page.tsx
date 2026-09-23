@@ -59,20 +59,21 @@ export default function Home() {
 
       <main className="flex-1 relative z-10">
 
-        {/* ── Split Asymmetric Hero Section ────────────────────────────── */}
-        <section className="pt-16 pb-20 sm:pt-20 sm:pb-28 border-b border-zinc-200/70 relative overflow-hidden">
+        {/* ── Split Asymmetric Hero Section (Institutional Dark Canvas) ── */}
+        <section className="pt-16 pb-20 sm:pt-20 sm:pb-28 border-b border-[#093A3E] bg-[#001011] relative overflow-hidden text-white">
 
-          {/* Hero Background Image with Minimalist Overlays */}
+          {/* Hero Background Image with Seamless Contrast Overlays */}
           <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
             <Image
               src="/images/hero-bg.jpg"
-              alt="Institutional Fintech Data Mesh"
+              alt="Institutional Wealth & AI Telemetry Architecture"
               fill
               priority
-              className="object-cover object-center opacity-25 mix-blend-luminosity filter contrast-125"
+              className="object-cover object-right lg:object-center opacity-85 filter contrast-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#fafafa] via-[#fafafa]/90 to-[#fafafa]/70" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#fafafa]/60 via-transparent to-[#fafafa]" />
+            {/* Left-side smooth gradient ensures 100% crystal-clear readability for typography */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#001011] via-[#001011]/85 sm:via-[#001011]/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#001011]/60 via-transparent to-[#001011]" />
           </div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -82,20 +83,20 @@ export default function Home() {
               <div className="lg:col-span-7 space-y-6 text-left">
                 
                 {/* Protocol Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-zinc-200 text-zinc-900 text-xs font-medium tracking-wide shadow-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="font-semibold">{cms.hero_badge}</span>
-                  <span className="text-zinc-300">|</span>
-                  <span className="text-zinc-500 text-[11px]">V2.4 Live</span>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#093A3E]/80 border border-[#3AAFB9]/40 text-white text-xs font-semibold tracking-wide shadow-md backdrop-blur-md">
+                  <span className="w-2 h-2 rounded-full bg-[#3AAFB9] animate-pulse" />
+                  <span className="font-semibold text-[#b5dfe3]">{cms.hero_badge}</span>
+                  <span className="text-[#3AAFB9]/40">|</span>
+                  <span className="text-[#3AAFB9] text-[11px] font-mono">V2.4 Live Engine</span>
                 </div>
 
                 {/* Primary Hero Title */}
-                <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold text-zinc-950 tracking-tight leading-[1.1] max-w-2xl">
-                  {cms.hero_title}
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.35rem] font-black text-white tracking-tight leading-[1.08] max-w-2xl">
+                  Automated AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#d9eef0] to-[#3AAFB9]">Investment Growth</span> Engine
                 </h1>
 
                 {/* Subtitle */}
-                <p className="text-base sm:text-lg text-zinc-600 font-normal leading-relaxed max-w-xl">
+                <p className="text-base sm:text-lg text-[#d2d7df] font-normal leading-relaxed max-w-xl">
                   {cms.hero_subtitle}
                 </p>
 
@@ -107,8 +108,8 @@ export default function Home() {
                     "Instant withdrawals to USDT, BTC & ETH",
                     "Zero lockup capital redemption tier",
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-zinc-700 font-medium">
-                      <div className="w-4 h-4 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center flex-shrink-0">
+                    <div key={i} className="flex items-center gap-2 text-xs text-[#d2d7df] font-medium">
+                      <div className="w-4 h-4 rounded-full bg-[#093A3E] border border-[#3AAFB9]/50 text-[#3AAFB9] flex items-center justify-center flex-shrink-0">
                         <Check className="w-2.5 h-2.5" />
                       </div>
                       <span>{item}</span>
@@ -120,28 +121,28 @@ export default function Home() {
                 <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <Link
                     href="/register"
-                    className="minimal-btn-primary px-8 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 font-medium cursor-pointer shadow-sm hover:shadow-md transition-all"
+                    className="px-8 py-3.5 rounded-xl text-sm font-extrabold flex items-center justify-center gap-2 bg-[#3AAFB9] hover:bg-[#5cb4be] text-[#001011] transition-all shadow-lg shadow-[#3AAFB9]/25 cursor-pointer"
                   >
                     <span>{cms.hero_cta}</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                   <Link
                     href="/plans"
-                    className="px-7 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 cursor-pointer font-medium bg-white border border-zinc-200 text-zinc-900 hover:bg-zinc-50 transition-all shadow-xs"
+                    className="px-7 py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white border border-white/20 transition-all backdrop-blur-md cursor-pointer"
                   >
                     <span>Explore Yield Plans</span>
                   </Link>
                 </div>
 
                 {/* Social Proof & Investor Community Stack */}
-                <div className="pt-4 border-t border-zinc-200/80 flex flex-wrap items-center gap-4">
+                <div className="pt-4 border-t border-[#093A3E] flex flex-wrap items-center gap-4">
                   <div className="flex -space-x-2.5 overflow-hidden">
                     {[
                       "/images/avatars/david.jpg",
                       "/images/avatars/sarah.jpg",
                       "/images/avatars/viktor.jpg",
                     ].map((src, idx) => (
-                      <div key={idx} className="relative inline-block w-8 h-8 rounded-full ring-2 ring-white overflow-hidden bg-zinc-100">
+                      <div key={idx} className="relative inline-block w-8 h-8 rounded-full ring-2 ring-[#001011] overflow-hidden bg-zinc-800">
                         <Image src={src} alt="Verified Investor" fill className="object-cover" />
                       </div>
                     ))}
@@ -152,73 +153,71 @@ export default function Home() {
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-3.5 h-3.5 fill-current" />
                       ))}
-                      <span className="font-bold text-zinc-950 ml-1">4.9/5</span>
+                      <span className="font-bold text-white ml-1">4.9/5</span>
                     </div>
-                    <div className="text-[11px] text-zinc-500 font-normal mt-0.5">
-                      Trusted by <span className="font-semibold text-zinc-800">124,500+ active investors</span> worldwide
+                    <div className="text-[11px] text-[#b5dfe3] font-normal mt-0.5">
+                      Trusted by <span className="font-semibold text-white">124,500+ active investors</span> worldwide
                     </div>
                   </div>
                 </div>
 
               </div>
 
-              {/* RIGHT COLUMN: Interactive Terminal Window & Floating HUD Chips (5 Cols) */}
-              <div className="lg:col-span-5 relative mt-6 lg:mt-0">
-
-                {/* Main 3D Terminal Frame */}
-                <div className="relative rounded-2xl overflow-hidden border border-zinc-200/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.14)] bg-zinc-950 group">
-                  
-                  {/* Terminal Header */}
-                  <div className="px-4 py-2.5 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                      <span className="ml-2 font-mono text-[11px] text-zinc-400">terminal.alpha-assets.com</span>
+              {/* RIGHT COLUMN: Interactive Terminal Window & Anchored Telemetry (5 Cols) */}
+              <div className="lg:col-span-5 relative mt-8 lg:mt-0">
+                <div className="relative rounded-2xl p-1 bg-gradient-to-b from-[#3AAFB9]/40 via-[#093A3E]/60 to-[#001011] shadow-2xl">
+                  <div className="relative rounded-[14px] overflow-hidden bg-[#041819] border border-[#093A3E]">
+                    
+                    {/* Terminal Title Bar */}
+                    <div className="px-4 py-2.5 bg-[#001011] border-b border-[#093A3E] flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#093A3E] border border-[#3AAFB9]/40" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#093A3E] border border-[#3AAFB9]/40" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#093A3E] border border-[#3AAFB9]/40" />
+                        <span className="ml-2 font-mono text-[11px] text-[#b5dfe3]">alpha-terminal.v2.4</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[11px] text-[#3AAFB9] font-mono">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] animate-pulse" />
+                        <span>LIVE EDGE</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>Live Edge</span>
-                    </div>
-                  </div>
 
-                  {/* Terminal Image Canvas */}
-                  <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full">
-                    <Image
-                      src="/images/hero-preview.jpg"
-                      alt="Alpha@ssets Platform Terminal Interface"
-                      fill
-                      priority
-                      className="object-cover object-center group-hover:scale-[1.015] transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/40 via-transparent to-transparent pointer-events-none" />
+                    {/* Terminal Canvas */}
+                    <div className="relative aspect-[4/3] sm:aspect-[16/11] w-full">
+                      <Image
+                        src="/images/hero-preview.jpg"
+                        alt="Alpha@ssets Platform Terminal Interface"
+                        fill
+                        priority
+                        className="object-cover object-center"
+                      />
+                    </div>
+
+                    {/* Anchored Telemetry Bar */}
+                    <div className="p-3 bg-[#001011]/90 border-t border-[#093A3E] grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-2.5 bg-[#041819] p-2.5 rounded-xl border border-[#093A3E]">
+                        <div className="w-7 h-7 rounded-lg bg-[#093A3E] text-[#3AAFB9] flex items-center justify-center shrink-0">
+                          <TrendingUp className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-[10px] text-[#86cbd1] uppercase font-bold truncate">Today's Payouts</div>
+                          <div className="text-xs font-mono font-bold text-white truncate">+$12,450.00 <span className="text-[#3AAFB9] text-[10px]">(+4.85%)</span></div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2.5 bg-[#041819] p-2.5 rounded-xl border border-[#093A3E]">
+                        <div className="w-7 h-7 rounded-lg bg-[#093A3E] text-[#3AAFB9] flex items-center justify-center shrink-0">
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-[10px] text-[#86cbd1] uppercase font-bold truncate">Ledger Audit</div>
+                          <div className="text-xs font-mono font-bold text-white truncate">100% On-Chain</div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
-
-                {/* Floating HUD Chip 1 (Top Left Overlap) */}
-                <div className="hidden sm:flex absolute -top-4 -left-6 bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-xl p-3 shadow-lg items-center gap-3 animate-fade-in">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-                    <TrendingUp className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] text-zinc-400 uppercase font-semibold">Today's Settlement</div>
-                    <div className="text-xs font-bold font-mono text-zinc-950">
-                      +$12,450.00 USDT <span className="text-emerald-600 font-semibold">(+4.85%)</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating HUD Chip 2 (Bottom Right Overlap) */}
-                <div className="hidden sm:flex absolute -bottom-5 -right-4 bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-xl p-3 shadow-lg items-center gap-3 animate-fade-in">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-950 flex items-center justify-center text-white">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] text-zinc-400 uppercase font-semibold">Ledger Verification</div>
-                    <div className="text-xs font-bold text-zinc-950 font-mono">100% On-Chain Proof</div>
-                  </div>
-                </div>
-
               </div>
 
             </div>
@@ -248,7 +247,7 @@ export default function Home() {
               </div>
 
               {/* 4 Quantitative Metrics Columns with Dividers */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[#093A3E]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#093A3E]">
                 {[
                   { label: "Total Assets Deposited", value: "$256,400,000+", sub: "Verified Capital", icon: TrendingUp },
                   { label: "Total Yield Disbursed",  value: "$734,180,000+", sub: "Automated Payouts", icon: Zap },
@@ -257,7 +256,7 @@ export default function Home() {
                 ].map((m, i) => {
                   const Icon = m.icon;
                   return (
-                    <div key={i} className="p-6 text-center lg:text-left flex flex-col justify-between hover:bg-[#093A3E]/20 transition-colors">
+                    <div key={i} className="bg-[#001011] p-6 text-center lg:text-left flex flex-col justify-between hover:bg-[#093A3E]/30 transition-colors">
                       <div className="flex items-center justify-center lg:justify-between mb-3">
                         <span className="text-[11px] font-bold text-[#b5dfe3] uppercase tracking-wider">{m.label}</span>
                         <div className="hidden lg:flex w-7 h-7 rounded-lg bg-[#093A3E] text-[#3AAFB9] border border-[#3AAFB9]/30 items-center justify-center">

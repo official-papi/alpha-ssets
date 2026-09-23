@@ -177,7 +177,7 @@ export default function KycPage() {
         {(currentStatus === "unverified" || currentStatus === "rejected") && (
           <div className="minimal-card p-6 border-slate-200 space-y-6">
             <h3 className="text-sm font-extrabold text-slate-900 flex items-center space-x-2">
-              <Upload className="w-4 h-4 text-indigo-600" />
+              <Upload className="w-4 h-4 text-[#093A3E]" />
               <span>Submit Verification Documents</span>
             </h3>
 
@@ -197,7 +197,7 @@ export default function KycPage() {
                   <select
                     value={docType}
                     onChange={(e) => setDocType(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 font-bold"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9] font-bold"
                   >
                     <option value="National ID">National ID Card</option>
                     <option value="Passport">International Passport</option>
@@ -212,7 +212,7 @@ export default function KycPage() {
                     value={docNumber}
                     onChange={(e) => setDocNumber(e.target.value)}
                     placeholder="e.g. A12345678"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                   />
                 </div>
 
@@ -223,14 +223,14 @@ export default function KycPage() {
                       type="file"
                       accept="image/*"
                       onChange={(e) => setFrontFile(e.target.files?.[0] || null)}
-                      className="block w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                      className="block w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#093A3E]/10 file:text-[#093A3E] hover:file:bg-[#093A3E]/20"
                     />
                     <input
                       type="text"
                       value={docFrontUrl}
                       onChange={(e) => setDocFrontUrl(e.target.value)}
                       placeholder="Or paste front image URL..."
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                     />
                   </div>
                 </div>
@@ -242,14 +242,14 @@ export default function KycPage() {
                       type="file"
                       accept="image/*"
                       onChange={(e) => setBackFile(e.target.files?.[0] || null)}
-                      className="block w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                      className="block w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#093A3E]/10 file:text-[#093A3E] hover:file:bg-[#093A3E]/20"
                     />
                     <input
                       type="text"
                       value={docBackUrl}
                       onChange={(e) => setDocBackUrl(e.target.value)}
                       placeholder="Or paste back image URL..."
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                     />
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export default function KycPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="minimal-btn-primary px-5 py-2.5 rounded-xl text-xs font-bold cursor-pointer shadow-md shadow-indigo-600/15"
+                className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#093A3E] hover:bg-[#001011] transition-all cursor-pointer shadow-md shadow-[#093A3E]/15"
               >
                 {submitting ? "Submitting Documents..." : "Submit Documents for Verification"}
               </button>
@@ -270,7 +270,7 @@ export default function KycPage() {
         {/* KYC History Table */}
         <div className="minimal-card p-6 border-slate-200">
           <h3 className="text-sm font-extrabold text-slate-900 mb-4 flex items-center space-x-2">
-            <FileText className="w-4 h-4 text-indigo-600" />
+            <FileText className="w-4 h-4 text-[#093A3E]" />
             <span>Submission Log</span>
           </h3>
 

@@ -100,17 +100,17 @@ export default function WithdrawModal({
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-            <ArrowUpRight className="w-5 h-5 text-emerald-600" />
+          <div className="w-10 h-10 rounded-xl bg-[#093A3E]/10 border border-[#093A3E]/20 flex items-center justify-center text-[#093A3E]">
+            <ArrowUpRight className="w-5 h-5 text-[#3AAFB9]" />
           </div>
           <div>
-            <h3 className="text-[17px] font-semibold text-slate-900">Withdraw Earnings</h3>
-            <p className="text-[12px] text-slate-400 mt-0.5">Transfer funds to your external wallet or bank</p>
+            <h3 className="text-[17px] font-extrabold text-[#001011]">Withdraw Earnings</h3>
+            <p className="text-[12px] text-slate-400 mt-0.5">Transfer settled yield or capital to your external destination</p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-5 bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2.5 text-red-600 text-[13px] font-medium">
+          <div className="mb-5 bg-rose-50 border border-rose-200 rounded-xl p-3 flex items-center gap-2.5 text-rose-700 text-[13px] font-medium">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
@@ -120,7 +120,7 @@ export default function WithdrawModal({
 
           {/* Wallet Selector */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-2">
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">
               Source Wallet
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -129,31 +129,31 @@ export default function WithdrawModal({
                 onClick={() => setWalletType("interest_wallet")}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                   walletType === "interest_wallet"
-                    ? "border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500/20"
+                    ? "border-[#093A3E] bg-[#093A3E]/6 ring-1 ring-[#3AAFB9]/40 shadow-xs"
                     : "border-slate-200 bg-white hover:border-slate-300"
                 }`}
               >
-                <p className="text-[11px] font-medium text-slate-500">Interest Wallet</p>
-                <p className="text-[18px] font-bold text-emerald-600 mt-1 font-mono">${interestBalance.toLocaleString()}</p>
+                <p className="text-[11px] font-semibold text-slate-500">Interest Wallet</p>
+                <p className="text-[18px] font-extrabold text-emerald-600 mt-1 font-mono">${interestBalance.toLocaleString()}</p>
               </button>
               <button
                 type="button"
                 onClick={() => setWalletType("deposit_wallet")}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                   walletType === "deposit_wallet"
-                    ? "border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500/20"
+                    ? "border-[#093A3E] bg-[#093A3E]/6 ring-1 ring-[#3AAFB9]/40 shadow-xs"
                     : "border-slate-200 bg-white hover:border-slate-300"
                 }`}
               >
-                <p className="text-[11px] font-medium text-slate-500">Deposit Wallet</p>
-                <p className="text-[18px] font-bold text-slate-900 mt-1 font-mono">${depositBalance.toLocaleString()}</p>
+                <p className="text-[11px] font-semibold text-slate-500">Deposit Wallet</p>
+                <p className="text-[18px] font-extrabold text-[#001011] mt-1 font-mono">${depositBalance.toLocaleString()}</p>
               </button>
             </div>
           </div>
 
           {/* Method */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
               Payout Method
             </label>
             <select
@@ -162,7 +162,7 @@ export default function WithdrawModal({
                 const found = methods.find((m) => m.name === e.target.value);
                 if (found) setSelectedMethod(found);
               }}
-              className="hm-input"
+              className="hm-input font-medium"
             >
               {methods.map((m) => (
                 <option key={m.id || m.code} value={m.name}>
@@ -174,7 +174,7 @@ export default function WithdrawModal({
 
           {/* Amount */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
               Amount (USD)
             </label>
             <input
@@ -186,13 +186,13 @@ export default function WithdrawModal({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder={`Available: $${currentBalance.toLocaleString()}`}
-              className="hm-input"
+              className="hm-input font-mono font-bold text-base"
             />
           </div>
 
           {/* Destination */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
               Destination Address / Account Info
             </label>
             <input
@@ -201,7 +201,7 @@ export default function WithdrawModal({
               value={accountDetails}
               onChange={(e) => setAccountDetails(e.target.value)}
               placeholder="e.g. TRC20 Wallet Address or Bank IBAN/SWIFT"
-              className="hm-input"
+              className="hm-input font-mono"
             />
           </div>
 
@@ -210,7 +210,7 @@ export default function WithdrawModal({
             <button type="button" onClick={onClose} className="hm-btn hm-btn-secondary text-[13px] cursor-pointer">
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="hm-btn hm-btn-primary text-[13px] cursor-pointer">
+            <button type="submit" disabled={loading} className="py-2.5 px-5 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-[13px] font-bold shadow-xs cursor-pointer flex items-center gap-2 transition-all">
               {loading ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /><span>Processing…</span></>
               ) : (

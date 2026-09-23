@@ -95,17 +95,17 @@ export default function NewInvestmentModal({
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-indigo-600" />
+          <div className="w-10 h-10 rounded-xl bg-[#093A3E]/10 border border-[#093A3E]/20 flex items-center justify-center text-[#093A3E]">
+            <TrendingUp className="w-5 h-5 text-[#093A3E]" />
           </div>
           <div>
-            <h3 className="text-[17px] font-semibold text-slate-900">Invest in Plan</h3>
-            <p className="text-[12px] text-slate-400 mt-0.5">Subscribe to automated yield generation</p>
+            <h3 className="text-[17px] font-extrabold text-[#001011]">Invest in Plan</h3>
+            <p className="text-[12px] text-slate-400 mt-0.5">Subscribe to algorithmic yield compounding</p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-5 bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2.5 text-red-600 text-[13px] font-medium">
+          <div className="mb-5 bg-rose-50 border border-rose-200 rounded-xl p-3 flex items-center gap-2.5 text-rose-700 text-[13px] font-medium">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
@@ -116,16 +116,16 @@ export default function NewInvestmentModal({
           {/* Plan Selector */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest">
+              <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest">
                 Select Investment Tier ({plans.length})
               </label>
               {selectedPlan && (
-                <span className="text-[11px] font-medium text-indigo-600">
+                <span className="text-[11px] font-bold text-[#093A3E]">
                   {selectedPlan.name} selected
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-48 overflow-y-auto p-1.5 border border-slate-100 rounded-xl bg-slate-50/60">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-48 overflow-y-auto p-1.5 border border-slate-200/80 rounded-xl bg-slate-50/60">
               {plans.map((p) => (
                 <button
                   key={p.id}
@@ -133,13 +133,13 @@ export default function NewInvestmentModal({
                   onClick={() => setSelectedPlan(p)}
                   className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                     selectedPlan?.id === p.id
-                      ? "border-indigo-500 bg-white ring-2 ring-indigo-500/20 shadow-sm"
+                      ? "border-[#3AAFB9] bg-[#f0f8f9] ring-2 ring-[#3AAFB9]/30 shadow-xs"
                       : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
                   }`}
                 >
-                  <p className="text-[13px] font-bold text-slate-900 truncate">{p.name}</p>
+                  <p className="text-[13px] font-extrabold text-[#001011] truncate">{p.name}</p>
                   <div className="flex items-baseline gap-1 mt-1">
-                    <span className="text-[14px] font-extrabold text-indigo-600 font-mono">{p.interest_rate}%</span>
+                    <span className="text-[15px] font-extrabold text-[#093A3E] font-mono">{p.interest_rate}%</span>
                     <span className="text-[10px] font-medium text-slate-400">/ week</span>
                   </div>
                   <div className="text-[10px] text-slate-500 mt-1 flex justify-between">
@@ -153,7 +153,7 @@ export default function NewInvestmentModal({
 
           {/* Wallet */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-2">
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">
               Pay From
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -162,24 +162,24 @@ export default function NewInvestmentModal({
                 onClick={() => setWalletType("deposit_wallet")}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                   walletType === "deposit_wallet"
-                    ? "border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500/20"
+                    ? "border-[#093A3E] bg-[#093A3E]/6 ring-1 ring-[#3AAFB9]/40 shadow-xs"
                     : "border-slate-200 bg-white hover:border-slate-300"
                 }`}
               >
-                <p className="text-[11px] font-medium text-slate-500">Deposit Wallet</p>
-                <p className="text-[18px] font-bold text-slate-900 mt-1 font-mono">${depositBalance.toLocaleString()}</p>
+                <p className="text-[11px] font-semibold text-slate-500">Deposit Wallet</p>
+                <p className="text-[18px] font-extrabold text-[#001011] mt-1 font-mono">${depositBalance.toLocaleString()}</p>
               </button>
               <button
                 type="button"
                 onClick={() => setWalletType("interest_wallet")}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                   walletType === "interest_wallet"
-                    ? "border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500/20"
+                    ? "border-[#093A3E] bg-[#093A3E]/6 ring-1 ring-[#3AAFB9]/40 shadow-xs"
                     : "border-slate-200 bg-white hover:border-slate-300"
                 }`}
               >
-                <p className="text-[11px] font-medium text-slate-500">Interest Wallet</p>
-                <p className="text-[18px] font-bold text-emerald-600 mt-1 font-mono">${interestBalance.toLocaleString()}</p>
+                <p className="text-[11px] font-semibold text-slate-500">Interest Wallet</p>
+                <p className="text-[18px] font-extrabold text-emerald-600 mt-1 font-mono">${interestBalance.toLocaleString()}</p>
               </button>
             </div>
           </div>
@@ -187,11 +187,11 @@ export default function NewInvestmentModal({
           {/* Amount */}
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
                 Investment Amount (USD)
               </label>
               {selectedPlan && (
-                <span className="text-[11px] text-slate-400">
+                <span className="text-[11px] text-slate-400 font-mono">
                   ${selectedPlan.min_amount.toLocaleString()} – ${selectedPlan.max_amount.toLocaleString()}
                 </span>
               )}
@@ -205,24 +205,24 @@ export default function NewInvestmentModal({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="e.g. 1000"
-              className="hm-input"
+              className="hm-input font-mono font-bold text-base"
             />
           </div>
 
           {/* ROI Preview */}
           {selectedPlan && dailyRoi !== null && (
-            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 space-y-2">
-              <div className="flex items-center gap-1.5 text-[12px] font-semibold text-indigo-700 mb-1">
+            <div className="bg-[#001011] border border-[#093A3E] text-white rounded-xl p-4 space-y-2.5 shadow-md">
+              <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#3AAFB9] mb-1">
                 <Sparkles className="w-3.5 h-3.5" />
-                Projected Returns
+                <span>Projected Yield Returns</span>
               </div>
               <div className="flex justify-between text-[13px]">
-                <span className="text-slate-500">Weekly ROI:</span>
-                <span className="font-semibold text-indigo-700">${dailyRoi.toFixed(2)} / week</span>
+                <span className="text-slate-300">Weekly ROI:</span>
+                <span className="font-extrabold font-mono text-[#3AAFB9]">${dailyRoi.toFixed(2)} / week</span>
               </div>
-              <div className="flex justify-between text-[13px]">
-                <span className="text-slate-500">Total Return ({selectedPlan.repeat_time} weeks):</span>
-                <span className="font-bold text-slate-900">${(dailyRoi * selectedPlan.repeat_time).toFixed(2)}</span>
+              <div className="flex justify-between text-[13px] border-t border-[#093A3E] pt-2">
+                <span className="text-slate-300">Total Return ({selectedPlan.repeat_time} weeks):</span>
+                <span className="font-extrabold font-mono text-emerald-400">${(dailyRoi * selectedPlan.repeat_time).toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -232,7 +232,7 @@ export default function NewInvestmentModal({
             <button type="button" onClick={onClose} className="hm-btn hm-btn-secondary text-[13px] cursor-pointer">
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="hm-btn hm-btn-primary text-[13px] cursor-pointer">
+            <button type="submit" disabled={loading} className="py-2.5 px-5 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-[13px] font-bold shadow-xs cursor-pointer flex items-center gap-2 transition-all">
               {loading ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /><span>Subscribing…</span></>
               ) : (

@@ -48,10 +48,10 @@ export default function PageHero({
           alt="Architectural Backdrop"
           fill
           priority
-          className="object-cover object-center opacity-25 mix-blend-luminosity filter contrast-125"
+          className="object-cover object-center opacity-75 filter contrast-115 brightness-95"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fafafa] via-[#fafafa]/90 to-[#fafafa]/75" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#fafafa]/50 to-[#fafafa]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fafafa]/95 via-[#fafafa]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fafafa]/30 via-transparent to-[#fafafa]" />
       </div>
 
       {/* Geometric Grid Canvas Background */}

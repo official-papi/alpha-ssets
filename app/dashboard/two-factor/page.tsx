@@ -121,7 +121,7 @@ export default function TwoFactorPage() {
         {/* Setup Instructions & Form */}
         <div className="minimal-card p-6 border-slate-200 space-y-6">
           <h3 className="text-sm font-extrabold text-slate-900 flex items-center space-x-2">
-            <QrCode className="w-4 h-4 text-indigo-600" />
+            <QrCode className="w-4 h-4 text-[#093A3E]" />
             <span>Google Authenticator Setup</span>
           </h3>
 
@@ -151,7 +151,7 @@ export default function TwoFactorPage() {
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between">
               <div>
                 <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">2FA Secret Key</div>
-                <div className="text-sm font-mono font-extrabold text-indigo-600 mt-0.5">{secretKey}</div>
+                <div className="text-sm font-mono font-extrabold text-[#093A3E] mt-0.5">{secretKey}</div>
               </div>
 
               <button
@@ -159,7 +159,7 @@ export default function TwoFactorPage() {
                 onClick={handleCopySecret}
                 className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center space-x-1.5 cursor-pointer shadow-xs"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-indigo-600" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-[#093A3E]" />}
                 <span>{copied ? "Copied" : "Copy Key"}</span>
               </button>
             </div>
@@ -174,7 +174,7 @@ export default function TwoFactorPage() {
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
                   placeholder="000000"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-center text-lg font-mono font-bold tracking-widest text-slate-900 focus:outline-none focus:border-indigo-600"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-center text-lg font-mono font-bold tracking-widest text-slate-900 focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                 />
               </div>
 
@@ -183,7 +183,7 @@ export default function TwoFactorPage() {
                 className={`w-full py-2.5 rounded-xl text-xs font-bold cursor-pointer transition-all shadow-md ${
                   is2FaEnabled
                     ? "bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100"
-                    : "minimal-btn-primary shadow-indigo-600/15"
+                    : "bg-[#093A3E] hover:bg-[#001011] text-white shadow-[#093A3E]/15"
                 }`}
               >
                 {is2FaEnabled ? "Disable 2FA Protection" : "Enable 2FA Protection"}

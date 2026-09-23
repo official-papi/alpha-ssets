@@ -191,11 +191,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Globe className="w-3.5 h-3.5 text-zinc-900" />
             <span>Site</span>
           </Link>
-          <div className="w-7 h-7 rounded-lg bg-zinc-950 flex items-center justify-center">
-            <ShieldAlert className="w-3.5 h-3.5 text-white" />
+          <div className="w-7 h-7 rounded-lg bg-[#093A3E] flex items-center justify-center">
+            <ShieldAlert className="w-3.5 h-3.5 text-[#3AAFB9]" />
           </div>
           <span className="text-[14px] font-bold text-zinc-900 tracking-tight">
-            Alpha<span className="text-zinc-400">@</span>ssets <span className="text-zinc-400 font-normal">Admin</span>
+            Alpha<span className="text-[#3AAFB9]">@</span>ssets <span className="text-zinc-400 font-normal">Admin</span>
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -217,12 +217,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Logo Header (Visible on Desktop & Mobile Drawer) */}
         <div className="flex items-center justify-between px-5 h-14 border-b border-zinc-200 flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-zinc-950 flex items-center justify-center">
-              <ShieldAlert className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-[#093A3E] flex items-center justify-center">
+              <ShieldAlert className="w-4 h-4 text-[#3AAFB9]" />
             </div>
             <div>
               <div className="text-[15px] font-bold text-zinc-950 tracking-tight leading-none">
-                Alpha<span className="text-zinc-400">@</span>ssets
+                Alpha<span className="text-[#3AAFB9]">@</span>ssets
               </div>
               <div className="text-[10px] text-zinc-500 font-medium mt-0.5">{t.admin.adminControlPanel}</div>
             </div>
@@ -241,10 +241,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link key={cleanHref} href={cleanHref} onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all border-l-2 ${
                   active
-                    ? "bg-zinc-100 text-zinc-950 font-semibold border-l-zinc-950"
+                    ? "bg-[#093A3E]/7 text-[#093A3E] font-semibold border-l-[#3AAFB9]"
                     : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 border-l-transparent"
                 }`}>
-                <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-zinc-950" : "text-zinc-400"}`} />
+                <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-[#093A3E]" : "text-zinc-400"}`} />
                 <span>{label}</span>
               </Link>
             );
@@ -315,7 +315,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span>{t.admin.systemLive}</span>
             </div>
             <div className="flex items-center gap-2.5 pl-3 border-l border-zinc-200">
-              <div className="w-7 h-7 rounded-full bg-zinc-950 text-white font-bold text-[12px] flex items-center justify-center">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#093A3E] to-[#001011] text-[#3AAFB9] font-bold text-[12px] flex items-center justify-center border border-[#093A3E]/30">
                 {adminInitial}
               </div>
               <div className="hidden lg:block text-left">

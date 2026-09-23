@@ -110,18 +110,18 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
     <div className="h-screen overflow-hidden bg-[#fafafa] flex flex-col md:flex-row">
 
       {/* ── Mobile Top Bar ── */}
-      <div className="md:hidden bg-white border-b border-zinc-200/70 px-4 h-14 flex items-center justify-between flex-shrink-0 z-50 sticky top-0">
+      <div className="md:hidden bg-[#001011] border-b border-[#093A3E]/40 px-4 h-14 flex items-center justify-between flex-shrink-0 z-50 sticky top-0 text-white">
         <div className="flex items-center gap-2">
-          <Link href="/" className="p-1.5 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-50 flex items-center gap-1 text-[11px] font-medium mr-1">
-            <Globe className="w-3.5 h-3.5 text-zinc-700" />
+          <Link href="/" className="p-1.5 rounded-lg border border-[#093A3E] text-slate-300 hover:text-white hover:bg-[#093A3E]/30 flex items-center gap-1 text-[11px] font-medium mr-1 transition-colors">
+            <Globe className="w-3.5 h-3.5 text-[#3AAFB9]" />
             <span>Site</span>
           </Link>
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-zinc-950 flex items-center justify-center">
-              <Wallet className="w-3.5 h-3.5 text-white" />
+            <div className="w-7 h-7 rounded-lg bg-[#093A3E] border border-[#3AAFB9]/30 flex items-center justify-center">
+              <Wallet className="w-3.5 h-3.5 text-[#3AAFB9]" />
             </div>
-            <span className="text-[15px] font-bold tracking-tight text-zinc-950">
-              Alpha<span className="text-zinc-500">@</span>ssets
+            <span className="text-[15px] font-bold tracking-tight text-white">
+              Alpha<span className="text-[#3AAFB9]">@</span>ssets
             </span>
           </Link>
         </div>
@@ -130,7 +130,7 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-1.5 rounded-lg border border-zinc-200 text-zinc-500 hover:bg-zinc-50"
+            className="p-1.5 rounded-lg border border-[#093A3E] text-slate-300 hover:bg-[#093A3E]/40 cursor-pointer"
           >
             {mobileOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
           </button>
@@ -139,30 +139,33 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
 
       {/* ── Sidebar ── */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-zinc-200/70 flex flex-col flex-shrink-0 transition-transform duration-200 md:static md:translate-x-0 md:h-screen
-        ${mobileOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"}
+        fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-[#d4e7e9] flex flex-col flex-shrink-0 transition-transform duration-200 md:static md:translate-x-0 md:h-screen
+        ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
       `}>
         {/* Logo Header */}
-        <div className="h-14 px-5 flex items-center justify-between border-b border-zinc-100 flex-shrink-0">
-          <Link href="/dashboard" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-zinc-950 flex items-center justify-center shadow-xs">
-              <Wallet className="w-4 h-4 text-white" />
+        <div className="h-16 px-5 flex items-center justify-between border-b border-slate-100 flex-shrink-0 bg-white">
+          <Link href="/dashboard" className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 rounded-xl bg-[#093A3E] border border-[#3AAFB9]/30 flex items-center justify-center shadow-xs text-[#3AAFB9] group-hover:scale-105 transition-transform">
+              <Wallet className="w-4.5 h-4.5" />
             </div>
             <div>
-              <div className="text-[15px] font-bold tracking-tight text-zinc-950 leading-none">
-                Alpha<span className="text-zinc-500">@</span>ssets
+              <div className="text-[15px] font-extrabold tracking-tight text-[#001011] leading-none">
+                Alpha<span className="text-[#3AAFB9]">@</span>ssets
               </div>
-              <div className="text-[10px] text-zinc-400 font-normal mt-0.5">{t.dashboard.investorWorkspace}</div>
+              <div className="text-[10px] text-[#093A3E] font-medium tracking-wide mt-1 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] inline-block animate-pulse" />
+                {t.dashboard.investorWorkspace}
+              </div>
             </div>
           </Link>
-          <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 text-zinc-400 hover:text-zinc-700">
+          <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 text-slate-400 hover:text-slate-700">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
-          <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider px-3 mb-2">
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
             Navigation
           </div>
           {navItems.map((item) => {
@@ -173,13 +176,13 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all border-l-[3px] ${
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all border-l-[3px] ${
                   isActive
-                    ? "bg-zinc-100 text-zinc-950 font-semibold border-l-zinc-950"
-                    : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 border-l-transparent"
+                    ? "bg-[#093A3E]/8 text-[#093A3E] font-bold border-l-[#3AAFB9] shadow-xs"
+                    : "text-slate-600 hover:bg-[#093A3E]/4 hover:text-[#093A3E] border-l-transparent"
                 }`}
               >
-                <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-zinc-950" : "text-zinc-400"}`} />
+                <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-[#093A3E]" : "text-slate-400 group-hover:text-[#093A3E]"}`} />
                 <span>{item.label}</span>
               </Link>
             );
@@ -187,13 +190,13 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-zinc-100 p-3 space-y-1 flex-shrink-0">
+        <div className="border-t border-slate-100 p-3 space-y-1.5 flex-shrink-0 bg-slate-50/50">
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-zinc-700 bg-zinc-50 border border-zinc-200 hover:bg-zinc-100 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-semibold text-slate-700 bg-white border border-slate-200 hover:border-[#3AAFB9]/40 hover:text-[#093A3E] transition-all shadow-2xs"
           >
-            <Globe className="w-4 h-4 text-zinc-600" />
+            <Globe className="w-3.5 h-3.5 text-[#093A3E]" />
             <span>{t.nav.backToSite}</span>
           </Link>
 
@@ -201,22 +204,22 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
             <Link
               href="/admin"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-zinc-800 bg-zinc-100 border border-zinc-200 hover:bg-zinc-150 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-bold text-white bg-[#001011] hover:bg-[#093A3E] transition-colors shadow-xs"
             >
-              <ShieldAlert className="w-4 h-4 text-zinc-700" />
+              <ShieldAlert className="w-3.5 h-3.5 text-[#3AAFB9]" />
               <span>{t.dashboard.adminPortal}</span>
             </Link>
           )}
-          <div className="px-3 py-2">
-            <div className="text-[13px] font-semibold text-slate-900 truncate">{fullName || "Investor"}</div>
+          <div className="px-3 py-1.5">
+            <div className="text-[13px] font-bold text-slate-900 truncate">{fullName || "Investor"}</div>
             <div className="text-[11px] text-slate-400 truncate">{userEmail}</div>
           </div>
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-3.5 h-3.5" />
             <span>{t.dashboard.signOut}</span>
           </button>
         </div>
@@ -226,18 +229,18 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
       <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
 
         {/* Desktop Header */}
-        <header className="hidden md:flex items-center justify-between px-6 h-14 bg-white border-b border-slate-100 flex-shrink-0 z-40">
+        <header className="hidden md:flex items-center justify-between px-8 h-16 bg-white border-b border-[#d4e7e9] flex-shrink-0 z-40">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="flex items-center gap-1.5 text-[13px] font-medium text-slate-500 hover:text-slate-900 transition-colors"
+              className="flex items-center gap-1.5 text-[12px] font-semibold text-slate-500 hover:text-[#093A3E] transition-colors"
             >
-              <Globe className="w-3.5 h-3.5" />
+              <Globe className="w-3.5 h-3.5 text-[#093A3E]" />
               <span>{t.nav.backToSite}</span>
             </Link>
-            <span className="text-slate-200">|</span>
-            <div className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-700">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+            <span className="text-slate-200">/</span>
+            <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#093A3E] bg-[#093A3E]/6 px-2.5 py-1 rounded-full border border-[#093A3E]/10">
+              <Sparkles className="w-3.5 h-3.5 text-[#3AAFB9]" />
               <span>{t.dashboard.investorWorkspace}</span>
             </div>
           </div>
@@ -249,28 +252,28 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
             <div className="relative">
               <button
                 onClick={handleMarkNotificationsRead}
-                className="relative p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+                className="relative p-2 rounded-xl text-slate-500 hover:text-[#093A3E] hover:bg-[#093A3E]/6 transition-colors cursor-pointer"
               >
                 <Bell className="w-4.5 h-4.5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white">
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#3AAFB9] text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white">
                     {unreadCount}
                   </span>
                 )}
               </button>
 
               {notifOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-xl p-3 z-50 space-y-2">
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-[#d4e7e9] rounded-2xl shadow-xl p-3 z-50 space-y-2">
                   <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <span className="text-[13px] font-semibold text-slate-900">Notifications</span>
-                    <span className="text-[11px] text-indigo-600 font-medium">Mark all read</span>
+                    <span className="text-[13px] font-bold text-slate-900">Notifications</span>
+                    <span className="text-[11px] text-[#3AAFB9] hover:text-[#093A3E] font-semibold cursor-pointer">Mark all read</span>
                   </div>
                   <div className="space-y-1.5 max-h-64 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="text-[13px] text-slate-400 py-4 text-center">No notifications yet.</div>
                     ) : (
                       notifications.map((n: any) => (
-                        <div key={n.id} className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                        <div key={n.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                           <div className="text-[13px] font-semibold text-slate-900">{n.title}</div>
                           <div className="text-[12px] text-slate-500 mt-0.5 leading-snug">{n.message}</div>
                           <div className="text-[10px] text-slate-400 mt-1 text-right">{new Date(n.created_at).toLocaleTimeString()}</div>
@@ -285,17 +288,17 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
             {/* Profile */}
             <Link
               href="/dashboard/profile"
-              className="flex items-center gap-2 pl-3 border-l border-slate-100 hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2 pl-3 border-l border-slate-200 hover:opacity-85 transition-opacity"
             >
               {avatarUrl ? (
-                <img src={avatarUrl} alt="Profile" className="w-7 h-7 rounded-full object-cover border border-slate-200" />
+                <img src={avatarUrl} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-[#3AAFB9]/40" />
               ) : (
-                <div className="w-7 h-7 rounded-full bg-indigo-600 text-white font-semibold text-[12px] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#093A3E] to-[#001011] text-[#3AAFB9] font-bold text-[12px] flex items-center justify-center shadow-xs">
                   {userInitial}
                 </div>
               )}
               <div className="hidden lg:block text-left">
-                <div className="text-[13px] font-semibold text-slate-900 leading-none truncate max-w-[120px]">{fullName || "Investor"}</div>
+                <div className="text-[13px] font-bold text-slate-900 leading-none truncate max-w-[120px]">{fullName || "Investor"}</div>
                 <div className="text-[11px] text-slate-400 mt-0.5 truncate max-w-[120px]">{userEmail}</div>
               </div>
             </Link>

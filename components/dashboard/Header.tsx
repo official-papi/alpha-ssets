@@ -75,12 +75,12 @@ export default function DashboardHeader({
 
         {/* Brand Logo & Status */}
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20 group-hover:scale-105 transition-transform text-white">
+          <div className="w-10 h-10 rounded-xl bg-[#093A3E] flex items-center justify-center shadow-lg shadow-[#093A3E]/20 group-hover:scale-105 transition-transform text-[#3AAFB9]">
             <TrendingUp className="w-5 h-5 font-bold" />
           </div>
           <div>
             <span className="text-xl font-black tracking-tight text-slate-900 flex items-center gap-1.5">
-              Alpha<span className="text-indigo-600">@ssets</span>
+              Alpha<span className="text-[#3AAFB9]">@ssets</span>
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </span>
             <span className="block text-[10px] text-slate-400 font-bold tracking-widest uppercase">
@@ -92,7 +92,7 @@ export default function DashboardHeader({
         {/* Live Wallet Quick Ticker */}
         <div className="hidden lg:flex items-center space-x-3 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-200 text-xs">
           <div className="flex items-center space-x-2 pr-3 border-r border-slate-200">
-            <Wallet className="w-3.5 h-3.5 text-indigo-600" />
+            <Wallet className="w-3.5 h-3.5 text-[#093A3E]" />
             <div>
               <span className="text-[10px] text-slate-500 font-bold block uppercase">{t.dashboard.depositWallet}</span>
               <span className="font-mono font-bold text-slate-900">${depositBalance.toFixed(2)}</span>
@@ -127,9 +127,9 @@ export default function DashboardHeader({
           <div className="hidden md:flex items-center gap-2">
             <button
               onClick={onOpenInvest}
-              className="minimal-btn-primary px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 cursor-pointer shadow-md shadow-indigo-600/10"
+              className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#093A3E] hover:bg-[#001011] transition-all flex items-center space-x-1.5 cursor-pointer shadow-md shadow-[#093A3E]/10"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-[#3AAFB9]" />
               <span>{t.dashboard.investNow}</span>
             </button>
 
@@ -152,7 +152,7 @@ export default function DashboardHeader({
 
           {/* User Profile Badge */}
           <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-extrabold text-white text-xs shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#093A3E] to-[#001011] text-[#3AAFB9] flex items-center justify-center font-extrabold text-xs shadow-md border border-[#093A3E]/30">
               {initials}
             </div>
             <div className="hidden sm:block text-left">

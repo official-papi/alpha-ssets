@@ -38,7 +38,7 @@ export default function TransactionsPage() {
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900">Transaction Ledger Log</h1>
+            <h1 className="text-2xl font-extrabold text-[#001011]">Transaction Ledger Log</h1>
             <p className="text-xs text-slate-500 mt-1">Immutable double-entry transaction record for deposits, yields, withdrawals, and referral rewards.</p>
           </div>
 
@@ -49,10 +49,10 @@ export default function TransactionsPage() {
                 key={type}
                 type="button"
                 onClick={() => setFilterType(type)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   filterType === type
-                    ? "bg-indigo-600 text-white shadow-xs"
-                    : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                    ? "bg-[#093A3E] text-white shadow-xs"
+                    : "bg-white border border-slate-200 text-slate-600 hover:border-[#3AAFB9]/50 hover:text-[#093A3E]"
                 }`}
               >
                 {type}
@@ -62,11 +62,11 @@ export default function TransactionsPage() {
         </div>
 
         {/* Transactions Table */}
-        <div className="minimal-card p-6 border-slate-200">
+        <div className="bg-white border border-[#d4e7e9] rounded-2xl p-6 shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-500 uppercase text-[10px] tracking-wider">
+                <tr className="border-b border-slate-200 text-slate-400 uppercase text-[10px] tracking-wider">
                   <th className="pb-3">Transaction Type</th>
                   <th className="pb-3">Amount</th>
                   <th className="pb-3">Description</th>
@@ -91,7 +91,7 @@ export default function TransactionsPage() {
                           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
                             tx.type === "deposit" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
                             tx.type === "withdraw" ? "bg-rose-50 text-rose-700 border border-rose-200" :
-                            "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                            "bg-[#093A3E]/8 text-[#093A3E] border border-[#093A3E]/20"
                           }`}>
                             {tx.type?.replace("_", " ")}
                           </span>
@@ -106,7 +106,7 @@ export default function TransactionsPage() {
                           <button
                             type="button"
                             onClick={() => setReceiptTx(tx)}
-                            className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px] font-bold transition-all cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg bg-[#093A3E]/8 text-[#093A3E] hover:bg-[#093A3E] hover:text-white text-[11px] font-bold transition-all cursor-pointer shadow-2xs"
                           >
                             Receipt
                           </button>
@@ -122,13 +122,15 @@ export default function TransactionsPage() {
 
         {/* Official Digital Proof Receipt Modal */}
         {receiptTx && (
-          <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-2xl relative text-slate-800">
+          <div className="hm-modal-overlay">
+            <div className="hm-modal max-w-md space-y-4">
               
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div className="flex items-center space-x-2">
-                  <FileText className="w-4 h-4 text-indigo-600" />
-                  <h3 className="text-sm font-extrabold text-slate-900">Official Financial Receipt</h3>
+                  <div className="w-8 h-8 rounded-lg bg-[#093A3E]/10 border border-[#093A3E]/20 flex items-center justify-center text-[#093A3E]">
+                    <FileText className="w-4 h-4 text-[#093A3E]" />
+                  </div>
+                  <h3 className="text-sm font-extrabold text-[#001011]">Official Financial Receipt</h3>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
@@ -139,7 +141,7 @@ export default function TransactionsPage() {
                     <Printer className="w-3.5 h-3.5" />
                     <span>Print</span>
                   </button>
-                  <button onClick={() => setReceiptTx(null)} className="text-slate-400 hover:text-slate-700 p-1">
+                  <button onClick={() => setReceiptTx(null)} className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -148,7 +150,7 @@ export default function TransactionsPage() {
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 text-xs">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <div className="text-[10px] text-slate-400 uppercase font-bold">Transaction Reference</div>
-                  <div className="font-mono font-extrabold text-indigo-600 text-xs">TX-{receiptTx.id?.slice(0, 8)}</div>
+                  <div className="font-mono font-extrabold text-[#093A3E] text-xs">TX-{receiptTx.id?.slice(0, 8)}</div>
                 </div>
 
                 <div className="flex justify-between">

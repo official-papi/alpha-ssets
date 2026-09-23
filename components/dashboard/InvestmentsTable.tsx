@@ -33,25 +33,25 @@ export default function InvestmentsTable({
   onSelectInvestment,
 }: InvestmentsTableProps) {
   return (
-    <div id="investments" className="hm-card overflow-hidden">
+    <div id="investments" className="bg-white border border-[#d4e7e9] rounded-2xl shadow-xs overflow-hidden">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-6 py-5 border-b border-slate-100">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center">
-            <TrendingUp className="w-4 h-4 text-indigo-600" />
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#093A3E]/10 border border-[#093A3E]/20 flex items-center justify-center text-[#093A3E]">
+            <TrendingUp className="w-5 h-5 text-[#093A3E]" />
           </div>
           <div>
-            <h2 className="text-[15px] font-semibold text-slate-900">Active Investment Portfolio</h2>
-            <p className="text-[12px] text-slate-400">Real-time live countdowns and yield progress tracking.</p>
+            <h2 className="text-[16px] font-extrabold text-[#001011]">Active Investment Portfolio</h2>
+            <p className="text-[12px] text-slate-400">Algorithmic yield generation, live countdowns, and progress tracking.</p>
           </div>
         </div>
         <button
           onClick={onOpenInvest}
-          className="hm-btn hm-btn-primary text-[12px] py-2 px-4 cursor-pointer"
+          className="py-2.5 px-4 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-[12px] font-bold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
         >
-          <Plus className="w-3.5 h-3.5" />
-          New Investment
+          <Plus className="w-4 h-4 text-[#3AAFB9]" />
+          <span>New Investment</span>
         </button>
       </div>
 
@@ -74,11 +74,11 @@ export default function InvestmentsTable({
               <tr>
                 <td colSpan={7} className="py-12 text-center">
                   <div className="flex flex-col items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
-                      <TrendingUp className="w-5 h-5 text-slate-400" />
+                    <div className="w-10 h-10 rounded-full bg-[#093A3E]/8 flex items-center justify-center">
+                      <TrendingUp className="w-5 h-5 text-[#093A3E]" />
                     </div>
-                    <p className="text-[13px] text-slate-400 font-medium">No active investments</p>
-                    <p className="text-[12px] text-slate-300">Click &ldquo;New Investment&rdquo; to subscribe to a plan</p>
+                    <p className="text-[13px] text-slate-500 font-semibold">No active investments</p>
+                    <p className="text-[12px] text-slate-400">Click &ldquo;New Investment&rdquo; to subscribe to a compounding package</p>
                   </div>
                 </td>
               </tr>
@@ -95,30 +95,30 @@ export default function InvestmentsTable({
                 const rawNextPayout = inv.next_payout_at || inv.nextPayoutAt;
 
                 return (
-                  <tr key={invId} className="hover:bg-slate-50/60 transition-colors">
+                  <tr key={invId} className="hover:bg-slate-50/70 transition-colors">
 
                     <td>
-                      <div className="font-semibold text-slate-900 text-[13px]">{planName}</div>
+                      <div className="font-bold text-[#001011] text-[13px]">{planName}</div>
                       <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate max-w-[140px]">{invId.slice(0, 8)}…</div>
                     </td>
 
                     <td>
-                      <span className="font-semibold text-slate-900 font-mono text-[13px]">
+                      <span className="font-extrabold text-[#001011] font-mono text-[13px]">
                         ${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </span>
                     </td>
 
                     <td>
-                      <span className="text-emerald-600 font-semibold font-mono text-[13px]">
+                      <span className="text-emerald-600 font-extrabold font-mono text-[13px]">
                         +${dailyReturn.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
-                      <span className="text-slate-400 text-[11px] ml-1">/period</span>
+                      <span className="text-slate-400 text-[11px] ml-1 font-medium">/period</span>
                     </td>
 
                     <td className="w-44">
-                      <div className="flex justify-between text-[11px] text-slate-400 mb-1.5 font-medium">
+                      <div className="flex justify-between text-[11px] text-slate-500 mb-1.5 font-medium">
                         <span>{completedPayouts}/{totalPayouts} payouts</span>
-                        <span className="text-indigo-600 font-semibold">{progressPct}%</span>
+                        <span className="text-[#093A3E] font-bold font-mono">{progressPct}%</span>
                       </div>
                       <div className="hm-progress-track">
                         <div
@@ -161,7 +161,7 @@ export default function InvestmentsTable({
                       <button
                         type="button"
                         onClick={() => onSelectInvestment?.(inv)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-[11px] border border-indigo-200/80 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#093A3E]/8 hover:bg-[#093A3E] hover:text-white text-[#093A3E] font-bold text-[11px] border border-[#093A3E]/20 transition-all cursor-pointer shadow-2xs"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Overview</span>

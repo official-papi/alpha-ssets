@@ -9,7 +9,7 @@ import { Layers, CheckCircle2, UserPlus, Wallet, ArrowRightLeft } from "lucide-r
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-100 text-slate-800 flex flex-col font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#fafafa] text-zinc-600 flex flex-col font-sans relative overflow-hidden">
       <Navbar />
 
       <main className="flex-1 relative z-10 pb-16">
@@ -30,16 +30,16 @@ export default function HowItWorksPage() {
           hudContent={
             <div className="space-y-2 py-1 text-xs font-medium">
               <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/80">
-                <div className="w-6 h-6 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 font-extrabold flex items-center justify-center text-[10px]">1</div>
+                <div className="w-6 h-6 rounded-lg bg-[#093A3E]/10 border border-[#093A3E]/20 text-[#093A3E] font-extrabold flex items-center justify-center text-[10px]">1</div>
                 <span className="font-extrabold text-slate-900">Create Free Account</span>
               </div>
               <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/80">
-                <div className="w-6 h-6 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 font-extrabold flex items-center justify-center text-[10px]">2</div>
+                <div className="w-6 h-6 rounded-lg bg-[#093A3E]/10 border border-[#093A3E]/20 text-[#093A3E] font-extrabold flex items-center justify-center text-[10px]">2</div>
                 <span className="font-extrabold text-slate-900">Fund Deposit Wallet</span>
               </div>
-              <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-indigo-50/80 border border-indigo-200/80">
-                <div className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-extrabold flex items-center justify-center text-[10px]">3</div>
-                <span className="font-extrabold text-indigo-900">Subscribe & Earn Daily ROI</span>
+              <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-[#093A3E]/5 border border-[#3AAFB9]/30">
+                <div className="w-6 h-6 rounded-lg bg-[#093A3E] text-[#3AAFB9] font-extrabold flex items-center justify-center text-[10px]">3</div>
+                <span className="font-extrabold text-[#001011]">Subscribe & Earn Daily ROI</span>
               </div>
             </div>
           }

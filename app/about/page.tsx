@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-100 text-slate-800 flex flex-col font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#fafafa] text-zinc-600 flex flex-col font-sans relative overflow-hidden">
       <Navbar />
 
       <main className="flex-1 relative z-10 pb-20">
@@ -38,7 +38,7 @@ export default function AboutPage() {
 
               <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50/80 border border-slate-200/80">
                 <div className="flex items-center space-x-2">
-                  <Lock className="w-4 h-4 text-indigo-600" />
+                  <Lock className="w-4 h-4 text-[#093A3E]" />
                   <span className="font-extrabold text-slate-900">Cold Storage Custody</span>
                 </div>
                 <span className="font-mono font-bold text-slate-700">Multi-Sig Vault</span>
@@ -49,7 +49,7 @@ export default function AboutPage() {
                   <Zap className="w-4 h-4 text-amber-500" />
                   <span className="font-extrabold text-slate-900">Automated Edge Engine</span>
                 </div>
-                <span className="font-mono font-bold text-indigo-600">0.00s Latency</span>
+                <span className="font-mono font-bold text-[#3AAFB9]">0.00s Latency</span>
               </div>
             </div>
           }
@@ -61,9 +61,9 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-5xl mx-auto">
             
             <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/15 to-blue-500/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-[#093A3E]/10 to-[#3AAFB9]/10 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
               <div className="relative bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 space-y-4 shadow-xl shadow-slate-900/5">
-                <div className="w-12 h-12 rounded-xl bg-indigo-50/80 border border-indigo-100/80 text-indigo-600 flex items-center justify-center font-bold shadow-xs">
+                <div className="w-12 h-12 rounded-xl bg-[#093A3E]/10 border border-[#093A3E]/20 text-[#093A3E] flex items-center justify-center font-bold shadow-xs">
                   <Target className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-black text-slate-900">Our Corporate Mission</h3>
@@ -74,9 +74,9 @@ export default function AboutPage() {
             </div>
 
             <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/15 to-teal-500/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-[#3AAFB9]/15 to-[#093A3E]/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
               <div className="relative bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 space-y-4 shadow-xl shadow-slate-900/5">
-                <div className="w-12 h-12 rounded-xl bg-emerald-50/80 border border-emerald-100/80 text-emerald-600 flex items-center justify-center font-bold shadow-xs">
+                <div className="w-12 h-12 rounded-xl bg-[#3AAFB9]/15 border border-[#3AAFB9]/30 text-[#093A3E] flex items-center justify-center font-bold shadow-xs">
                   <Cpu className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-black text-slate-900">Automated Infrastructure</h3>
@@ -90,7 +90,7 @@ export default function AboutPage() {
 
           {/* Call to Action Card */}
           <div className="relative group max-w-3xl mx-auto">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600/30 to-violet-600/30 rounded-3xl blur-md opacity-80 group-hover:opacity-100 transition duration-500" />
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#093A3E]/20 to-[#3AAFB9]/20 rounded-3xl blur-md opacity-80 group-hover:opacity-100 transition duration-500" />
             <div className="relative bg-white/80 backdrop-blur-2xl border border-white/90 rounded-2xl p-10 text-center shadow-2xl space-y-4">
               <h3 className="text-2xl font-black text-slate-900">Ready to Start Compounding?</h3>
               <p className="text-xs text-slate-600 font-medium max-w-md mx-auto">
@@ -98,7 +98,7 @@ export default function AboutPage() {
               </p>
               <Link
                 href="/register"
-                className="inline-flex items-center space-x-2 minimal-btn-primary px-8 py-3.5 rounded-xl text-xs font-extrabold shadow-lg shadow-indigo-600/20"
+                className="inline-flex items-center space-x-2 minimal-btn-primary px-8 py-3.5 rounded-xl text-xs font-extrabold shadow-lg shadow-[#093A3E]/20"
               >
                 <span>Create Free Account</span>
                 <ArrowRight className="w-4 h-4" />

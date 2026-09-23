@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Wallet, TrendingUp, Zap, RefreshCw, ArrowDownRight, ArrowUpRight, Plus } from "lucide-react";
+import { Wallet, TrendingUp, Zap, RefreshCw, ArrowDownRight, ArrowUpRight, Plus, ShieldCheck } from "lucide-react";
 
 interface OverviewCardsProps {
   depositBalance?: number;
@@ -29,87 +29,103 @@ export default function OverviewCards({
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
       {/* ── Deposit Wallet ── */}
-      <div className="hm-stat-card hm-stat-brand group hover:shadow-md transition-all duration-150">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Deposit Wallet</p>
-            <p className="text-[26px] font-bold text-zinc-950 tracking-tight font-mono leading-none">
-              ${fmt(depositBalance)}
-            </p>
+      <div className="bg-white border border-[#d4e7e9] rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-[#093A3E]/40 transition-all duration-200 flex flex-col justify-between relative overflow-hidden group">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[#093A3E]" />
+        <div>
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Deposit Wallet</p>
+              <p className="text-[26px] font-extrabold text-[#001011] tracking-tight font-mono leading-none">
+                ${fmt(depositBalance)}
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-[#093A3E]/8 border border-[#093A3E]/15 flex items-center justify-center flex-shrink-0 text-[#093A3E] group-hover:scale-105 transition-transform">
+              <Wallet className="w-5 h-5" />
+            </div>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center flex-shrink-0 text-zinc-900">
-            <Wallet className="w-4 h-4" />
-          </div>
+          <p className="text-[11px] text-slate-400 font-medium mb-4">Available liquid capital for investments</p>
         </div>
         <button
           onClick={onOpenDeposit}
-          className="hm-btn hm-btn-primary w-full text-[12px] py-2 font-medium"
+          className="w-full py-2.5 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-[12px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
         >
-          <ArrowDownRight className="w-3.5 h-3.5" />
-          Deposit Funds
+          <ArrowDownRight className="w-3.5 h-3.5 text-[#3AAFB9]" />
+          <span>Deposit Funds</span>
         </button>
       </div>
 
       {/* ── Interest Wallet ── */}
-      <div className="hm-stat-card hm-stat-success group hover:shadow-md transition-all duration-150">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Interest Wallet</p>
-            <p className="text-[26px] font-bold text-emerald-600 tracking-tight font-mono leading-none">
-              ${fmt(interestBalance)}
-            </p>
+      <div className="bg-white border border-[#d4e7e9] rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-[#3AAFB9] transition-all duration-200 flex flex-col justify-between relative overflow-hidden group">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#093A3E] to-[#3AAFB9]" />
+        <div>
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Interest Earnings</p>
+              <p className="text-[26px] font-extrabold text-emerald-600 tracking-tight font-mono leading-none">
+                ${fmt(interestBalance)}
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-[#3AAFB9]/10 border border-[#3AAFB9]/25 flex items-center justify-center flex-shrink-0 text-[#093A3E] group-hover:scale-105 transition-transform">
+              <TrendingUp className="w-5 h-5 text-[#3AAFB9]" />
+            </div>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 text-emerald-700">
-            <TrendingUp className="w-4 h-4" />
-          </div>
+          <p className="text-[11px] text-slate-400 font-medium mb-4">Realized yield ready for payout or transfer</p>
         </div>
         <button
           onClick={onOpenWithdraw}
-          className="hm-btn w-full text-[12px] py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-colors font-medium"
+          className="w-full py-2.5 rounded-xl bg-[#f0f8f9] hover:bg-[#3AAFB9]/15 text-[#093A3E] border border-[#3AAFB9]/30 text-[12px] font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs"
         >
-          <ArrowUpRight className="w-3.5 h-3.5" />
-          Request Payout
+          <ArrowUpRight className="w-3.5 h-3.5 text-[#3AAFB9]" />
+          <span>Request Payout</span>
         </button>
       </div>
 
       {/* ── Total Invested ── */}
-      <div className="hm-stat-card hm-stat-sky group hover:shadow-md transition-all duration-150">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Active Capital</p>
-            <p className="text-[26px] font-bold text-zinc-950 tracking-tight font-mono leading-none">
-              ${fmt(totalInvested)}
-            </p>
+      <div className="bg-white border border-[#d4e7e9] rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-[#093A3E]/40 transition-all duration-200 flex flex-col justify-between relative overflow-hidden group">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[#001011]" />
+        <div>
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Active Capital</p>
+              <p className="text-[26px] font-extrabold text-[#001011] tracking-tight font-mono leading-none">
+                ${fmt(totalInvested)}
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-800 group-hover:scale-105 transition-transform">
+              <Zap className="w-5 h-5 text-[#093A3E]" />
+            </div>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center flex-shrink-0 text-zinc-900">
-            <Zap className="w-4 h-4" />
-          </div>
+          <p className="text-[11px] text-slate-400 font-medium mb-4">Capital locked in automated compounding</p>
         </div>
         <button
           onClick={onOpenInvest}
-          className="hm-btn w-full text-[12px] py-2 bg-zinc-50 text-zinc-800 border border-zinc-200 hover:bg-zinc-100 transition-colors font-medium"
+          className="w-full py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 hover:border-[#3AAFB9]/40 text-[12px] font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs"
         >
-          <Plus className="w-3.5 h-3.5" />
-          Invest In Plan
+          <Plus className="w-3.5 h-3.5 text-[#093A3E]" />
+          <span>Invest In Plan</span>
         </button>
       </div>
 
       {/* ── Total Payouts ── */}
-      <div className="hm-stat-card hm-stat-purple group hover:shadow-md transition-all duration-150">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Total Payouts</p>
-            <p className="text-[26px] font-bold text-zinc-950 tracking-tight font-mono leading-none">
-              ${fmt(totalWithdrawn)}
-            </p>
+      <div className="bg-white border border-[#d4e7e9] rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-[#3AAFB9] transition-all duration-200 flex flex-col justify-between relative overflow-hidden group">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[#3AAFB9]" />
+        <div>
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Payouts</p>
+              <p className="text-[26px] font-extrabold text-[#001011] tracking-tight font-mono leading-none">
+                ${fmt(totalWithdrawn)}
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-800 group-hover:scale-105 transition-transform">
+              <RefreshCw className="w-5 h-5 text-[#3AAFB9]" />
+            </div>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center flex-shrink-0 text-zinc-900">
-            <RefreshCw className="w-4 h-4" />
-          </div>
+          <p className="text-[11px] text-slate-400 font-medium mb-4">Total principal and profit settled</p>
         </div>
-        <div className="flex items-center gap-1.5 text-[12px] font-normal text-zinc-500">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
-          <span>Ledger: <strong className="text-zinc-800 font-semibold">Audited &amp; Verified</strong></span>
+        <div className="w-full py-2.5 rounded-xl bg-[#001011] text-[#3AAFB9] border border-[#093A3E] text-[11px] font-bold flex items-center justify-center gap-2 tracking-wide font-mono shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-[#3AAFB9] inline-block animate-pulse" />
+          <span>AUDITED LEDGER · VERIFIED</span>
         </div>
       </div>
 

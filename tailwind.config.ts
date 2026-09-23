@@ -39,6 +39,19 @@ const config: Config = {
           light: "#d9eef0",
           border: "#cbe3e6",
         },
+        indigo: {
+          50: "#f0f8f9",
+          100: "#d9eef0",
+          200: "#b5dfe3",
+          300: "#86cbd1",
+          400: "#5cb4be",
+          500: "#3AAFB9",
+          600: "#093A3E",
+          700: "#062a2d",
+          800: "#093A3E",
+          900: "#001011",
+          950: "#001011",
+        },
       },
       fontFamily: {
         sans: [

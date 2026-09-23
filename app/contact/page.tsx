@@ -33,7 +33,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-100 text-slate-800 flex flex-col font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#fafafa] text-zinc-600 flex flex-col font-sans relative overflow-hidden">
       <Navbar />
 
       <main className="flex-1 relative z-10 pb-20">
@@ -55,18 +55,18 @@ export default function ContactPage() {
             <div className="space-y-3 py-1 text-xs font-medium">
               <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-indigo-600" />
+                  <Clock className="w-4 h-4 text-[#093A3E]" />
                   <span className="font-extrabold text-slate-900">Current Queue SLA</span>
                 </div>
                 <span className="font-mono font-extrabold text-emerald-600">~ 12 Mins</span>
               </div>
 
-              <div className="p-3 rounded-xl bg-indigo-50/80 border border-indigo-200/80 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-[#093A3E]/5 border border-[#3AAFB9]/30 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                  <span className="font-extrabold text-indigo-950">Encrypted Communication</span>
+                  <ShieldCheck className="w-4 h-4 text-[#093A3E]" />
+                  <span className="font-extrabold text-[#001011]">Encrypted Communication</span>
                 </div>
-                <span className="font-mono font-bold text-indigo-700">AES-256</span>
+                <span className="font-mono font-bold text-[#093A3E]">AES-256</span>
               </div>
             </div>
           }
@@ -80,9 +80,9 @@ export default function ContactPage() {
             <div className="space-y-4">
               
               <div className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/15 to-blue-500/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#093A3E]/10 to-[#3AAFB9]/10 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
                 <div className="relative bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 flex items-center space-x-4 shadow-xl shadow-slate-900/5">
-                  <div className="w-12 h-12 rounded-xl bg-indigo-50/80 border border-indigo-100/80 text-indigo-600 flex items-center justify-center font-bold flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-[#093A3E]/10 border border-[#093A3E]/20 text-[#093A3E] flex items-center justify-center font-bold flex-shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
@@ -93,9 +93,9 @@ export default function ContactPage() {
               </div>
 
               <div className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/15 to-teal-500/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#093A3E]/10 to-[#3AAFB9]/10 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
                 <div className="relative bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 flex items-center space-x-4 shadow-xl shadow-slate-900/5">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50/80 border border-emerald-100/80 text-emerald-600 flex items-center justify-center font-bold flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-[#3AAFB9]/15 border border-[#3AAFB9]/30 text-[#093A3E] flex items-center justify-center font-bold flex-shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
@@ -106,9 +106,9 @@ export default function ContactPage() {
               </div>
 
               <div className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/15 to-violet-500/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#001011]/10 to-[#093A3E]/10 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
                 <div className="relative bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 flex items-center space-x-4 shadow-xl shadow-slate-900/5">
-                  <div className="w-12 h-12 rounded-xl bg-purple-50/80 border border-purple-100/80 text-purple-600 flex items-center justify-center font-bold flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-[#001011]/5 border border-[#001011]/10 text-[#001011] flex items-center justify-center font-bold flex-shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
@@ -122,7 +122,7 @@ export default function ContactPage() {
 
             {/* Right Glass Form */}
             <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600/20 to-violet-600/20 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-[#093A3E]/15 to-[#3AAFB9]/15 rounded-3xl blur-md opacity-60 group-hover:opacity-100 transition duration-500" />
               
               <div className="relative bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-xl shadow-slate-900/5">
                 {submitted ? (
@@ -131,7 +131,7 @@ export default function ContactPage() {
                       <CheckCircle2 className="w-6 h-6" />
                     </div>
                     <h3 className="text-lg font-black text-slate-900">Message Sent Successfully!</h3>
-                    <p className="text-xs text-slate-600 font-medium">Our support desk will respond to <strong className="font-mono text-indigo-600">{formData.email}</strong> within 2 hours.</p>
+                    <p className="text-xs text-slate-600 font-medium">Our support desk will respond to <strong className="font-mono text-[#093A3E]">{formData.email}</strong> within 2 hours.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -143,7 +143,7 @@ export default function ContactPage() {
                         placeholder="John Doe"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-indigo-600"
+                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                       />
                     </div>
 
@@ -155,7 +155,7 @@ export default function ContactPage() {
                         placeholder="john@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-indigo-600"
+                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                       />
                     </div>
 
@@ -167,7 +167,7 @@ export default function ContactPage() {
                         placeholder="Deposit Inquiry"
                         value={formData.subject}
                         onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-indigo-600"
+                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                       />
                     </div>
 
@@ -179,13 +179,13 @@ export default function ContactPage() {
                         placeholder="Describe your inquiry..."
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-medium focus:outline-none focus:border-indigo-600"
+                        className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-medium focus:outline-none focus:border-[#093A3E] focus:ring-1 focus:ring-[#3AAFB9]"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="minimal-btn-primary w-full py-3.5 px-4 text-xs font-extrabold flex items-center justify-center space-x-2 shadow-md shadow-indigo-600/15 cursor-pointer"
+                      className="minimal-btn-primary w-full py-3.5 px-4 text-xs font-extrabold flex items-center justify-center space-x-2 shadow-md shadow-[#093A3E]/15 cursor-pointer"
                     >
                       <span>Send Support Ticket</span>
                       <Send className="w-3.5 h-3.5" />

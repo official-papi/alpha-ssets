@@ -42,37 +42,38 @@ export default function DepositPage() {
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900">Deposit Funds</h1>
+            <h1 className="text-2xl font-extrabold text-[#001011]">Deposit Funds</h1>
             <p className="text-xs text-slate-500 mt-1">Fund your Deposit Wallet via USDT TRC20, Bitcoin, or Bank Wire.</p>
           </div>
 
           <button
             type="button"
             onClick={() => setIsDepositOpen(true)}
-            className="minimal-btn-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-2 cursor-pointer shadow-md shadow-indigo-600/15 self-start sm:self-auto"
+            className="py-2.5 px-4 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-xs font-bold flex items-center space-x-2 cursor-pointer shadow-xs transition-all self-start sm:self-auto"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-[#3AAFB9]" />
             <span>Make New Deposit</span>
           </button>
         </div>
 
         {/* Balance Stat Card */}
-        <div className="minimal-card p-6 max-w-sm border-slate-200">
-          <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Available Deposit Balance</div>
-          <div className="text-3xl font-extrabold font-mono text-slate-900 mt-1">${depositWallet.toFixed(2)}</div>
+        <div className="bg-white border border-[#d4e7e9] rounded-2xl p-6 max-w-sm shadow-xs relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#093A3E]" />
+          <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Available Deposit Balance</div>
+          <div className="text-3xl font-extrabold font-mono text-[#001011] mt-1">${depositWallet.toFixed(2)}</div>
         </div>
 
         {/* Deposit Logs Table */}
-        <div className="minimal-card p-6 border-slate-200">
-          <h3 className="text-sm font-extrabold text-slate-900 mb-4 flex items-center space-x-2">
-            <History className="w-4 h-4 text-indigo-600" />
-            <span>Deposit History</span>
+        <div className="bg-white border border-[#d4e7e9] rounded-2xl p-6 shadow-xs">
+          <h3 className="text-sm font-extrabold text-[#001011] mb-4 flex items-center space-x-2">
+            <History className="w-4 h-4 text-[#093A3E]" />
+            <span>Deposit History Ledger</span>
           </h3>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-500 uppercase text-[10px] tracking-wider">
+                <tr className="border-b border-slate-200 text-slate-400 uppercase text-[10px] tracking-wider">
                   <th className="pb-3">Gateway</th>
                   <th className="pb-3">Amount</th>
                   <th className="pb-3">TX Hash / Ref</th>
@@ -90,8 +91,8 @@ export default function DepositPage() {
                 ) : (
                   depositLogs.map((log) => (
                     <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-3 font-extrabold text-slate-900 uppercase">{log.gateway}</td>
-                      <td className="py-3 font-mono font-extrabold text-indigo-600">${Number(log.amount).toFixed(2)}</td>
+                      <td className="py-3 font-extrabold text-[#001011] uppercase">{log.gateway}</td>
+                      <td className="py-3 font-mono font-extrabold text-[#093A3E]">${Number(log.amount).toFixed(2)}</td>
                       <td className="py-3 font-mono text-slate-500 text-[11px] truncate max-w-[150px]">{log.transaction_id || "-"}</td>
                       <td className="py-3">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
