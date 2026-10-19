@@ -16,6 +16,8 @@ export const metadata: Metadata = {
 
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import GoogleTranslateBridge from "@/components/common/GoogleTranslateBridge";
+import { WalletProvider } from "@/lib/wallet/WalletContext";
+import WalletConnectModal from "@/components/common/WalletConnectModal";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -29,8 +31,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         suppressHydrationWarning
       >
         <LanguageProvider>
-          <GoogleTranslateBridge />
-          {children}
+          <WalletProvider>
+            <GoogleTranslateBridge />
+            <WalletConnectModal />
+            {children}
+          </WalletProvider>
         </LanguageProvider>
       </body>
     </html>

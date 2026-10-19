@@ -255,9 +255,8 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex justify-between text-[10px] text-slate-500 font-medium pt-2 border-t border-slate-100">
-            <span>Starter: 45%</span>
-            <span>Silver: 35%</span>
-            <span>Gold: 20%</span>
+            <span>Basic Plan: 58%</span>
+            <span>Premium Plan: 42%</span>
           </div>
         </div>
 

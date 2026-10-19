@@ -12,12 +12,8 @@ import { createClient } from "@/lib/supabase/client";
 import { getActiveUser } from "@/lib/auth/activeUser";
 
 const DEFAULT_PLANS = [
-  { id: "plan-1", name: "Regular Package", min_amount: 500, max_amount: 2000, interest_rate: 2.5, return_type: "weekly", repeat_time: 8 },
-  { id: "plan-2", name: "Silver Package", min_amount: 3000, max_amount: 5000, interest_rate: 4.0, return_type: "weekly", repeat_time: 12 },
-  { id: "plan-3", name: "Gold Package", min_amount: 10000, max_amount: 20000, interest_rate: 6.0, return_type: "weekly", repeat_time: 16 },
-  { id: "plan-4", name: "VIP Package", min_amount: 50000, max_amount: 200000, interest_rate: 10.0, return_type: "weekly", repeat_time: 24 },
-  { id: "plan-5", name: "Ultimate Package", min_amount: 500000, max_amount: 3000000, interest_rate: 12.0, return_type: "weekly", repeat_time: 36 },
-  { id: "plan-6", name: "Elites Package", min_amount: 5000000, max_amount: 20000000, interest_rate: 15.5, return_type: "weekly", repeat_time: 52 },
+  { id: "plan-1", name: "Basic Plan", min_amount: 200, max_amount: 4999, interest_rate: 3.5, return_type: "weekly", repeat_time: 8 },
+  { id: "plan-2", name: "Premium Plan", min_amount: 5000, max_amount: 1000000, interest_rate: 7.0, return_type: "weekly", repeat_time: 16 },
 ];
 
 export default function InvestmentsPage() {
@@ -83,8 +79,13 @@ export default function InvestmentsPage() {
       }
 
       const { data: livePlans } = await supabase.from("investment_plans").select("*").eq("is_active", true);
-      if (livePlans && livePlans.length > 0) {
-        const formattedPlans = livePlans.map((p: any) => ({
+      const validLivePlans = (livePlans || []).filter((p: any) => {
+        const n = (p.name || "").toLowerCase();
+        return n.includes("basic") || n.includes("premium");
+      });
+
+      if (validLivePlans.length > 0) {
+        const formattedPlans = validLivePlans.map((p: any) => ({
           id: p.id,
           name: p.name,
           min_amount: Number(p.min_amount),
@@ -95,6 +96,9 @@ export default function InvestmentsPage() {
         }));
         setDbPlans(formattedPlans);
         if (formattedPlans[0]) setSelectedPlanId(formattedPlans[0].id);
+      } else {
+        setDbPlans(DEFAULT_PLANS);
+        setSelectedPlanId(DEFAULT_PLANS[0].id);
       }
     }
   };

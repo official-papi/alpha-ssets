@@ -10,6 +10,7 @@ import RoiCalculator from "@/components/landing/RoiCalculator";
 import HowItWorks from "@/components/landing/HowItWorks";
 import ReferralSection from "@/components/landing/ReferralSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
+import AiTradingEscrowSection from "@/components/landing/AiTradingEscrowSection";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, TrendingUp, Zap, Lock, Sparkles, MessageSquare, Check, Star } from "lucide-react";
 import Image from "next/image";
@@ -305,6 +306,7 @@ export default function Home() {
         </section>
 
         <TopInvestors />
+        <AiTradingEscrowSection />
         <PlanCards />
         <RoiCalculator />
         <HowItWorks />

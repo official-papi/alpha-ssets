@@ -47,7 +47,13 @@ export default function AdminPlansPage() {
           .from("investment_plans")
           .select("*")
           .order("min_amount", { ascending: true });
-        if (data) setPlans(data);
+        if (data) {
+          const filtered = data.filter((p: any) => {
+            const n = (p.name || "").toLowerCase();
+            return n.includes("basic") || n.includes("premium");
+          });
+          setPlans(filtered);
+        }
       }
     } catch (e) {
       const supabase = createClient();
@@ -55,7 +61,13 @@ export default function AdminPlansPage() {
         .from("investment_plans")
         .select("*")
         .order("min_amount", { ascending: true });
-      if (data) setPlans(data);
+      if (data) {
+        const filtered = data.filter((p: any) => {
+          const n = (p.name || "").toLowerCase();
+          return n.includes("basic") || n.includes("premium");
+        });
+        setPlans(filtered);
+      }
     } finally {
       setLoading(false);
     }

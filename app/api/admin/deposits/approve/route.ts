@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminSupabase } from "@/lib/supabase/admin";
+import { sendEmail } from "@/lib/email/resend";
+import { depositApprovedEmail } from "@/lib/email/templates";
 
 // Elevated API endpoint to approve deposit and credit user wallet
 
@@ -88,6 +90,30 @@ export async function POST(req: Request) {
       description: `Deposit approved via ${depObj.gateway || depObj.gateway_name || "Payment Gateway"}`,
       trx_ref: `DEP-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
     });
+
+    // Send email notification to user
+    try {
+      let recipientEmail = depObj.profiles?.email;
+      let recipientName = depObj.profiles?.full_name;
+      if (!recipientEmail) {
+        const { data: userData } = await supabase.auth.admin.getUserById(userId);
+        recipientEmail = userData?.user?.email;
+        recipientName = userData?.user?.user_metadata?.full_name;
+      }
+
+      if (recipientEmail) {
+        const { subject, html } = depositApprovedEmail({
+          name: recipientName,
+          amount: depositAmount,
+          newBalance: newBal,
+          gateway: depObj.gateway || depObj.gateway_name || "Payment Gateway",
+          trxId: depObj.trx_id || depObj.transaction_id,
+        });
+        await sendEmail({ to: recipientEmail, subject, html });
+      }
+    } catch (emailErr) {
+      console.warn("Failed to dispatch deposit approved email:", emailErr);
+    }
 
     return NextResponse.json({
       success: true,

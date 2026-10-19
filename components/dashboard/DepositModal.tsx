@@ -108,6 +108,23 @@ export default function DepositModal({ isOpen, gateways, onClose, onSuccess }: D
       setError(insertError.message);
       setLoading(false);
     } else {
+      // Dispatch email confirmation in background
+      fetch("/api/email/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event: "deposit_submitted",
+          payload: {
+            userId: activeUser.id,
+            userEmail: activeUser.email,
+            userName: activeUser.full_name,
+            amount: finalAmount,
+            gateway: selectedGateway.name,
+            trxId: trxId.trim() || undefined,
+          },
+        }),
+      }).catch((e) => console.warn("Background email notification error:", e));
+
       setLoading(false);
       onSuccess();
       onClose();

@@ -49,18 +49,30 @@ export default function AdminWithdrawalsPage() {
     setSubmitting(true);
     setMsg(null);
 
-    const supabase = createClient();
-    await supabase.from("withdrawals").update({
-      status: "approved",
-      admin_feedback: feedback || "Withdrawal payout sent successfully",
-      updated_at: new Date().toISOString(),
-    }).eq("id", withdrawalId);
+    try {
+      const res = await fetch("/api/admin/withdrawals/approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          withdrawalId,
+          feedback: feedback || "Withdrawal payout sent successfully",
+        }),
+      });
 
-    setMsg({ text: "Withdrawal approved and completed!", type: "success" });
-    setTimeout(() => {
-      setSelectedWithdrawal(null);
-      fetchWithdrawals();
-    }, 1200);
+      const data = await res.json();
+      if (data.success) {
+        setMsg({ text: data.message || "Withdrawal approved and completed!", type: "success" });
+        setTimeout(() => {
+          setSelectedWithdrawal(null);
+          fetchWithdrawals();
+        }, 1200);
+      } else {
+        setMsg({ text: data.error || "Failed to approve withdrawal.", type: "error" });
+      }
+    } catch (err: any) {
+      setMsg({ text: err.message || "Network error while approving payout.", type: "error" });
+    }
+
     setSubmitting(false);
   };
 

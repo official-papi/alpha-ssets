@@ -104,15 +104,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Language & Regulatory Disclaimer Column */}
+          {/* Language Column */}
           <div className="space-y-4">
             <h4 className="text-[11px] font-bold text-[#3AAFB9] uppercase tracking-widest mb-2">
               {t.footer.selectLanguage}
             </h4>
             <LanguageSelector variant="footer" dropDirection="up" />
-            <p className="text-[#5cb4be]/70 leading-relaxed text-[12px] pt-2 font-normal">
-              {t.footer.disclaimerText}
-            </p>
           </div>
 
         </div>
