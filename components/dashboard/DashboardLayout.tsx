@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard, Wallet, ArrowDownRight, ArrowUpRight,
   History, Users, User, ShieldCheck, Key, ShieldAlert,
-  LogOut, TrendingUp, Menu, X, Bell, Globe, Sparkles, Cpu
+  LogOut, TrendingUp, Menu, X, Bell, Globe, Sparkles
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -95,7 +95,6 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
   const navItems = [
     { label: t.dashboard.overview,         href: "/dashboard",              icon: LayoutDashboard },
     { label: t.dashboard.investments,      href: "/dashboard/investments",  icon: TrendingUp },
-    { label: "AI Trading Wallet",          href: "/dashboard/wallet-connect", icon: Cpu },
     { label: t.dashboard.depositFunds,     href: "/dashboard/deposit",      icon: ArrowDownRight },
     { label: t.dashboard.withdrawFunds,    href: "/dashboard/withdraw",     icon: ArrowUpRight },
     { label: t.dashboard.transactions,     href: "/dashboard/transactions", icon: History },

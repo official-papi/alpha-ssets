@@ -9,9 +9,9 @@ const ICONS = [UserPlus, Wallet, TrendingUp];
 
 export default function HowItWorks() {
   const [steps, setSteps] = useState([
-    { step: 1, title: "Connect Web3 Wallet or Register", desc: "Connect your MetaMask, WalletConnect, or Trust Wallet, or create your account to access the institutional trading console." },
-    { step: 2, title: "Select Basic or Premium with Escrow", desc: "Allocate capital into the Basic Plan (3.5% weekly) or Premium Plan (7.0% weekly). 100% of your principal is locked in smart-contract escrow." },
-    { step: 3, title: "Company Trades For You via AI", desc: "Our proprietary AI neural network makes optimal decisions on when to buy and sell. Automated weekly profits are deposited directly to your wallet." },
+    { step: 1, title: "Create Free Account", desc: "Fill in your registration details and complete instant email authentication to unlock your investor dashboard." },
+    { step: 2, title: "Make A Deposit & Select Plan", desc: "Fund your account via crypto (USDT, BTC, ETH) or bank transfer, and activate your preferred investment package." },
+    { step: 3, title: "Earn Interest & Withdraw", desc: "Receive automated daily yield credited directly to your interest wallet. Withdraw earnings anytime instantly." },
   ]);
 
   useEffect(() => {

@@ -2,17 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart2, ArrowRight, Menu, X, LayoutDashboard, Loader2, Home, Wallet } from "lucide-react";
+import { BarChart2, ArrowRight, Menu, X, LayoutDashboard, Loader2, Home } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import LanguageSelector from "@/components/common/LanguageSelector";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { useWallet } from "@/lib/wallet/WalletContext";
 
 export default function Navbar() {
   const pathname = usePathname();
   const { t } = useLanguage();
-  const { isConnected, shortAddress, openModal } = useWallet();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -77,21 +75,6 @@ export default function Navbar() {
         {/* Desktop CTAs & Language Selector */}
         <div className="hidden md:flex items-center gap-3">
           <LanguageSelector variant="default" />
-
-          {/* Web3 Wallet Connect Button */}
-          <button
-            type="button"
-            onClick={openModal}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
-              isConnected
-                ? "bg-[#093A3E] text-[#3AAFB9] border-[#3AAFB9]/40 hover:bg-[#001011]"
-                : "bg-[#041819] text-white border-[#093A3E] hover:border-[#3AAFB9]"
-            }`}
-          >
-            <Wallet className="w-3.5 h-3.5 text-[#3AAFB9]" />
-            <span>{isConnected ? shortAddress : "Connect Wallet"}</span>
-            {isConnected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />}
-          </button>
 
           {authLoading ? (
             <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
@@ -161,19 +144,6 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          {/* Mobile Wallet Connect */}
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              openModal();
-            }}
-            className="w-full py-2.5 px-3 rounded-xl bg-[#093A3E] text-white text-xs font-bold flex items-center justify-center gap-2 border border-[#3AAFB9]/40 mt-2"
-          >
-            <Wallet className="w-4 h-4 text-[#3AAFB9]" />
-            <span>{isConnected ? `Wallet: ${shortAddress}` : "Connect Web3 Trading Wallet"}</span>
-          </button>
-
           <div className="pt-3 flex gap-2 border-t border-zinc-100 mt-2">
             {user ? (
               <Link

@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Trophy, ArrowDownRight, ArrowUpRight, ShieldCheck } from "lucide-react";
 
 const TOP_INVESTORS = [
-  { rank: "1st", name: "Alexander Wright", amount: "$486,000.00", badge: "Premium Tier", flag: "🇺🇸" },
-  { rank: "2nd", name: "Sophia Chen",       amount: "$400,000.00", badge: "Premium Tier", flag: "🇸🇬" },
-  { rank: "3rd", name: "Marcus Vance",      amount: "$287,000.00", badge: "Premium Tier", flag: "🇬🇧" },
-  { rank: "4th", name: "Elena Rostova",     amount: "$250,000.00", badge: "Basic Tier",    flag: "🇩🇪" },
+  { rank: "1st", name: "Alexander Wright", amount: "$486,000.00", badge: "VIP Platinum", flag: "🇺🇸" },
+  { rank: "2nd", name: "Sophia Chen",       amount: "$400,000.00", badge: "Gold Executive", flag: "🇸🇬" },
+  { rank: "3rd", name: "Marcus Vance",      amount: "$287,000.00", badge: "Gold Executive", flag: "🇬🇧" },
+  { rank: "4th", name: "Elena Rostova",     amount: "$250,000.00", badge: "Silver Growth",   flag: "🇩🇪" },
 ];
 
 const RECENT_TRANSACTIONS = [

@@ -19,8 +19,12 @@ interface InvestmentTier {
 }
 
 const DEFAULT_PLANS: InvestmentTier[] = [
-  { id: "basic",   name: "Basic Plan",   rate: 3.5,  weeks: 8,  min: 200,   max: 4999,    step: 100,  badge: "Starter Tier", interval: "Weekly", capitalBack: true },
-  { id: "premium", name: "Premium Plan", rate: 7.0,  weeks: 16, min: 5000,  max: 1000000, step: 2500, badge: "Most Popular", interval: "Weekly", capitalBack: true },
+  { id: "regular",  name: "Regular",   rate: 2.5,  weeks: 8,  min: 500,     max: 2000,     step: 100,    badge: "Starter",    interval: "Weekly", capitalBack: true },
+  { id: "silver",   name: "Silver",    rate: 4.0,  weeks: 12, min: 3000,    max: 5000,     step: 250,    badge: "Growth",     interval: "Weekly", capitalBack: true },
+  { id: "gold",     name: "Gold",      rate: 6.0,  weeks: 16, min: 10000,   max: 20000,    step: 1000,   badge: "Popular",    interval: "Weekly", capitalBack: true },
+  { id: "vip",      name: "VIP",       rate: 10.0, weeks: 24, min: 50000,   max: 200000,   step: 5000,   badge: "High Yield", interval: "Weekly", capitalBack: true },
+  { id: "ultimate", name: "Ultimate",  rate: 12.0, weeks: 36, min: 500000,  max: 3000000,  step: 50000,  badge: "Executive",  interval: "Weekly", capitalBack: true },
+  { id: "elites",   name: "Elites",    rate: 15.5, weeks: 52, min: 5000000, max: 20000000, step: 250000, badge: "Exclusive",  interval: "Weekly", capitalBack: true },
 ];
 
 export default function RoiCalculator() {
@@ -40,24 +44,19 @@ export default function RoiCalculator() {
           .eq("is_active", true)
           .order("min_amount", { ascending: true });
 
-        const validPlans = (data || []).filter((p: any) => {
-          const n = (p.name || "").toLowerCase();
-          return n.includes("basic") || n.includes("premium");
-        });
-
-        if (validPlans.length > 0) {
-          const formatted: InvestmentTier[] = validPlans.map((p: any) => {
+        if (data && data.length > 0) {
+          const formatted: InvestmentTier[] = data.map((p: any) => {
             const isWeekly = Number(p.payout_interval_hours) === 168 || (p.description || "").toLowerCase().includes("week");
             const rate = Number(p.roi_percentage || 0);
             const weeks = isWeekly ? Number(p.total_payout_periods || 8) : Math.max(1, Math.round(Number(p.total_payout_periods || 30) / 7));
-            const min = Number(p.min_amount || 200);
-            const max = Number(p.max_amount || 1000000);
-            const step = Math.max(100, Math.round((max - min) / 25));
-            const isPremium = (p.name || "").toLowerCase().includes("premium");
-            const badge = p.badge || (isPremium ? "Most Popular" : "Starter Tier");
+            const min = Number(p.min_amount || 100);
+            const max = Number(p.max_amount || 10000);
+            const step = Math.max(50, Math.round((max - min) / 20));
+            const isElite = (p.name || "").toLowerCase().includes("elite");
+            const badge = p.badge || (isElite ? "Exclusive" : rate >= 10 ? "High Yield" : rate >= 6 ? "Popular" : "Standard");
             return {
               id: p.id,
-              name: p.name,
+              name: p.name.replace(/ Package$/i, ""),
               rate,
               weeks,
               min,
@@ -73,12 +72,6 @@ export default function RoiCalculator() {
           setAmount(formatted[0].min);
           setInputVal(formatted[0].min.toString());
           setCustomWeeks(formatted[0].weeks);
-        } else {
-          setPlansList(DEFAULT_PLANS);
-          setSelected(DEFAULT_PLANS[0]);
-          setAmount(DEFAULT_PLANS[0].min);
-          setInputVal(DEFAULT_PLANS[0].min.toString());
-          setCustomWeeks(DEFAULT_PLANS[0].weeks);
         }
       } catch {
         // Fallback silently
@@ -136,8 +129,8 @@ export default function RoiCalculator() {
     { label: "4 Wks", weeks: 4 },
     { label: "8 Wks", weeks: 8 },
     { label: `${selected.weeks}w (Std)`, weeks: selected.weeks },
-    { label: "16 Wks", weeks: 16 },
     { label: "24 Wks", weeks: 24 },
+    { label: "52 Wks", weeks: 52 },
   ];
 
   return (
@@ -155,7 +148,7 @@ export default function RoiCalculator() {
               Simulate Your Returns
             </h2>
             <p className="text-[#2f494c] text-xs sm:text-sm mt-1 font-normal">
-              Select between Basic and Premium to preview algorithmic weekly returns secured by Escrow.
+              Select a tier and adjust your capital to preview real-time automated weekly returns.
             </p>
           </div>
           
@@ -169,8 +162,8 @@ export default function RoiCalculator() {
         <div className="bg-white border border-[#d4e7e9] rounded-2xl shadow-sm overflow-hidden">
           
           {/* 1. Low-Profile Tier Tabs */}
-          <div className="bg-[#f0f8f9] border-b border-[#d4e7e9] p-2.5">
-            <div className="grid grid-cols-2 gap-3 max-w-xl mx-auto">
+          <div className="bg-[#f0f8f9] border-b border-[#d4e7e9] p-2 overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1.5 min-w-max sm:min-w-0 sm:grid sm:grid-cols-6">
               {plansList.map((tier) => {
                 const isSelected = selected.id === tier.id;
                 return (
@@ -178,15 +171,15 @@ export default function RoiCalculator() {
                     key={tier.id}
                     type="button"
                     onClick={() => changePlan(tier)}
-                    className={`py-3 px-4 rounded-xl text-center transition-all cursor-pointer border text-xs ${
+                    className={`py-2 px-3 rounded-xl text-center transition-all cursor-pointer border text-xs ${
                       isSelected
-                        ? "bg-[#093A3E] text-white border-[#093A3E] font-bold shadow-md shadow-[#093A3E]/20"
+                        ? "bg-[#093A3E] text-white border-[#093A3E] font-bold shadow-xs"
                         : "bg-white text-[#001011] border-[#d4e7e9] hover:border-[#3AAFB9] hover:bg-[#f8fcfc] font-medium"
                     }`}
                   >
-                    <div className="font-extrabold text-sm">{tier.name}</div>
-                    <div className={`font-mono text-xs font-bold mt-0.5 ${isSelected ? "text-[#3AAFB9]" : "text-[#093A3E]"}`}>
-                      {tier.rate}% Yield / week
+                    <div className="truncate">{tier.name}</div>
+                    <div className={`font-mono text-[11px] font-bold ${isSelected ? "text-[#3AAFB9]" : "text-[#093A3E]"}`}>
+                      {tier.rate}%/wk
                     </div>
                   </button>
                 );

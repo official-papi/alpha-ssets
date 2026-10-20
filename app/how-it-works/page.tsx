@@ -19,27 +19,27 @@ export default function HowItWorksPage() {
           badge="4-Step Automated Protocol"
           title="How The High-Yield Engine"
           titleHighlight="Operates Step-by-Step"
-          subtitle="Learn how to connect your Web3 wallet or create an account, allocate into our Basic or Premium Escrow plans, and let the company AI execute trades for you."
+          subtitle="Learn how to create your investor account, fund your deposit wallet via gateway or crypto, activate your preferred compounding tier, and withdraw interest payouts."
           icon={Layers}
           breadcrumb="How It Works"
           stats={[
-            { label: "Wallet Connect", value: "Instant Web3" },
-            { label: "Principal Escrow", value: "100% Protected" },
-            { label: "AI Trading", value: "Smart Buy & Sell" },
+            { label: "Account Setup", value: "< 2 Mins" },
+            { label: "Deposit Approval", value: "Instant / Fast" },
+            { label: "Yield Payouts", value: "Automated" },
           ]}
           hudContent={
             <div className="space-y-2 py-1 text-xs font-medium">
               <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/80">
                 <div className="w-6 h-6 rounded-lg bg-[#093A3E]/10 border border-[#093A3E]/20 text-[#093A3E] font-extrabold flex items-center justify-center text-[10px]">1</div>
-                <span className="font-extrabold text-slate-900">Connect Web3 Wallet or Register</span>
+                <span className="font-extrabold text-slate-900">Create Free Account</span>
               </div>
               <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/80">
                 <div className="w-6 h-6 rounded-lg bg-[#093A3E]/10 border border-[#093A3E]/20 text-[#093A3E] font-extrabold flex items-center justify-center text-[10px]">2</div>
-                <span className="font-extrabold text-slate-900">Select Basic or Premium Plan</span>
+                <span className="font-extrabold text-slate-900">Fund Deposit Wallet</span>
               </div>
               <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-[#093A3E]/5 border border-[#3AAFB9]/30">
                 <div className="w-6 h-6 rounded-lg bg-[#093A3E] text-[#3AAFB9] font-extrabold flex items-center justify-center text-[10px]">3</div>
-                <span className="font-extrabold text-[#001011]">Company AI Trades & Escrow Payouts</span>
+                <span className="font-extrabold text-[#001011]">Subscribe & Earn Daily ROI</span>
               </div>
             </div>
           }

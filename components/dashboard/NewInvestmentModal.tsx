@@ -32,16 +32,7 @@ export default function NewInvestmentModal({
   onClose,
   onSuccess,
 }: NewInvestmentModalProps) {
-  const validPlans = (plans || []).filter((p) => {
-    const n = (p.name || "").toLowerCase();
-    return n.includes("basic") || n.includes("premium");
-  });
-  const activePlans = validPlans.length > 0 ? validPlans : [
-    { id: "basic-plan", name: "Basic Plan", min_amount: 200, max_amount: 4999, interest_rate: 3.5, return_type: "weekly", repeat_time: 8 },
-    { id: "premium-plan", name: "Premium Plan", min_amount: 5000, max_amount: 1000000, interest_rate: 7.0, return_type: "weekly", repeat_time: 16 },
-  ];
-
-  const [selectedPlan, setSelectedPlan] = useState<InvestmentPlan | null>(activePlans[0] || null);
+  const [selectedPlan, setSelectedPlan] = useState<InvestmentPlan | null>(plans[0] || null);
   const [walletType, setWalletType] = useState<"deposit_wallet" | "interest_wallet">("deposit_wallet");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
@@ -83,24 +74,6 @@ export default function NewInvestmentModal({
       setLoading(false);
       return;
     }
-
-    // Dispatch investment plan activation email in background
-    fetch("/api/email/notify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        event: "investment_started",
-        payload: {
-          userId: activeUser.id,
-          userEmail: activeUser.email,
-          userName: activeUser.full_name,
-          planName: selectedPlan.name,
-          amount: numAmount,
-          dailyRate: selectedPlan.interest_rate,
-          durationDays: selectedPlan.repeat_time,
-        },
-      }),
-    }).catch((e) => console.warn("Background investment email error:", e));
 
     setLoading(false);
     onSuccess();
@@ -144,37 +117,34 @@ export default function NewInvestmentModal({
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                Select Investment Plan ({activePlans.length})
+                Select Investment Tier ({plans.length})
               </label>
-              <div className="flex items-center gap-1.5 text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                <span>🔒 Escrow Secured</span>
-              </div>
+              {selectedPlan && (
+                <span className="text-[11px] font-bold text-[#093A3E]">
+                  {selectedPlan.name} selected
+                </span>
+              )}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-1.5 border border-slate-200/80 rounded-xl bg-slate-50/60">
-              {activePlans.map((p) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-48 overflow-y-auto p-1.5 border border-slate-200/80 rounded-xl bg-slate-50/60">
+              {plans.map((p) => (
                 <button
                   key={p.id}
                   type="button"
                   onClick={() => setSelectedPlan(p)}
-                  className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                     selectedPlan?.id === p.id
                       ? "border-[#3AAFB9] bg-[#f0f8f9] ring-2 ring-[#3AAFB9]/30 shadow-xs"
                       : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <p className="text-[14px] font-black text-[#001011] truncate">{p.name}</p>
-                    <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-[#093A3E] text-[#3AAFB9]">
-                      AI Trading
-                    </span>
+                  <p className="text-[13px] font-extrabold text-[#001011] truncate">{p.name}</p>
+                  <div className="flex items-baseline gap-1 mt-1">
+                    <span className="text-[15px] font-extrabold text-[#093A3E] font-mono">{p.interest_rate}%</span>
+                    <span className="text-[10px] font-medium text-slate-400">/ week</span>
                   </div>
-                  <div className="flex items-baseline gap-1 mt-1.5">
-                    <span className="text-[17px] font-extrabold text-[#093A3E] font-mono">{p.interest_rate}%</span>
-                    <span className="text-[11px] font-medium text-slate-400">/ week</span>
-                  </div>
-                  <div className="text-[11px] text-slate-500 mt-2 flex justify-between border-t border-slate-100 pt-1.5">
-                    <span>{p.repeat_time} Weeks</span>
-                    <span className="font-bold text-slate-800">${p.min_amount.toLocaleString()}–${p.max_amount.toLocaleString()}</span>
+                  <div className="text-[10px] text-slate-500 mt-1 flex justify-between">
+                    <span>{p.repeat_time} wks</span>
+                    <span className="font-semibold text-slate-700">${p.min_amount.toLocaleString()}–${p.max_amount.toLocaleString()}</span>
                   </div>
                 </button>
               ))}

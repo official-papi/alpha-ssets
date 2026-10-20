@@ -8,9 +8,8 @@ import DepositModal from "@/components/dashboard/DepositModal";
 import WithdrawModal from "@/components/dashboard/WithdrawModal";
 import NewInvestmentModal from "@/components/dashboard/NewInvestmentModal";
 import InvestmentDetailsModal from "@/components/dashboard/InvestmentDetailsModal";
-import { Copy, Check, Sparkles, RefreshCw, X, CheckCircle2, AlertCircle, Wallet, ShieldCheck, Cpu, Lock } from "lucide-react";
+import { Copy, Check, Sparkles, RefreshCw, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { useWallet } from "@/lib/wallet/WalletContext";
 
 interface UserProfile {
   id: string;
@@ -23,12 +22,15 @@ interface UserProfile {
 }
 
 const DEFAULT_PLANS = [
-  { id: "plan-1", name: "Basic Plan", min_amount: 200, max_amount: 4999, interest_rate: 3.5, return_type: "weekly", repeat_time: 8 },
-  { id: "plan-2", name: "Premium Plan", min_amount: 5000, max_amount: 1000000, interest_rate: 7.0, return_type: "weekly", repeat_time: 16 },
+  { id: "plan-1", name: "Regular Package", min_amount: 500, max_amount: 2000, interest_rate: 2.5, return_type: "weekly", repeat_time: 8 },
+  { id: "plan-2", name: "Silver Package", min_amount: 3000, max_amount: 5000, interest_rate: 4.0, return_type: "weekly", repeat_time: 12 },
+  { id: "plan-3", name: "Gold Package", min_amount: 10000, max_amount: 20000, interest_rate: 6.0, return_type: "weekly", repeat_time: 16 },
+  { id: "plan-4", name: "VIP Package", min_amount: 50000, max_amount: 200000, interest_rate: 10.0, return_type: "weekly", repeat_time: 24 },
+  { id: "plan-5", name: "Ultimate Package", min_amount: 500000, max_amount: 3000000, interest_rate: 12.0, return_type: "weekly", repeat_time: 36 },
+  { id: "plan-6", name: "Elites Package", min_amount: 5000000, max_amount: 20000000, interest_rate: 15.5, return_type: "weekly", repeat_time: 52 },
 ];
 
 export default function DashboardPage() {
-  const { isConnected, shortAddress, balanceUsdt, isTradingDelegated, escrowLocked, openModal, toggleTradingDelegation } = useWallet();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [investments, setInvestments] = useState<any[]>([]);
   const [dbPlans, setDbPlans] = useState<any[]>([]);
@@ -81,20 +83,15 @@ export default function DashboardPage() {
       setGateways(gatewaysRes.data);
     }
 
-    const validPlans = (plansRes.data || []).filter((p: any) => {
-      const n = (p.name || "").toLowerCase();
-      return n.includes("basic") || n.includes("premium");
-    });
-
-    if (validPlans.length > 0) {
+    if (plansRes.data && plansRes.data.length > 0) {
       setDbPlans(
-        validPlans.map((p: any) => ({
+        plansRes.data.map((p: any) => ({
           id: p.id,
           name: p.name,
           min_amount: Number(p.min_amount),
           max_amount: Number(p.max_amount),
           interest_rate: Number(p.roi_percentage),
-          return_type: "weekly",
+          return_type: "daily",
           repeat_time: p.total_payout_periods,
         }))
       );
@@ -245,58 +242,6 @@ export default function DashboardPage() {
                   {copiedRef ? <Check className="w-3.5 h-3.5 text-[#3AAFB9]" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Web3 AI Trading Vault & Escrow Status Console */}
-        <div className="bg-[#001011] border border-[#093A3E] rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#3AAFB9]/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
-            <div className="space-y-1.5 max-w-xl">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[11px] font-mono font-bold text-[#3AAFB9] uppercase tracking-wider">
-                  Escrow System: 100% Protected
-                </span>
-                <span className="text-[#093A3E]">|</span>
-                <span className="text-[11px] text-[#86cbd1] font-mono">Neural Model: Live</span>
-              </div>
-              <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                <Cpu className="w-5 h-5 text-[#3AAFB9]" />
-                <span>Company AI Automated Trade Execution</span>
-              </h2>
-              <p className="text-xs text-[#86cbd1] leading-relaxed">
-                Connect your Web3 wallet to authorize automated algorithmic trades executed on your behalf. Our AI algorithms analyze global liquidity to make smarter decisions on <strong>when to buy and sell</strong>. All funds remain protected by multi-signature smart escrow.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              {isConnected ? (
-                <div className="flex items-center gap-3 bg-[#041819] border border-[#3AAFB9]/30 px-4 py-2.5 rounded-xl">
-                  <div className="text-left">
-                    <div className="text-[10px] text-slate-400 font-bold uppercase">Connected Web3 Wallet</div>
-                    <div className="text-xs font-mono font-extrabold text-[#3AAFB9]">{shortAddress}</div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={openModal}
-                    className="text-xs font-bold bg-[#093A3E] hover:bg-[#3AAFB9] text-white hover:text-[#001011] px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                  >
-                    Manage Vault
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={openModal}
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#3AAFB9] to-[#278e98] hover:from-[#5cb4be] hover:to-[#3AAFB9] text-[#001011] text-xs font-black shadow-lg shadow-[#3AAFB9]/20 transition-all flex items-center gap-2 cursor-pointer active:scale-95"
-                >
-                  <Wallet className="w-4 h-4 text-[#001011]" />
-                  <span>Connect Wallet to Trade</span>
-                </button>
-              )}
             </div>
           </div>
         </div>

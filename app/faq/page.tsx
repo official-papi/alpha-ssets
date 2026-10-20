@@ -8,34 +8,29 @@ import { useState } from "react";
 
 const FAQ_ITEMS = [
   {
-    category: "AI Trading & Wallet Connect",
-    q: "How does Wallet Connect and automated trading work?",
-    a: "You can connect your Web3 wallet (MetaMask, WalletConnect, Coinbase, or Trust Wallet) directly. By connecting, you authorize the company's automated trading desk to trade on your behalf using advanced AI algorithms that make smarter, high-conviction decisions on exactly when to buy and sell.",
-  },
-  {
-    category: "Security & Escrow",
-    q: "How are my deposited funds and wallet assets protected?",
-    a: "We utilize an institutional smart-contract Escrow System. Your principal remains locked in multi-signature escrow segregated vaults throughout the investment cycle. The company can only execute trades; funds can never be withdrawn without your private key.",
-  },
-  {
-    category: "AI Intelligence",
-    q: "How does the AI determine when to buy and sell?",
-    a: "Our neural deep-learning model continuously scans order books, cross-exchange liquidity, volatility indices, and momentum oscillators across 40+ premier exchanges to mathematically identify high-probability entry (buy) and exit (sell) points with dynamic stop-losses.",
-  },
-  {
-    category: "Investment Plans",
-    q: "What investment plans are available?",
-    a: "The platform offers two structured tiers: the Basic Plan ($200 to $4,999 with 3.5% weekly yield for 8 weeks) and the Premium Plan ($5,000 to $1,000,000 with 7.0% weekly yield for 16 weeks). Both return 100% of your principal upon maturity.",
+    category: "General Platform",
+    q: "What is Alpha Assets?",
+    a: "Alpha Assets is an automated AI compounding yield and wealth management platform that executes algorithmic quantitative strategies and automated wallet disbursements.",
   },
   {
     category: "Deposits & Payouts",
-    q: "What deposit and payout options are supported?",
-    a: "We support USDT (TRC20 & ERC20), Bitcoin (BTC), Ethereum (ETH), direct Web3 connected wallet settlements, and Bank Wire Transfers.",
+    q: "What deposit payment methods are supported?",
+    a: "We support USDT TRC20, Bitcoin (BTC), Ethereum (ETH), and direct Bank Wire Transfers.",
+  },
+  {
+    category: "Deposits & Payouts",
+    q: "How fast are withdrawal requests processed?",
+    a: "Withdrawal requests are processed automatically or reviewed within 1 to 24 hours depending on security checks for large sums.",
+  },
+  {
+    category: "Investments",
+    q: "Can I invest in multiple packages at the same time?",
+    a: "Yes! You can hold multiple active investments across different plans (Starter, Silver, Gold) simultaneously.",
   },
   {
     category: "Affiliate Network",
     q: "How does the multi-tier referral program work?",
-    a: "You earn 5% on direct Level 1 referrals, 3% on Level 2 referrals, and 1% on Level 3 referrals whenever they fund an investment plan.",
+    a: "You earn 5% on direct Level 1 referrals, 3% on Level 2 referrals, and 1% on Level 3 referrals whenever they deposit into an investment plan.",
   },
 ];
 

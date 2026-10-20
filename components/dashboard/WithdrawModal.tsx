@@ -225,24 +225,6 @@ export default function WithdrawModal({
         .eq("id", activeUser.id);
     }
 
-    // Dispatch withdrawal email notification in background
-    fetch("/api/email/notify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        event: "withdrawal_submitted",
-        payload: {
-          userId: activeUser.id,
-          userEmail: activeUser.email,
-          userName: activeUser.full_name,
-          amount: numAmount,
-          netAmount: netAmount,
-          method: selectedMethod.name,
-          destination: finalDetails,
-        },
-      }),
-    }).catch((e) => console.warn("Background withdrawal email error:", e));
-
     setLoading(false);
     onSuccess();
     onClose();

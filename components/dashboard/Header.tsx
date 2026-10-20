@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { TrendingUp, LogOut, ArrowDownRight, ArrowUpRight, Plus, ShieldAlert, Wallet, Lock, Cpu, ShieldCheck } from "lucide-react";
+import { TrendingUp, LogOut, ArrowDownRight, ArrowUpRight, Plus, ShieldAlert, Wallet } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSelector from "@/components/common/LanguageSelector";
-import { useWallet } from "@/lib/wallet/WalletContext";
 
 interface DashboardHeaderProps {
   userEmail?: string;
@@ -30,7 +29,6 @@ export default function DashboardHeader({
 }: DashboardHeaderProps) {
   const router = useRouter();
   const { t } = useLanguage();
-  const { isConnected, shortAddress, openModal, escrowLocked } = useWallet();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -109,27 +107,8 @@ export default function DashboardHeader({
           </div>
         </div>
 
-        {/* Quick Actions & Controls */}
+        {/* Quick Actions & Admin Switcher Button */}
         <div className="flex items-center gap-3">
-          {/* Web3 Trading Wallet Connect */}
-          <button
-            type="button"
-            onClick={openModal}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
-              isConnected
-                ? "bg-[#093A3E] text-[#3AAFB9] border-[#3AAFB9]/40 hover:bg-[#001011]"
-                : "bg-slate-50 text-slate-800 border-slate-200 hover:border-[#3AAFB9]"
-            }`}
-          >
-            <Wallet className="w-3.5 h-3.5 text-[#3AAFB9]" />
-            <span className="hidden sm:inline">{isConnected ? shortAddress : "Connect Wallet"}</span>
-            {isConnected && (
-              <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono pl-1 border-l border-slate-300/40">
-                <Lock className="w-2.5 h-2.5 text-emerald-400" />
-                <span>Escrow</span>
-              </span>
-            )}
-          </button>
 
           {/* Language Selector */}
           <LanguageSelector variant="default" />

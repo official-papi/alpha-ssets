@@ -18,11 +18,7 @@ export async function GET() {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    const filtered = (data || []).filter((p: any) => {
-      const n = (p.name || "").toLowerCase();
-      return n.includes("basic") || n.includes("premium");
-    });
-    return NextResponse.json({ success: true, data: filtered });
+    return NextResponse.json({ success: true, data });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

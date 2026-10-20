@@ -73,7 +73,7 @@ export const translations = {
       riskDisclaimer: "Risk Disclaimer",
       support: "24/7 Support",
       allRightsReserved: "All rights reserved.",
-      disclaimerText: "",
+      disclaimerText: "High-yield investment programs carry risk. Past performance does not guarantee future results. Invest responsibly.",
       selectLanguage: "Language",
     },
 
@@ -214,7 +214,7 @@ export const translations = {
       riskDisclaimer: "Descargo de Riesgo",
       support: "Soporte 24/7",
       allRightsReserved: "Todos los derechos reservados.",
-      disclaimerText: "",
+      disclaimerText: "Las inversiones de alto rendimiento conllevan riesgos. El rendimiento pasado no garantiza resultados futuros. Invierta responsablemente.",
       selectLanguage: "Idioma",
     },
 
@@ -349,7 +349,7 @@ export const translations = {
       riskDisclaimer: "Avertissement sur les risques",
       support: "Support 24/7",
       allRightsReserved: "Tous droits réservés.",
-      disclaimerText: "",
+      disclaimerText: "Les investissements comportent des risques. Investissez de manière responsable.",
       selectLanguage: "Langue",
     },
     dashboard: {
@@ -476,7 +476,7 @@ export const translations = {
       riskDisclaimer: "Risikohinweis",
       support: "24/7 Support",
       allRightsReserved: "Alle Rechte vorbehalten.",
-      disclaimerText: "",
+      disclaimerText: "Investitionen bergen Risiken. Investieren Sie verantwortungsbewusst.",
       selectLanguage: "Sprache",
     },
     dashboard: {
@@ -603,7 +603,7 @@ export const translations = {
       riskDisclaimer: "Aviso de Risco",
       support: "Suporte 24/7",
       allRightsReserved: "Todos os direitos reservados.",
-      disclaimerText: "",
+      disclaimerText: "Investimentos envolvem riscos. Invista com responsabilidade.",
       selectLanguage: "Idioma",
     },
     dashboard: {
@@ -730,7 +730,7 @@ export const translations = {
       riskDisclaimer: "إخلاء المسؤولية عن المخاطر",
       support: "دعم 24/7",
       allRightsReserved: "جميع الحقوق محفوظة.",
-      disclaimerText: "",
+      disclaimerText: "تنطوي الاستثمارات على مخاطر. استثمر بمسؤولية.",
       selectLanguage: "اللغة",
     },
     dashboard: {

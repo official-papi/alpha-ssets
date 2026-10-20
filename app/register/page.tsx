@@ -44,24 +44,12 @@ function RegisterForm() {
 
     if (signUpError) {
       setError(signUpError.message); setLoading(false);
+    } else if (data.session) {
+      setSuccess("Account created! Redirecting…");
+      setTimeout(() => { router.push("/dashboard"); router.refresh(); }, 1500);
     } else {
-      // Trigger welcome email in background
-      fetch("/api/email/notify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event: "welcome",
-          payload: { email, name: fullName },
-        }),
-      }).catch((e) => console.warn("Background welcome email error:", e));
-
-      if (data.session) {
-        setSuccess("Account created! Redirecting…");
-        setTimeout(() => { router.push("/dashboard"); router.refresh(); }, 1500);
-      } else {
-        setSuccess("Registration successful! Check your email to verify your account.");
-        setLoading(false);
-      }
+      setSuccess("Registration successful! Check your email to verify your account.");
+      setLoading(false);
     }
   };
 

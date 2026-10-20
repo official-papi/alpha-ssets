@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { getAdminSupabase } from "@/lib/supabase/admin";
-import { sendEmail } from "@/lib/email/resend";
-import { withdrawalRejectedEmail } from "@/lib/email/templates";
 
 export async function POST(req: Request) {
   try {
@@ -17,7 +15,7 @@ export async function POST(req: Request) {
     // 1. Fetch withdrawal details
     const { data: withObj, error: fetchErr } = await supabase
       .from("withdrawals")
-      .select("*, profiles(deposit_wallet, interest_wallet, email, full_name)")
+      .select("*, profiles(deposit_wallet, interest_wallet, email)")
       .eq("id", withdrawalId)
       .single();
 
@@ -101,29 +99,6 @@ export async function POST(req: Request) {
       description: `Refunded rejected withdrawal of $${refundAmount.toFixed(2)} to ${targetWallet}`,
       trx_ref: `REF-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
     });
-
-    // Send email notification to user
-    try {
-      let recipientEmail = withObj.profiles?.email;
-      let recipientName = withObj.profiles?.full_name;
-      if (!recipientEmail) {
-        const { data: userData } = await supabase.auth.admin.getUserById(userId);
-        recipientEmail = userData?.user?.email;
-        recipientName = userData?.user?.user_metadata?.full_name;
-      }
-
-      if (recipientEmail) {
-        const { subject, html } = withdrawalRejectedEmail({
-          name: recipientName,
-          amount: refundAmount,
-          walletRefunded: targetWallet,
-          reason: feedback || "Withdrawal request rejected by administrator",
-        });
-        await sendEmail({ to: recipientEmail, subject, html });
-      }
-    } catch (emailErr) {
-      console.warn("Failed to dispatch withdrawal rejected email:", emailErr);
-    }
 
     return NextResponse.json({
       success: true,
