@@ -17,10 +17,10 @@ export default function TradingViewTicker() {
     script.onerror = () => setUseFallback(true);
     script.innerHTML = JSON.stringify({
       symbols: [
-        { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-        { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
-        { proName: "BINANCE:SOLUSD", title: "Solana" },
         { proName: "BITSTAMP:XRPUSD", title: "XRP" },
+        { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
+        { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
+        { proName: "BINANCE:SOLUSD", title: "Solana" },
         { proName: "NASDAQ:NVDA", title: "Nvidia" },
         { proName: "NASDAQ:AAPL", title: "Apple" },
         { proName: "NASDAQ:TSLA", title: "Tesla" },
@@ -36,10 +36,10 @@ export default function TradingViewTicker() {
   }, []);
 
   const fallbackCoins = [
-    { symbol: "BTC/USD", price: "$96,480.00", change: "+3.4%", up: true },
-    { symbol: "ETH/USD", price: "$3,425.50", change: "+2.1%", up: true },
-    { symbol: "SOL/USD", price: "$214.80", change: "+5.8%", up: true },
     { symbol: "XRP/USD", price: "$2.48", change: "+4.1%", up: true },
+    { symbol: "ETH/USD", price: "$3,425.50", change: "+2.1%", up: true },
+    { symbol: "BTC/USD", price: "$96,480.00", change: "+3.4%", up: true },
+    { symbol: "SOL/USD", price: "$214.80", change: "+5.8%", up: true },
     { symbol: "NVDA", price: "$142.60", change: "+3.9%", up: true },
     { symbol: "AAPL", price: "$234.90", change: "+1.2%", up: true },
     { symbol: "TSLA", price: "$228.40", change: "+4.7%", up: true },

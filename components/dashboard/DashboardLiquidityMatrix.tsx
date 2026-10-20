@@ -18,13 +18,13 @@ interface DashboardLiquidityMatrixProps {
 
 const DASHBOARD_ASSETS = [
   {
-    name: "Bitcoin",
-    symbol: "BTC",
-    share: 22,
-    price: "$96,480.00",
-    change: "+3.42%",
-    color: "#F7931A",
-    type: "Crypto Reserve",
+    name: "XRP",
+    symbol: "XRP",
+    share: 12,
+    price: "$2.48",
+    change: "+4.12%",
+    color: "#00AEEF",
+    type: "Cross-Border Settlement",
   },
   {
     name: "Ethereum",
@@ -36,6 +36,15 @@ const DASHBOARD_ASSETS = [
     type: "Smart Contracts",
   },
   {
+    name: "Bitcoin",
+    symbol: "BTC",
+    share: 22,
+    price: "$96,480.00",
+    change: "+3.42%",
+    color: "#F7931A",
+    type: "Crypto Reserve",
+  },
+  {
     name: "Solana",
     symbol: "SOL",
     share: 14,
@@ -43,15 +52,6 @@ const DASHBOARD_ASSETS = [
     change: "+5.78%",
     color: "#14F195",
     type: "High-Speed Arbitrage",
-  },
-  {
-    name: "XRP",
-    symbol: "XRP",
-    share: 12,
-    price: "$2.48",
-    change: "+4.12%",
-    color: "#00AEEF",
-    type: "Cross-Border Settlement",
   },
   {
     name: "Nvidia",
@@ -95,7 +95,7 @@ export default function DashboardLiquidityMatrix({
   totalInvested,
   onOpenInvest,
 }: DashboardLiquidityMatrixProps) {
-  const [selectedSymbol, setSelectedSymbol] = useState<string>("BTC");
+  const [selectedSymbol, setSelectedSymbol] = useState<string>("XRP");
 
   const effectiveCapital = totalInvested > 0 ? totalInvested : 5000;
   const isSimulated = totalInvested === 0;
