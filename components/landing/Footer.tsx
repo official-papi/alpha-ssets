@@ -110,9 +110,6 @@ export default function Footer() {
               {t.footer.selectLanguage}
             </h4>
             <LanguageSelector variant="footer" dropDirection="up" />
-            <p className="text-[#5cb4be]/70 leading-relaxed text-[12px] pt-2 font-normal">
-              {t.footer.disclaimerText}
-            </p>
           </div>
 
         </div>

@@ -8,6 +8,7 @@ import DepositModal from "@/components/dashboard/DepositModal";
 import WithdrawModal from "@/components/dashboard/WithdrawModal";
 import NewInvestmentModal from "@/components/dashboard/NewInvestmentModal";
 import InvestmentDetailsModal from "@/components/dashboard/InvestmentDetailsModal";
+import DashboardLiquidityMatrix from "@/components/dashboard/DashboardLiquidityMatrix";
 import { Copy, Check, Sparkles, RefreshCw, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -22,12 +23,8 @@ interface UserProfile {
 }
 
 const DEFAULT_PLANS = [
-  { id: "plan-1", name: "Regular Package", min_amount: 500, max_amount: 2000, interest_rate: 2.5, return_type: "weekly", repeat_time: 8 },
-  { id: "plan-2", name: "Silver Package", min_amount: 3000, max_amount: 5000, interest_rate: 4.0, return_type: "weekly", repeat_time: 12 },
-  { id: "plan-3", name: "Gold Package", min_amount: 10000, max_amount: 20000, interest_rate: 6.0, return_type: "weekly", repeat_time: 16 },
-  { id: "plan-4", name: "VIP Package", min_amount: 50000, max_amount: 200000, interest_rate: 10.0, return_type: "weekly", repeat_time: 24 },
-  { id: "plan-5", name: "Ultimate Package", min_amount: 500000, max_amount: 3000000, interest_rate: 12.0, return_type: "weekly", repeat_time: 36 },
-  { id: "plan-6", name: "Elites Package", min_amount: 5000000, max_amount: 20000000, interest_rate: 15.5, return_type: "weekly", repeat_time: 52 },
+  { id: "plan-1", name: "Regular Package", min_amount: 500, max_amount: 20000, interest_rate: 5.0, return_type: "weekly", repeat_time: 8 },
+  { id: "plan-2", name: "Premium Package", min_amount: 20000, max_amount: 5000000, interest_rate: 8.5, return_type: "weekly", repeat_time: 16 },
 ];
 
 export default function DashboardPage() {
@@ -254,6 +251,12 @@ export default function DashboardPage() {
           totalWithdrawn={totalWithdrawnSum}
           onOpenDeposit={() => setIsDepositOpen(true)}
           onOpenWithdraw={() => setIsWithdrawOpen(true)}
+          onOpenInvest={() => setIsInvestOpen(true)}
+        />
+
+        {/* Space for Liquidity Control Matrix */}
+        <DashboardLiquidityMatrix
+          totalInvested={totalInvested}
           onOpenInvest={() => setIsInvestOpen(true)}
         />
 

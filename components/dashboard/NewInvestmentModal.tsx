@@ -125,7 +125,7 @@ export default function NewInvestmentModal({
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-48 overflow-y-auto p-1.5 border border-slate-200/80 rounded-xl bg-slate-50/60">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-56 overflow-y-auto p-1.5 border border-slate-200/80 rounded-xl bg-slate-50/60">
               {plans.map((p) => (
                 <button
                   key={p.id}

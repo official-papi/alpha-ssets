@@ -7,38 +7,39 @@ import { createClient } from "@/lib/supabase/client";
 
 const DEFAULT_PLANS = [
   {
-    id: "1", name: "Regular Package", rate: "2.5%", cycle: "Weekly for 8 Weeks",
-    min: "$500", max: "$2,000", featured: false, badge: "Starter Tier",
-    features: ["2.5% Weekly Return", "Principal Returned at End", "Instant Crypto Withdrawals", "Standard Support"],
-  },
-  {
-    id: "2", name: "Silver Package", rate: "4.0%", cycle: "Weekly for 12 Weeks",
-    min: "$3,000", max: "$5,000", featured: false, badge: "Growth Tier",
-    features: ["4.0% Weekly Return", "Principal Returned at End", "Zero Withdrawal Fees", "Multi-Tier Referral Commission"],
-  },
-  {
-    id: "3", name: "Gold Package", rate: "6.0%", cycle: "Weekly for 16 Weeks",
-    min: "$10,000", max: "$20,000", featured: true, badge: "Most Popular",
-    features: ["6.0% Weekly Return", "Principal Returned at End", "Priority Withdrawals", "Dedicated Account Manager"],
-  },
-  {
-    id: "4", name: "VIP Package", rate: "10.0%", cycle: "Weekly for 24 Weeks",
-    min: "$50,000", max: "$200,000", featured: false, badge: "High Yield",
-    features: ["10.0% Weekly Return", "Principal Returned at End", "Custom Vault Storage", "VIP 24/7 Concierge Support"],
-  },
-  {
-    id: "5", name: "Ultimate Package", rate: "12.0%", cycle: "Weekly for 36 Weeks",
-    min: "$500,000", max: "$3,000,000", featured: false, badge: "Executive",
-    features: ["12.0% Weekly Return", "Principal Returned at End", "Institutional Cold Custody", "Private Wealth Advisory"],
-  },
-  {
-    id: "6", name: "Elites Package", rate: "15.5%", cycle: "Weekly for 52 Weeks",
-    min: "$5,000,000", max: "$20,000,000", featured: true, badge: "Exclusive",
+    id: "1",
+    name: "Regular Package",
+    rate: "5.0%",
+    interval: "week",
+    cycle: "Weekly for 8 Weeks",
+    min: "$500",
+    max: "$20,000",
+    featured: false,
+    badge: "Starter Tier",
     features: [
-      "15.5% Weekly Return",
-      "🏠 Company House Loan Eligibility (Pay in Installments)",
-      "Principal Returned at End",
-      "Direct Private Banker & VIP Vault Access",
+      "5.0% Guaranteed Weekly Return",
+      "Principal Returned at End (8 Weeks)",
+      "Instant Crypto & Fiat Withdrawals",
+      "Multi-Asset Liquidity Allocation",
+      "Standard 24/7 Investor Support",
+    ],
+  },
+  {
+    id: "2",
+    name: "Premium Package",
+    rate: "8.5%",
+    interval: "week",
+    cycle: "Weekly for 16 Weeks",
+    min: "$20,000",
+    max: "$5,000,000",
+    featured: true,
+    badge: "Most Popular",
+    features: [
+      "8.5% High-Yield Weekly Return",
+      "Principal Returned at End (16 Weeks)",
+      "Prioritized Instant Liquidity Withdrawals",
+      "Dedicated Private Wealth Executive",
+      "Institutional Multi-Sig Cold Vault Custody",
     ],
   },
 ];
@@ -119,42 +120,50 @@ export default function PlanCards() {
             </p>
           </div>
 
-          {/* Carousel Navigation Controls */}
-          <div className="flex items-center gap-3 self-start md:self-end">
-            <span className="text-xs text-[#5e7e83] font-medium hidden sm:inline">
-              Swipe or use controls to explore tiers →
-            </span>
-            <div className="flex items-center space-x-1.5 bg-[#f0f8f9] p-1 rounded-xl border border-[#c8e2e5]">
-              <button
-                type="button"
-                onClick={() => handleScroll("left")}
-                aria-label="Scroll left"
-                className="w-8 h-8 rounded-lg bg-white text-[#093A3E] flex items-center justify-center border border-[#d4e7e9] shadow-2xs hover:bg-[#f0f8f9] transition-colors cursor-pointer"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleScroll("right")}
-                aria-label="Scroll right"
-                className="w-8 h-8 rounded-lg bg-white text-[#093A3E] flex items-center justify-center border border-[#d4e7e9] shadow-2xs hover:bg-[#f0f8f9] transition-colors cursor-pointer"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+          {/* Carousel Navigation Controls (shown when > 2 plans) */}
+          {plans.length > 2 && (
+            <div className="flex items-center gap-3 self-start md:self-end">
+              <span className="text-xs text-[#5e7e83] font-medium hidden sm:inline">
+                Swipe or use controls to explore tiers →
+              </span>
+              <div className="flex items-center space-x-1.5 bg-[#f0f8f9] p-1 rounded-xl border border-[#c8e2e5]">
+                <button
+                  type="button"
+                  onClick={() => handleScroll("left")}
+                  aria-label="Scroll left"
+                  className="w-8 h-8 rounded-lg bg-white text-[#093A3E] flex items-center justify-center border border-[#d4e7e9] shadow-2xs hover:bg-[#f0f8f9] transition-colors cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleScroll("right")}
+                  aria-label="Scroll right"
+                  className="w-8 h-8 rounded-lg bg-white text-[#093A3E] flex items-center justify-center border border-[#d4e7e9] shadow-2xs hover:bg-[#f0f8f9] transition-colors cursor-pointer"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Horizontal Scrolling Cards Container */}
+        {/* Responsive Cards Container */}
         <div
           ref={scrollRef}
-          className="flex gap-5 overflow-x-auto pb-6 pt-3 px-1 scroll-smooth snap-x snap-mandatory scrollbar-none"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className={
+            plans.length <= 2
+              ? "grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto pb-6 pt-3"
+              : "flex gap-5 overflow-x-auto pb-6 pt-3 px-1 scroll-smooth snap-x snap-mandatory scrollbar-none"
+          }
+          style={plans.length > 2 ? { scrollbarWidth: "none", msOverflowStyle: "none" } : undefined}
         >
           {plans.map((plan, i) => (
             <div
               key={i}
-              className={`w-[300px] sm:w-[340px] flex-shrink-0 snap-start relative rounded-2xl p-7 flex flex-col justify-between transition-all duration-200 ${
+              className={`w-full relative rounded-2xl p-7 flex flex-col justify-between transition-all duration-200 ${
+                plans.length > 2 ? "w-[300px] sm:w-[340px] flex-shrink-0 snap-start" : ""
+              } ${
                 plan.featured
                   ? "bg-[#001011] text-white shadow-xl border border-[#093A3E]"
                   : "bg-white border border-[#d4e7e9] shadow-xs hover:border-[#3AAFB9]"

@@ -20,9 +20,10 @@ export default function TradingViewTicker() {
         { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
         { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
         { proName: "BINANCE:SOLUSD", title: "Solana" },
-        { proName: "BINANCE:BNBUSD", title: "BNB" },
-        { proName: "FX_IDC:EURUSD", title: "EUR/USD" },
-        { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
+        { proName: "BITSTAMP:XRPUSD", title: "XRP" },
+        { proName: "NASDAQ:NVDA", title: "Nvidia" },
+        { proName: "NASDAQ:AAPL", title: "Apple" },
+        { proName: "NASDAQ:TSLA", title: "Tesla" },
       ],
       showSymbolLogo: true,
       isTransparent: true,
@@ -35,12 +36,14 @@ export default function TradingViewTicker() {
   }, []);
 
   const fallbackCoins = [
-    { symbol: "BTC/USD", price: "$96,450.20", change: "+3.4%", up: true },
-    { symbol: "ETH/USD", price: "$3,420.80", change: "+2.1%", up: true },
-    { symbol: "SOL/USD", price: "$210.50", change: "+5.8%", up: true },
-    { symbol: "BNB/USD", price: "$645.10", change: "+1.2%", up: true },
-    { symbol: "USDT/USD", price: "$1.000", change: "0.0%", up: true },
-    { symbol: "EUR/USD", price: "1.085", change: "-0.2%", up: false },
+    { symbol: "BTC/USD", price: "$96,480.00", change: "+3.4%", up: true },
+    { symbol: "ETH/USD", price: "$3,425.50", change: "+2.1%", up: true },
+    { symbol: "SOL/USD", price: "$214.80", change: "+5.8%", up: true },
+    { symbol: "XRP/USD", price: "$2.48", change: "+4.1%", up: true },
+    { symbol: "NVDA", price: "$142.60", change: "+3.9%", up: true },
+    { symbol: "AAPL", price: "$234.90", change: "+1.2%", up: true },
+    { symbol: "TSLA", price: "$228.40", change: "+4.7%", up: true },
+    { symbol: "ATFC/USD", price: "$1.000", change: "0.0%", up: true },
   ];
 
   return (

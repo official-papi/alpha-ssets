@@ -6,6 +6,7 @@ import Footer from "@/components/landing/Footer";
 import TradingViewTicker from "@/components/landing/TradingViewTicker";
 import TopInvestors from "@/components/landing/TopInvestors";
 import PlanCards from "@/components/landing/PlanCards";
+import LiquidityControlSection from "@/components/landing/LiquidityControlSection";
 import RoiCalculator from "@/components/landing/RoiCalculator";
 import HowItWorks from "@/components/landing/HowItWorks";
 import ReferralSection from "@/components/landing/ReferralSection";
@@ -305,6 +306,7 @@ export default function Home() {
         </section>
 
         <TopInvestors />
+        <LiquidityControlSection />
         <PlanCards />
         <RoiCalculator />
         <HowItWorks />

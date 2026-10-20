@@ -19,12 +19,8 @@ interface InvestmentTier {
 }
 
 const DEFAULT_PLANS: InvestmentTier[] = [
-  { id: "regular",  name: "Regular",   rate: 2.5,  weeks: 8,  min: 500,     max: 2000,     step: 100,    badge: "Starter",    interval: "Weekly", capitalBack: true },
-  { id: "silver",   name: "Silver",    rate: 4.0,  weeks: 12, min: 3000,    max: 5000,     step: 250,    badge: "Growth",     interval: "Weekly", capitalBack: true },
-  { id: "gold",     name: "Gold",      rate: 6.0,  weeks: 16, min: 10000,   max: 20000,    step: 1000,   badge: "Popular",    interval: "Weekly", capitalBack: true },
-  { id: "vip",      name: "VIP",       rate: 10.0, weeks: 24, min: 50000,   max: 200000,   step: 5000,   badge: "High Yield", interval: "Weekly", capitalBack: true },
-  { id: "ultimate", name: "Ultimate",  rate: 12.0, weeks: 36, min: 500000,  max: 3000000,  step: 50000,  badge: "Executive",  interval: "Weekly", capitalBack: true },
-  { id: "elites",   name: "Elites",    rate: 15.5, weeks: 52, min: 5000000, max: 20000000, step: 250000, badge: "Exclusive",  interval: "Weekly", capitalBack: true },
+  { id: "regular", name: "Regular", rate: 5.0, weeks: 8, min: 500, max: 20000, step: 500, badge: "Starter", interval: "Weekly", capitalBack: true },
+  { id: "premium", name: "Premium", rate: 8.5, weeks: 16, min: 20000, max: 5000000, step: 10000, badge: "Executive", interval: "Weekly", capitalBack: true },
 ];
 
 export default function RoiCalculator() {
