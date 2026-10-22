@@ -6,9 +6,11 @@ import { BarChart2, ShieldCheck, Mail, Phone, MapPin, ArrowRight, Sparkles } fro
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSelector from "@/components/common/LanguageSelector";
+import SecurityAuditModal from "@/components/landing/SecurityAuditModal";
 
 export default function Footer() {
   const { t } = useLanguage();
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [cms, setCms] = useState({
     support_email: "support@alphaassets.io",
     support_phone: "+1 (800) 555-0100",
@@ -50,10 +52,13 @@ export default function Footer() {
               {t.footer.description}
             </p>
             
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#093A3E]/80 border border-[#3AAFB9]/40 text-[#3AAFB9] text-xs font-semibold shadow-xs">
+            <button
+              onClick={() => setIsAuditModalOpen(true)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#093A3E]/80 hover:bg-[#093A3E] border border-[#3AAFB9]/40 hover:border-[#3AAFB9] text-[#3AAFB9] text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
+            >
               <ShieldCheck className="w-3.5 h-3.5 text-[#3AAFB9]" />
               <span>{t.hero.securityAudited}</span>
-            </div>
+            </button>
           </div>
 
           {/* Quick Links Column */}
@@ -125,6 +130,11 @@ export default function Footer() {
         </div>
 
       </div>
+
+      <SecurityAuditModal
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
+      />
     </footer>
   );
 }

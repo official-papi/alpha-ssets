@@ -134,6 +134,7 @@ export default function ReferralSection() {
                 src="/images/network-art.jpg"
                 alt="Global Referral Liquidity Mesh"
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-700 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#001011]/95 via-[#093A3E]/40 to-transparent pointer-events-none" />

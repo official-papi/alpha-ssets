@@ -44,7 +44,7 @@ export const translations = {
       totalDeposited: "Total Deposited",
       paidOut: "Paid Out",
       uptime: "Uptime",
-      securityAudited: "100% Audited Smart Infrastructure",
+      securityAudited: "100% Non-Custodial & Formally Audited",
     },
 
     plans: {
@@ -65,7 +65,7 @@ export const translations = {
 
     // Footer
     footer: {
-      description: "Alpha@ssets is a premier automated yield generation and high-frequency trading platform built on institutional-grade financial infrastructure.",
+      description: "Alpha@ssets is a non-custodial AI risk protection protocol built on smart contract escrow vaults. We shield your assets from drawdowns by auto-converting to stablecoins on crashes and re-entering on recovery—without ever holding your private keys.",
       quickLinks: "Quick Links",
       legal: "Legal & Compliance",
       privacyPolicy: "Privacy Policy",
@@ -73,7 +73,7 @@ export const translations = {
       riskDisclaimer: "Risk Disclaimer",
       support: "24/7 Support",
       allRightsReserved: "All rights reserved.",
-      disclaimerText: "High-yield investment programs carry risk. Past performance does not guarantee future results. Invest responsibly.",
+      disclaimerText: "Cryptocurrency automated risk protection involves market conditions and volatility. Smart contracts operate on deterministic rules. Trade responsibly.",
       selectLanguage: "Language",
     },
 

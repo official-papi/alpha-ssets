@@ -62,6 +62,16 @@ const config: Config = {
           "system-ui",
           "sans-serif",
         ],
+        slab: [
+          "var(--font-roboto-slab)",
+          "'Roboto Slab'",
+          "serif",
+        ],
+        serif: [
+          "var(--font-roboto-slab)",
+          "'Roboto Slab'",
+          "serif",
+        ],
       },
     },
   },
