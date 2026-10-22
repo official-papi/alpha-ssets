@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
-import { ArrowDownRight, ArrowUpRight, History, ShieldCheck, Sparkles, TrendingUp, Wallet } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, History, Sparkles, TrendingUp, Wallet, Coins } from "lucide-react";
 
 interface CryptoPortfolioOverviewProps {
   totalUsdValue: number;
   totalWithdrawnUsd: number;
+  depositWalletBalance?: number;
+  interestWalletBalance?: number;
   topAssetSymbol?: string;
   topAssetAmount?: number;
   activeCurrenciesCount: number;
@@ -17,6 +19,8 @@ interface CryptoPortfolioOverviewProps {
 export default function CryptoPortfolioOverview({
   totalUsdValue = 0,
   totalWithdrawnUsd = 0,
+  depositWalletBalance = 0,
+  interestWalletBalance = 0,
   topAssetSymbol = "XRP",
   topAssetAmount = 0,
   activeCurrenciesCount = 5,
@@ -59,7 +63,7 @@ export default function CryptoPortfolioOverview({
               </span>
             </div>
             <p className="text-xs text-slate-300/80 mt-2 max-w-md">
-              Aggregate valuation across all your crypto balances (XRP, BTC, ETH, USDT, SOL).
+              Aggregate valuation across all your crypto balances and account wallets.
             </p>
           </div>
 
@@ -96,19 +100,23 @@ export default function CryptoPortfolioOverview({
           </div>
         </div>
 
-        {/* Bottom Pill Indicators */}
-        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 pt-5 border-t border-white/10 text-xs">
+        {/* Bottom Pill Indicators: Showing Liquid Balances & Stats */}
+        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-white/10 text-xs">
           <div>
-            <span className="text-slate-400 block text-[11px]">Primary Asset</span>
-            <span className="font-bold text-white font-mono">{topAssetSymbol} ({topAssetAmount > 0 ? topAssetAmount.toFixed(4) : "0.00"})</span>
+            <span className="text-slate-400 block text-[11px]">Deposit Wallet</span>
+            <span className="font-bold text-white font-mono text-sm">${fmt(depositWalletBalance)}</span>
           </div>
           <div>
-            <span className="text-slate-400 block text-[11px]">Custody Wallets</span>
-            <span className="font-bold text-white">{activeCurrenciesCount} Active Accounts</span>
+            <span className="text-slate-400 block text-[11px]">Interest Earnings</span>
+            <span className="font-bold text-emerald-400 font-mono text-sm">${fmt(interestWalletBalance)}</span>
           </div>
-          <div className="col-span-2 sm:col-span-1">
+          <div>
+            <span className="text-slate-400 block text-[11px]">Active Custody Coins</span>
+            <span className="font-bold text-white">{activeCurrenciesCount} Currencies</span>
+          </div>
+          <div>
             <span className="text-slate-400 block text-[11px]">Total Realized Payouts</span>
-            <span className="font-bold text-emerald-400 font-mono">${fmt(totalWithdrawnUsd)}</span>
+            <span className="font-bold text-slate-300 font-mono text-sm">${fmt(totalWithdrawnUsd)}</span>
           </div>
         </div>
       </div>

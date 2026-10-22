@@ -165,26 +165,32 @@ export default function DashboardPage() {
       balancesRes.data.forEach((b: any) => {
         userBalancesMap.set(b.symbol.toUpperCase(), Number(b.balance || 0));
       });
-    } else if (depositsRes.data && depositsRes.data.length > 0) {
-      // 2. Intelligent fallback: aggregate from approved deposits by coin
+    }
+
+    // 2. Aggregate from approved deposits by coin
+    if (depositsRes.data && depositsRes.data.length > 0) {
       depositsRes.data.forEach((dep: any) => {
         const gName = String(dep.gateway_name || "").toUpperCase();
         let sym = "";
         if (gName.includes("XRP") || gName.includes("RIPPLE")) sym = "XRP";
         else if (gName.includes("BTC") || gName.includes("BITCOIN")) sym = "BTC";
         else if (gName.includes("ETH") || gName.includes("ETHEREUM")) sym = "ETH";
-        else if (gName.includes("USDT") || gName.includes("TETHER")) sym = "USDT";
         else if (gName.includes("SOL") || gName.includes("SOLANA")) sym = "SOL";
+        else if (gName.includes("USDT") || gName.includes("TETHER")) sym = "USDT";
 
-        if (sym) {
-          const coinPrice = livePrices[sym]?.usd || 1;
+        if (sym && sym !== "USDT") {
+          const coinPrice = livePrices[sym]?.usd || (sym === "BTC" ? 67850 : sym === "ETH" ? 3480 : sym === "XRP" ? 0.584 : 150);
           const current = userBalancesMap.get(sym) || 0;
-          // If crypto_amount is saved, use it; otherwise convert fiat deposit to crypto units
           const cryptoAmt = dep.crypto_amount ? Number(dep.crypto_amount) : Number(dep.final_amount || dep.amount || 0) / coinPrice;
           userBalancesMap.set(sym, current + cryptoAmt);
         }
       });
     }
+
+    // 3. User's liquid cash in deposit_wallet + interest_wallet is mapped to USDT (1 USDT = $1 USD)
+    const liquidCash = Number(profileRes.data?.deposit_wallet || 0) + Number(profileRes.data?.interest_wallet || 0);
+    const existingUsdt = userBalancesMap.get("USDT") || 0;
+    userBalancesMap.set("USDT", Math.max(existingUsdt, liquidCash));
 
     // Merge currencies, user balances, and live prices
     const dbCurrencies = currenciesRes.data && currenciesRes.data.length > 0 ? currenciesRes.data : null;
@@ -217,10 +223,12 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, [fetchDashboardData]);
 
-  // Total Portfolio Net Worth calculation
+  // Total Portfolio Net Worth calculation (Crypto + Liquid Wallets)
   const totalUsdValue = useMemo(() => {
-    return cryptoAssets.reduce((acc, curr) => acc + (curr.balance * (curr.priceUsd || 0)), 0);
-  }, [cryptoAssets]);
+    const cryptoTotal = cryptoAssets.reduce((acc, curr) => acc + (curr.balance * (curr.priceUsd || 0)), 0);
+    const walletTotal = (profile?.deposit_wallet || 0) + (profile?.interest_wallet || 0);
+    return Math.max(cryptoTotal, walletTotal);
+  }, [cryptoAssets, profile]);
 
   // Top asset determination
   const topAsset = useMemo(() => {
@@ -310,6 +318,8 @@ export default function DashboardPage() {
         <CryptoPortfolioOverview
           totalUsdValue={totalUsdValue}
           totalWithdrawnUsd={totalWithdrawnSum}
+          depositWalletBalance={profile?.deposit_wallet || 0}
+          interestWalletBalance={profile?.interest_wallet || 0}
           topAssetSymbol={topAsset?.symbol || "XRP"}
           topAssetAmount={topAsset?.balance || 0}
           activeCurrenciesCount={cryptoAssets.length}
