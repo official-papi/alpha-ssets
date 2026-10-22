@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import OverviewCards from "@/components/dashboard/OverviewCards";
-import InvestmentsTable from "@/components/dashboard/InvestmentsTable";
-import DepositModal from "@/components/dashboard/DepositModal";
-import WithdrawModal from "@/components/dashboard/WithdrawModal";
-import NewInvestmentModal from "@/components/dashboard/NewInvestmentModal";
-import InvestmentDetailsModal from "@/components/dashboard/InvestmentDetailsModal";
-import DashboardLiquidityMatrix from "@/components/dashboard/DashboardLiquidityMatrix";
-import { Copy, Check, Sparkles, RefreshCw, X, CheckCircle2, AlertCircle } from "lucide-react";
+import CryptoPortfolioOverview from "@/components/dashboard/CryptoPortfolioOverview";
+import CryptoAssetCards, { CryptoAssetItem } from "@/components/dashboard/CryptoAssetCards";
+import CryptoHoldingsTable from "@/components/dashboard/CryptoHoldingsTable";
+import CryptoDepositModal from "@/components/dashboard/CryptoDepositModal";
+import CryptoWithdrawModal from "@/components/dashboard/CryptoWithdrawModal";
+import { Copy, Check, Sparkles, RefreshCw } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 interface UserProfile {
@@ -22,16 +21,64 @@ interface UserProfile {
   role?: string;
 }
 
-const DEFAULT_PLANS = [
-  { id: "plan-1", name: "Regular Package", min_amount: 500, max_amount: 20000, interest_rate: 5.0, return_type: "weekly", repeat_time: 8 },
-  { id: "plan-2", name: "Premium Package", min_amount: 20000, max_amount: 5000000, interest_rate: 8.5, return_type: "weekly", repeat_time: 16 },
+const DEFAULT_SUPPORTED_CRYPTO: CryptoAssetItem[] = [
+  {
+    symbol: "XRP",
+    name: "Ripple",
+    network: "XRPL (Ripple Ledger)",
+    balance: 0,
+    priceUsd: 0.584,
+    change24h: 3.42,
+    requiresTag: true,
+    walletAddress: "rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh",
+    tagValue: "583921",
+  },
+  {
+    symbol: "BTC",
+    name: "Bitcoin",
+    network: "Bitcoin Network",
+    balance: 0,
+    priceUsd: 67850.0,
+    change24h: 1.85,
+    requiresTag: false,
+    walletAddress: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  },
+  {
+    symbol: "ETH",
+    name: "Ethereum",
+    network: "ERC-20",
+    balance: 0,
+    priceUsd: 3480.0,
+    change24h: 2.15,
+    requiresTag: false,
+    walletAddress: "0x71C83d3b7da5F23e098a5F38A88950d81745Fe1e",
+  },
+  {
+    symbol: "USDT",
+    name: "Tether USD",
+    network: "TRC-20",
+    balance: 0,
+    priceUsd: 1.0,
+    change24h: 0.01,
+    requiresTag: false,
+    walletAddress: "T9yD14Nj9j7x8kL2m1n0PqRsTuVwXyZ3aB",
+  },
+  {
+    symbol: "SOL",
+    name: "Solana",
+    network: "Solana Mainnet",
+    balance: 0,
+    priceUsd: 154.5,
+    change24h: 4.65,
+    requiresTag: false,
+    walletAddress: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+  },
 ];
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [investments, setInvestments] = useState<any[]>([]);
-  const [dbPlans, setDbPlans] = useState<any[]>([]);
-  const [gateways, setGateways] = useState<any[]>([]);
+  const [cryptoAssets, setCryptoAssets] = useState<CryptoAssetItem[]>(DEFAULT_SUPPORTED_CRYPTO);
   const [totalWithdrawnSum, setTotalWithdrawnSum] = useState(0);
   const [copiedRef, setCopiedRef] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -39,16 +86,7 @@ export default function DashboardPage() {
   // Modals state
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-  const [isInvestOpen, setIsInvestOpen] = useState(false);
-  const [isReinvestOpen, setIsReinvestOpen] = useState(false);
-  const [selectedInvForDetails, setSelectedInvForDetails] = useState<any | null>(null);
-
-  // Reinvest Form state
-  const [reinvestAmount, setReinvestAmount] = useState("");
-  const [reinvesting, setReinvesting] = useState(false);
-  const [reinvestMsg, setReinvestMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
-
-  const [isImpersonating, setIsImpersonating] = useState(false);
+  const [modalPreselectedSymbol, setModalPreselectedSymbol] = useState<string>("XRP");
 
   const fetchDashboardData = useCallback(async () => {
     const supabase = createClient();
@@ -59,43 +97,30 @@ export default function DashboardPage() {
       return;
     }
 
-    // Process any due investment payouts in the background
-    try {
-      await fetch("/api/cron/payouts", { method: "POST" });
-    } catch {}
-
     const impersonatedId = typeof window !== "undefined" ? sessionStorage.getItem("impersonate_user_id") : null;
     const targetUserId = impersonatedId || user.id;
-    if (impersonatedId) setIsImpersonating(true);
 
-    const [profileRes, investRes, withdrawRes, plansRes, gatewaysRes] = await Promise.all([
+    // Fetch user profile, withdrawals, and crypto balances in parallel
+    const [profileRes, withdrawRes, balancesRes, currenciesRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", targetUserId).single(),
-      supabase.from("user_investments").select("*, investment_plans(name, badge, capital_back)").eq("user_id", targetUserId),
       supabase.from("withdrawals").select("net_amount").eq("user_id", targetUserId).eq("status", "approved"),
-      supabase.from("investment_plans").select("*").eq("is_active", true),
-      supabase.from("gateways").select("*").eq("status", true),
+      supabase.from("user_crypto_balances").select("*").eq("user_id", targetUserId),
+      supabase.from("crypto_currencies").select("*").eq("is_active", true).order("sort_order", { ascending: true }),
     ]);
 
-    if (gatewaysRes.data && gatewaysRes.data.length > 0) {
-      setGateways(gatewaysRes.data);
+    // Fetch live prices from our API route
+    let livePrices: Record<string, { usd: number; change24h: number }> = {};
+    try {
+      const priceRes = await fetch("/api/crypto/prices");
+      if (priceRes.ok) {
+        const priceData = await priceRes.json();
+        if (priceData.prices) livePrices = priceData.prices;
+      }
+    } catch (err) {
+      console.warn("Could not fetch live crypto prices:", err);
     }
 
-    if (plansRes.data && plansRes.data.length > 0) {
-      setDbPlans(
-        plansRes.data.map((p: any) => ({
-          id: p.id,
-          name: p.name,
-          min_amount: Number(p.min_amount),
-          max_amount: Number(p.max_amount),
-          interest_rate: Number(p.roi_percentage),
-          return_type: "daily",
-          repeat_time: p.total_payout_periods,
-        }))
-      );
-    } else {
-      setDbPlans(DEFAULT_PLANS);
-    }
-
+    // Set Profile
     if (profileRes.data) {
       setProfile({
         id: profileRes.data.id,
@@ -108,33 +133,41 @@ export default function DashboardPage() {
       });
     }
 
-    if (investRes.data && investRes.data.length > 0) {
-      setInvestments(
-        investRes.data.map((inv: any) => ({
-          id: inv.id,
-          planName: inv.investment_plans?.name || "Active Tier",
-          badge: inv.investment_plans?.badge || "Active Package",
-          capital_back: inv.investment_plans?.capital_back ?? true,
-          amount: Number(inv.invest_amount || inv.amount || 0),
-          dailyReturn: Number(inv.payout_per_period || inv.daily_return || 0),
-          totalPayouts: inv.total_payout_periods || inv.total_payouts || 30,
-          completedPayouts: inv.paid_periods || inv.payouts_completed || 0,
-          total_profit_earned: Number(inv.total_profit_earned || 0),
-          next_payout_at: inv.next_payout_at,
-          nextPayout: inv.next_payout_at ? new Date(inv.next_payout_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Active",
-          status: inv.status,
-          created_at: inv.created_at,
-        }))
-      );
-    } else {
-      setInvestments([]);
-    }
-
+    // Set Withdrawn sum
     if (withdrawRes.data) {
       const sum = withdrawRes.data.reduce((acc: number, curr: any) => acc + Number(curr.net_amount || 0), 0);
       setTotalWithdrawnSum(sum);
     }
 
+    // Merge currencies, user balances, and live prices
+    const dbCurrencies = currenciesRes.data && currenciesRes.data.length > 0 ? currenciesRes.data : null;
+    const userBalancesMap = new Map<string, number>();
+    if (balancesRes.data) {
+      balancesRes.data.forEach((b: any) => {
+        userBalancesMap.set(b.symbol.toUpperCase(), Number(b.balance || 0));
+      });
+    }
+
+    const baseList = dbCurrencies
+      ? dbCurrencies.map((c: any) => ({
+          symbol: c.symbol,
+          name: c.name,
+          network: c.network,
+          balance: userBalancesMap.get(c.symbol.toUpperCase()) || 0,
+          priceUsd: livePrices[c.symbol]?.usd || (c.symbol === "USDT" ? 1.0 : 0),
+          change24h: livePrices[c.symbol]?.change24h || 0,
+          requiresTag: c.requires_tag ?? false,
+          walletAddress: c.wallet_address || undefined,
+          tagValue: c.tag_value || undefined,
+        }))
+      : DEFAULT_SUPPORTED_CRYPTO.map((item) => ({
+          ...item,
+          balance: userBalancesMap.get(item.symbol) || (item.symbol === "USDT" && Number(profileRes.data?.deposit_wallet || 0) > 0 ? Number(profileRes.data?.deposit_wallet) : 0),
+          priceUsd: livePrices[item.symbol]?.usd ?? item.priceUsd,
+          change24h: livePrices[item.symbol]?.change24h ?? item.change24h,
+        }));
+
+    setCryptoAssets(baseList);
     setLoading(false);
   }, []);
 
@@ -142,45 +175,33 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, [fetchDashboardData]);
 
-  const handleTransferEarnings = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const amt = Number(reinvestAmount);
-    if (!amt || amt <= 0) return;
+  // Total Portfolio Net Worth calculation
+  const totalUsdValue = useMemo(() => {
+    return cryptoAssets.reduce((acc, curr) => acc + (curr.balance * (curr.priceUsd || 0)), 0);
+  }, [cryptoAssets]);
 
-    if (!profile || profile.interest_wallet < amt) {
-      setReinvestMsg({ text: "Insufficient Interest Wallet balance for transfer.", type: "error" });
-      return;
-    }
-
-    setReinvesting(true);
-    setReinvestMsg(null);
-
-    const supabase = createClient();
-    const newInterest = profile.interest_wallet - amt;
-    const newDeposit = profile.deposit_wallet + amt;
-
-    await supabase.from("profiles").update({
-      interest_wallet: newInterest,
-      deposit_wallet: newDeposit,
-    }).eq("id", profile.id);
-
-    await supabase.from("wallet_transactions").insert({
-      user_id: profile.id,
-      type: "reinvest",
-      amount: amt,
-      wallet_type: "deposit_wallet",
-      description: `Transferred $${amt.toFixed(2)} from Interest Earnings to Deposit Wallet for compounding`,
+  // Top asset determination
+  const topAsset = useMemo(() => {
+    let top = cryptoAssets[0];
+    let maxVal = 0;
+    cryptoAssets.forEach((a) => {
+      const val = a.balance * (a.priceUsd || 0);
+      if (val > maxVal) {
+        maxVal = val;
+        top = a;
+      }
     });
+    return top;
+  }, [cryptoAssets]);
 
-    setReinvestMsg({ text: "Earnings transferred to Deposit Wallet successfully!", type: "success" });
-    setTimeout(() => {
-      setIsReinvestOpen(false);
-      setReinvestAmount("");
-      setReinvestMsg(null);
-      fetchDashboardData();
-    }, 1200);
+  const handleOpenDeposit = (symbol?: string) => {
+    setModalPreselectedSymbol(symbol || "XRP");
+    setIsDepositOpen(true);
+  };
 
-    setReinvesting(false);
+  const handleOpenWithdraw = (symbol?: string) => {
+    setModalPreselectedSymbol(symbol || "XRP");
+    setIsWithdrawOpen(true);
   };
 
   const referralLink = typeof window !== "undefined"
@@ -193,12 +214,11 @@ export default function DashboardPage() {
     setTimeout(() => setCopiedRef(false), 2000);
   };
 
-  const totalInvested = investments.reduce((acc, curr) => acc + (curr.amount || 0), 0);
-
   return (
     <DashboardLayout userEmail={profile?.email}>
       <div className="space-y-8">
-        {/* Institutional Command Terminal Banner */}
+        
+        {/* Executive Terminal Banner */}
         <div className="relative group overflow-hidden rounded-2xl border border-[#093A3E] bg-[#001011] p-6 sm:p-8 shadow-xl text-white">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(58,175,185,0.12),transparent_70%)] pointer-events-none" />
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#093A3E]/30 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
@@ -207,23 +227,24 @@ export default function DashboardPage() {
             <div className="space-y-2.5 max-w-xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#093A3E]/60 border border-[#3AAFB9]/40 text-[#3AAFB9] text-[11px] font-bold uppercase tracking-wider backdrop-blur-xs">
                 <Sparkles className="w-3.5 h-3.5 text-[#3AAFB9]" />
-                <span>Executive Terminal · Welcome Back, {profile?.full_name || "Investor"}</span>
+                <span>Crypto Custody Console · Welcome Back, {profile?.full_name || "Investor"}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
-                Institutional Wealth Console
+                Institutional Crypto Portfolio
               </h1>
               <p className="text-slate-300 text-xs sm:text-sm font-normal leading-relaxed">
-                Algorithmic yield tracking, verified ledger execution, and instant wallet compounding at tier-1 security standards.
+                Direct blockchain asset accounts. Deposit with XRP, Bitcoin, Ethereum, USDT, or Solana with instant attribution and verified cold custody.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
               <button
-                onClick={() => setIsReinvestOpen(true)}
+                onClick={() => fetchDashboardData()}
                 className="px-4 py-2.5 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white border border-[#3AAFB9]/40 text-xs font-bold flex items-center justify-center space-x-2 cursor-pointer shadow-xs transition-all hover:border-[#3AAFB9]"
+                title="Refresh Balances"
               >
                 <RefreshCw className="w-4 h-4 text-[#3AAFB9]" />
-                <span>Reinvest Earnings</span>
+                <span>Refresh Rates</span>
               </button>
 
               <div className="bg-[#093A3E]/40 border border-[#3AAFB9]/30 p-2.5 px-4 rounded-xl flex items-center justify-between gap-3 backdrop-blur-sm">
@@ -243,126 +264,51 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Account Balances Grid */}
-        <OverviewCards
-          depositBalance={profile?.deposit_wallet || 0}
-          interestBalance={profile?.interest_wallet || 0}
-          totalInvested={totalInvested}
-          totalWithdrawn={totalWithdrawnSum}
-          onOpenDeposit={() => setIsDepositOpen(true)}
-          onOpenWithdraw={() => setIsWithdrawOpen(true)}
-          onOpenInvest={() => setIsInvestOpen(true)}
+        {/* 1. Hero Portfolio Overview Card (Total Net Worth, Quick Actions) */}
+        <CryptoPortfolioOverview
+          totalUsdValue={totalUsdValue}
+          totalWithdrawnUsd={totalWithdrawnSum}
+          topAssetSymbol={topAsset?.symbol || "XRP"}
+          topAssetAmount={topAsset?.balance || 0}
+          activeCurrenciesCount={cryptoAssets.length}
+          onOpenDeposit={handleOpenDeposit}
+          onOpenWithdraw={handleOpenWithdraw}
+          onViewHistory={() => router.push("/dashboard/transactions")}
         />
 
-        {/* Space for Liquidity Control Matrix */}
-        <DashboardLiquidityMatrix
-          totalInvested={totalInvested}
-          onOpenInvest={() => setIsInvestOpen(true)}
+        {/* 2. Crypto Accounts Grid: Shows XRP, BTC, ETH, USDT, SOL balances distinctly */}
+        <CryptoAssetCards
+          assets={cryptoAssets}
+          onDeposit={handleOpenDeposit}
+          onWithdraw={handleOpenWithdraw}
         />
 
-        {/* Active Investments Tracker */}
-        <InvestmentsTable
-          investments={investments}
-          onOpenInvest={() => setIsInvestOpen(true)}
-          onSelectInvestment={(inv) => setSelectedInvForDetails(inv)}
+        {/* 3. Detailed Crypto Asset Holdings Breakdown Table */}
+        <CryptoHoldingsTable
+          assets={cryptoAssets}
+          totalUsdValue={totalUsdValue}
+          onDeposit={handleOpenDeposit}
+          onWithdraw={handleOpenWithdraw}
         />
 
-        {/* Reinvest / Internal Transfer Modal */}
-        {isReinvestOpen && profile && (
-          <div className="hm-modal-overlay">
-            <div className="hm-modal max-w-md space-y-4">
-              
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#093A3E]/10 border border-[#093A3E]/20 flex items-center justify-center text-[#093A3E]">
-                    <RefreshCw className="w-4 h-4 text-[#093A3E]" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-extrabold text-slate-900">Reinvest Interest Earnings</h3>
-                    <p className="text-[11px] text-slate-400">Zero-fee internal wallet transfer</p>
-                  </div>
-                </div>
-                <button onClick={() => setIsReinvestOpen(false)} className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="bg-[#f0f8f9] border border-[#3AAFB9]/30 rounded-xl p-3.5 text-xs text-[#093A3E] font-medium leading-relaxed">
-                Transfer earnings from your <strong className="font-mono text-[#001011]">${profile.interest_wallet.toFixed(2)}</strong> Interest Wallet to your Deposit Wallet to immediately compound into higher-tier investment plans.
-              </div>
-
-              {reinvestMsg && (
-                <div className={`p-3 rounded-xl text-xs flex items-center space-x-2 font-semibold ${
-                  reinvestMsg.type === "success" ? "bg-emerald-50 border border-emerald-200 text-emerald-700" : "bg-rose-50 border border-rose-200 text-rose-700"
-                }`}>
-                  {reinvestMsg.type === "success" ? <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" /> : <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />}
-                  <span>{reinvestMsg.text}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleTransferEarnings} className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Transfer Amount ($)</label>
-                    <span className="text-[11px] text-slate-400 font-mono">Max: ${profile.interest_wallet.toFixed(2)}</span>
-                  </div>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="1"
-                    max={profile.interest_wallet}
-                    required
-                    value={reinvestAmount}
-                    onChange={(e) => setReinvestAmount(e.target.value)}
-                    placeholder="100.00"
-                    className="hm-input font-mono font-bold"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={reinvesting}
-                  className="w-full py-2.5 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center justify-center space-x-2"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 text-[#3AAFB9] ${reinvesting ? "animate-spin" : ""}`} />
-                  <span>{reinvesting ? "Transferring Funds..." : "Transfer to Deposit Wallet"}</span>
-                </button>
-              </form>
-
-            </div>
-          </div>
-        )}
-
-        {/* Modals */}
-        <DepositModal
+        {/* 4. Multi-Crypto Deposit Modal (Supports XRP with Tag, BTC, ETH, USDT, SOL) */}
+        <CryptoDepositModal
           isOpen={isDepositOpen}
-          gateways={gateways}
+          assets={cryptoAssets}
+          preSelectedSymbol={modalPreselectedSymbol}
           onClose={() => setIsDepositOpen(false)}
           onSuccess={fetchDashboardData}
         />
 
-        <WithdrawModal
+        {/* 5. Crypto Withdrawal Modal */}
+        <CryptoWithdrawModal
           isOpen={isWithdrawOpen}
-          interestBalance={profile?.interest_wallet || 0}
-          depositBalance={profile?.deposit_wallet || 0}
+          assets={cryptoAssets}
+          preSelectedSymbol={modalPreselectedSymbol}
           onClose={() => setIsWithdrawOpen(false)}
           onSuccess={fetchDashboardData}
         />
 
-        <NewInvestmentModal
-          isOpen={isInvestOpen}
-          depositBalance={profile?.deposit_wallet || 0}
-          interestBalance={profile?.interest_wallet || 0}
-          plans={dbPlans.length > 0 ? dbPlans : DEFAULT_PLANS}
-          onClose={() => setIsInvestOpen(false)}
-          onSuccess={fetchDashboardData}
-        />
-
-        <InvestmentDetailsModal
-          isOpen={!!selectedInvForDetails}
-          investment={selectedInvForDetails}
-          onClose={() => setSelectedInvForDetails(null)}
-        />
       </div>
     </DashboardLayout>
   );

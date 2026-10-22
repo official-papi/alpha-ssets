@@ -31,9 +31,9 @@ export async function POST(req: Request) {
     const depositAmount = Number(depObj.final_amount || depObj.amount || 0);
     const userId = depObj.user_id;
 
-    // 2. Try RPC first (which also distributes multi-level referral commissions)
+    // 2. Try RPC first
     try {
-      const { data: rpcRes, error: rpcErr } = await supabase.rpc("approve_deposit_rpc", {
+      const { data: rpcRes, error: rpcErr } = await supabase.rpc("approve_crypto_deposit_rpc", {
         p_deposit_id: depositId,
         p_admin_id: userId,
         p_feedback: feedback || "Deposit verified and approved by admin",
@@ -42,12 +42,27 @@ export async function POST(req: Request) {
       if (!rpcErr && rpcRes && rpcRes.success) {
         return NextResponse.json({
           success: true,
-          message: `Deposit of $${depositAmount.toFixed(2)} approved and credited successfully!`,
+          message: `Deposit of ${depObj.crypto_amount || depositAmount} ${depObj.crypto_symbol || "USD"} approved and credited successfully!`,
         });
       }
     } catch (rpcEx) {
-      console.warn("RPC approve_deposit_rpc failed, proceeding with direct admin execution:", rpcEx);
+      console.warn("RPC approve_crypto_deposit_rpc not available, checking approve_deposit_rpc:", rpcEx);
     }
+
+    try {
+      const { data: legacyRpcRes, error: legacyRpcErr } = await supabase.rpc("approve_deposit_rpc", {
+        p_deposit_id: depositId,
+        p_admin_id: userId,
+        p_feedback: feedback || "Deposit verified and approved by admin",
+      });
+
+      if (!legacyRpcErr && legacyRpcRes && legacyRpcRes.success) {
+        return NextResponse.json({
+          success: true,
+          message: `Deposit of $${depositAmount.toFixed(2)} approved and credited successfully!`,
+        });
+      }
+    } catch {}
 
     // 3. Direct admin execution with elevated service role (bypasses RLS)
     await supabase.from("deposits").update({
@@ -56,7 +71,29 @@ export async function POST(req: Request) {
       updated_at: new Date().toISOString(),
     }).eq("id", depositId);
 
-    // Fetch fresh profile
+    // Credit specific crypto balance if crypto_symbol is present
+    if (depObj.crypto_symbol && depObj.crypto_amount) {
+      const cryptoSym = String(depObj.crypto_symbol).toUpperCase();
+      const cryptoAmt = Number(depObj.crypto_amount);
+
+      const { data: existingBal } = await supabase
+        .from("user_crypto_balances")
+        .select("balance")
+        .eq("user_id", userId)
+        .eq("symbol", cryptoSym)
+        .maybeSingle();
+
+      const newCryptoBal = (Number(existingBal?.balance) || 0) + cryptoAmt;
+
+      await supabase.from("user_crypto_balances").upsert({
+        user_id: userId,
+        symbol: cryptoSym,
+        balance: newCryptoBal,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id,symbol" });
+    }
+
+    // Also update legacy deposit_wallet for compatibility
     const { data: profile } = await supabase
       .from("profiles")
       .select("deposit_wallet")
@@ -66,17 +103,13 @@ export async function POST(req: Request) {
     const currentBal = Number(profile?.deposit_wallet || 0);
     const newBal = currentBal + depositAmount;
 
-    const { error: profileErr } = await supabase
+    await supabase
       .from("profiles")
       .update({
         deposit_wallet: newBal,
         updated_at: new Date().toISOString(),
       })
       .eq("id", userId);
-
-    if (profileErr) {
-      throw new Error(`Failed to credit deposit wallet: ${profileErr.message}`);
-    }
 
     // Record transaction
     await supabase.from("transactions").insert({
