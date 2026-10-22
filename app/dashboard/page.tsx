@@ -100,12 +100,14 @@ export default function DashboardPage() {
     const impersonatedId = typeof window !== "undefined" ? sessionStorage.getItem("impersonate_user_id") : null;
     const targetUserId = impersonatedId || user.id;
 
-    // Fetch user profile, withdrawals, and crypto balances in parallel
-    const [profileRes, withdrawRes, balancesRes, currenciesRes] = await Promise.all([
+    // Fetch user profile, withdrawals, gateways, and deposits in parallel
+    const [profileRes, withdrawRes, balancesRes, currenciesRes, gatewaysRes, depositsRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", targetUserId).single(),
-      supabase.from("withdrawals").select("net_amount").eq("user_id", targetUserId).eq("status", "approved"),
+      supabase.from("withdrawals").select("net_amount, method_name, account_details, status").eq("user_id", targetUserId),
       supabase.from("user_crypto_balances").select("*").eq("user_id", targetUserId),
       supabase.from("crypto_currencies").select("*").eq("is_active", true).order("sort_order", { ascending: true }),
+      supabase.from("gateways").select("*").eq("status", true),
+      supabase.from("deposits").select("*").eq("user_id", targetUserId).eq("status", "approved"),
     ]);
 
     // Fetch live prices from our API route
@@ -135,18 +137,57 @@ export default function DashboardPage() {
 
     // Set Withdrawn sum
     if (withdrawRes.data) {
-      const sum = withdrawRes.data.reduce((acc: number, curr: any) => acc + Number(curr.net_amount || 0), 0);
+      const sum = withdrawRes.data
+        .filter((w: any) => w.status === "approved")
+        .reduce((acc: number, curr: any) => acc + Number(curr.net_amount || 0), 0);
       setTotalWithdrawnSum(sum);
+    }
+
+    // Map real addresses from gateways configured in database
+    const gatewayAddressMap = new Map<string, string>();
+    if (gatewaysRes.data) {
+      gatewaysRes.data.forEach((g: any) => {
+        const code = String(g.code || "").toLowerCase();
+        const name = String(g.name || "").toLowerCase();
+        if (code.includes("xrp") || name.includes("xrp")) gatewayAddressMap.set("XRP", g.wallet_address);
+        if (code.includes("bitcoin") || code.includes("btc") || name.includes("bitcoin")) gatewayAddressMap.set("BTC", g.wallet_address);
+        if (code.includes("ethereum") || code.includes("eth") || name.includes("ethereum")) gatewayAddressMap.set("ETH", g.wallet_address);
+        if (code.includes("usdt") || name.includes("usdt")) gatewayAddressMap.set("USDT", g.wallet_address);
+        if (code.includes("solana") || code.includes("sol") || name.includes("solana")) gatewayAddressMap.set("SOL", g.wallet_address);
+      });
+    }
+
+    // Dynamic balance aggregation from approved deposits & user_crypto_balances
+    const userBalancesMap = new Map<string, number>();
+    
+    // 1. From user_crypto_balances table if present
+    if (balancesRes.data && balancesRes.data.length > 0) {
+      balancesRes.data.forEach((b: any) => {
+        userBalancesMap.set(b.symbol.toUpperCase(), Number(b.balance || 0));
+      });
+    } else if (depositsRes.data && depositsRes.data.length > 0) {
+      // 2. Intelligent fallback: aggregate from approved deposits by coin
+      depositsRes.data.forEach((dep: any) => {
+        const gName = String(dep.gateway_name || "").toUpperCase();
+        let sym = "";
+        if (gName.includes("XRP") || gName.includes("RIPPLE")) sym = "XRP";
+        else if (gName.includes("BTC") || gName.includes("BITCOIN")) sym = "BTC";
+        else if (gName.includes("ETH") || gName.includes("ETHEREUM")) sym = "ETH";
+        else if (gName.includes("USDT") || gName.includes("TETHER")) sym = "USDT";
+        else if (gName.includes("SOL") || gName.includes("SOLANA")) sym = "SOL";
+
+        if (sym) {
+          const coinPrice = livePrices[sym]?.usd || 1;
+          const current = userBalancesMap.get(sym) || 0;
+          // If crypto_amount is saved, use it; otherwise convert fiat deposit to crypto units
+          const cryptoAmt = dep.crypto_amount ? Number(dep.crypto_amount) : Number(dep.final_amount || dep.amount || 0) / coinPrice;
+          userBalancesMap.set(sym, current + cryptoAmt);
+        }
+      });
     }
 
     // Merge currencies, user balances, and live prices
     const dbCurrencies = currenciesRes.data && currenciesRes.data.length > 0 ? currenciesRes.data : null;
-    const userBalancesMap = new Map<string, number>();
-    if (balancesRes.data) {
-      balancesRes.data.forEach((b: any) => {
-        userBalancesMap.set(b.symbol.toUpperCase(), Number(b.balance || 0));
-      });
-    }
 
     const baseList = dbCurrencies
       ? dbCurrencies.map((c: any) => ({
@@ -156,13 +197,14 @@ export default function DashboardPage() {
           balance: userBalancesMap.get(c.symbol.toUpperCase()) || 0,
           priceUsd: livePrices[c.symbol]?.usd || (c.symbol === "USDT" ? 1.0 : 0),
           change24h: livePrices[c.symbol]?.change24h || 0,
-          requiresTag: c.requires_tag ?? false,
-          walletAddress: c.wallet_address || undefined,
-          tagValue: c.tag_value || undefined,
+          requiresTag: c.requires_tag ?? (c.symbol === "XRP"),
+          walletAddress: gatewayAddressMap.get(c.symbol) || c.wallet_address || undefined,
+          tagValue: c.tag_value || (c.symbol === "XRP" ? "583921" : undefined),
         }))
       : DEFAULT_SUPPORTED_CRYPTO.map((item) => ({
           ...item,
-          balance: userBalancesMap.get(item.symbol) || (item.symbol === "USDT" && Number(profileRes.data?.deposit_wallet || 0) > 0 ? Number(profileRes.data?.deposit_wallet) : 0),
+          balance: userBalancesMap.get(item.symbol) || 0,
+          walletAddress: gatewayAddressMap.get(item.symbol) || item.walletAddress,
           priceUsd: livePrices[item.symbol]?.usd ?? item.priceUsd,
           change24h: livePrices[item.symbol]?.change24h ?? item.change24h,
         }));

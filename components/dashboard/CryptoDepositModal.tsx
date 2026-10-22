@@ -118,19 +118,30 @@ export default function CryptoDepositModal({
       const generatedRef = `DEP-${selectedSymbol}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
 
       // Insert deposit tagged with exact crypto symbol and amount
-      const { error: insertError } = await supabase.from("deposits").insert({
+      const standardPayload: any = {
         user_id: activeUser.id,
-        amount: approxUsd, // USD estimate for backward compatibility
+        amount: approxUsd,
         charge: 0,
         final_amount: approxUsd,
-        gateway_name: `${currentAsset?.name || selectedSymbol} (${currentAsset?.network || "Crypto"})`,
+        gateway_name: `${selectedSymbol} - ${numAmount} ${selectedSymbol}`,
         trx_id: txHash.trim() || generatedRef,
         proof_url: proofUrl,
         status: "pending",
+      };
+
+      // Try with extended columns first
+      let { error: insertError } = await supabase.from("deposits").insert({
+        ...standardPayload,
         crypto_symbol: selectedSymbol,
         crypto_amount: numAmount,
         tx_hash: txHash.trim() || null,
       });
+
+      // If column doesn't exist in existing schema, retry with standard payload
+      if (insertError && (insertError.message.includes("column") || insertError.code === "PGRST204")) {
+        const retryRes = await supabase.from("deposits").insert(standardPayload);
+        insertError = retryRes.error;
+      }
 
       if (insertError) {
         setError(insertError.message);

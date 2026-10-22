@@ -85,8 +85,8 @@ export default function CryptoWithdrawModal({
         return;
       }
 
-      // Record withdrawal request
-      const { error: withdrawErr } = await supabase.from("withdrawals").insert({
+      // Standard withdrawal payload
+      const standardPayload: any = {
         user_id: activeUser.id,
         amount: approxUsd,
         charge: 0,
@@ -99,11 +99,22 @@ export default function CryptoWithdrawModal({
           destination_tag: destinationTag.trim() || null,
         },
         status: "pending",
+      };
+
+      // Try with extended columns first
+      let { error: withdrawErr } = await supabase.from("withdrawals").insert({
+        ...standardPayload,
         crypto_symbol: selectedSymbol,
         crypto_amount: numAmount,
         destination_address: destinationAddress.trim(),
         destination_tag: destinationTag.trim() || null,
       });
+
+      // Fallback if custom columns not added yet
+      if (withdrawErr && (withdrawErr.message.includes("column") || withdrawErr.code === "PGRST204")) {
+        const retryRes = await supabase.from("withdrawals").insert(standardPayload);
+        withdrawErr = retryRes.error;
+      }
 
       if (withdrawErr) {
         setError(withdrawErr.message);
