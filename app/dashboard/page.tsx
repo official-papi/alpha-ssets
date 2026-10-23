@@ -8,6 +8,8 @@ import CryptoAssetCards, { CryptoAssetItem } from "@/components/dashboard/Crypto
 import CryptoHoldingsTable from "@/components/dashboard/CryptoHoldingsTable";
 import CryptoDepositModal from "@/components/dashboard/CryptoDepositModal";
 import CryptoWithdrawModal from "@/components/dashboard/CryptoWithdrawModal";
+import DashboardLiquidityMatrix from "@/components/dashboard/DashboardLiquidityMatrix";
+import FundCryptoModal from "@/components/dashboard/FundCryptoModal";
 import { Copy, Check, Sparkles, RefreshCw } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -22,6 +24,16 @@ interface UserProfile {
 }
 
 const DEFAULT_SUPPORTED_CRYPTO: CryptoAssetItem[] = [
+  {
+    symbol: "ATFC",
+    name: "American Trust Fund",
+    network: "Sovereign Trust Escrow",
+    balance: 0,
+    priceUsd: 1.0,
+    change24h: 0.0,
+    requiresTag: false,
+    walletAddress: "0x892aF75dE163B8d6263B2dD6C9eA75d5032F5e71",
+  },
   {
     symbol: "XRP",
     name: "Ripple",
@@ -86,7 +98,9 @@ export default function DashboardPage() {
   // Modals state
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-  const [modalPreselectedSymbol, setModalPreselectedSymbol] = useState<string>("XRP");
+  const [isFundOpen, setIsFundOpen] = useState(false);
+  const [modalPreselectedSymbol, setModalPreselectedSymbol] = useState<string>("ATFC");
+  const [modalPreselectedFundSymbol, setModalPreselectedFundSymbol] = useState<string>("ATFC");
 
   const fetchDashboardData = useCallback(async () => {
     const supabase = createClient();
@@ -149,6 +163,7 @@ export default function DashboardPage() {
       gatewaysRes.data.forEach((g: any) => {
         const code = String(g.code || "").toLowerCase();
         const name = String(g.name || "").toLowerCase();
+        if (code.includes("atfc") || name.includes("american trust")) gatewayAddressMap.set("ATFC", g.wallet_address);
         if (code.includes("xrp") || name.includes("xrp")) gatewayAddressMap.set("XRP", g.wallet_address);
         if (code.includes("bitcoin") || code.includes("btc") || name.includes("bitcoin")) gatewayAddressMap.set("BTC", g.wallet_address);
         if (code.includes("ethereum") || code.includes("eth") || name.includes("ethereum")) gatewayAddressMap.set("ETH", g.wallet_address);
@@ -172,14 +187,15 @@ export default function DashboardPage() {
       depositsRes.data.forEach((dep: any) => {
         const gName = String(dep.gateway_name || "").toUpperCase();
         let sym = "";
-        if (gName.includes("XRP") || gName.includes("RIPPLE")) sym = "XRP";
+        if (gName.includes("ATFC") || gName.includes("AMERICAN TRUST")) sym = "ATFC";
+        else if (gName.includes("XRP") || gName.includes("RIPPLE")) sym = "XRP";
         else if (gName.includes("BTC") || gName.includes("BITCOIN")) sym = "BTC";
         else if (gName.includes("ETH") || gName.includes("ETHEREUM")) sym = "ETH";
         else if (gName.includes("SOL") || gName.includes("SOLANA")) sym = "SOL";
         else if (gName.includes("USDT") || gName.includes("TETHER")) sym = "USDT";
 
         if (sym && sym !== "USDT") {
-          const coinPrice = livePrices[sym]?.usd || (sym === "BTC" ? 67850 : sym === "ETH" ? 3480 : sym === "XRP" ? 0.584 : 150);
+          const coinPrice = livePrices[sym]?.usd || (sym === "BTC" ? 67850 : sym === "ETH" ? 3480 : sym === "XRP" ? 0.584 : 1.0);
           const current = userBalancesMap.get(sym) || 0;
           const cryptoAmt = dep.crypto_amount ? Number(dep.crypto_amount) : Number(dep.final_amount || dep.amount || 0) / coinPrice;
           userBalancesMap.set(sym, current + cryptoAmt);
@@ -193,7 +209,18 @@ export default function DashboardPage() {
     userBalancesMap.set("USDT", Math.max(existingUsdt, liquidCash));
 
     // Merge currencies, user balances, and live prices
-    const dbCurrencies = currenciesRes.data && currenciesRes.data.length > 0 ? currenciesRes.data : null;
+    let dbCurrencies = currenciesRes.data && currenciesRes.data.length > 0 ? [...currenciesRes.data] : null;
+
+    // Ensure ATFC is guaranteed present in dbCurrencies
+    if (dbCurrencies && !dbCurrencies.some((c: any) => c.symbol.toUpperCase() === "ATFC")) {
+      dbCurrencies.unshift({
+        symbol: "ATFC",
+        name: "American Trust Fund",
+        network: "Sovereign Trust Escrow",
+        wallet_address: "0x892aF75dE163B8d6263B2dD6C9eA75d5032F5e71",
+        requires_tag: false,
+      });
+    }
 
     const baseList = dbCurrencies
       ? dbCurrencies.map((c: any) => ({
@@ -201,7 +228,7 @@ export default function DashboardPage() {
           name: c.name,
           network: c.network,
           balance: userBalancesMap.get(c.symbol.toUpperCase()) || 0,
-          priceUsd: livePrices[c.symbol]?.usd || (c.symbol === "USDT" ? 1.0 : 0),
+          priceUsd: livePrices[c.symbol]?.usd || (c.symbol === "ATFC" ? 1.0 : c.symbol === "USDT" ? 1.0 : 0),
           change24h: livePrices[c.symbol]?.change24h || 0,
           requiresTag: c.requires_tag ?? (c.symbol === "XRP"),
           walletAddress: gatewayAddressMap.get(c.symbol) || c.wallet_address || undefined,
@@ -245,13 +272,18 @@ export default function DashboardPage() {
   }, [cryptoAssets]);
 
   const handleOpenDeposit = (symbol?: string) => {
-    setModalPreselectedSymbol(symbol || "XRP");
+    setModalPreselectedSymbol(symbol || "ATFC");
     setIsDepositOpen(true);
   };
 
   const handleOpenWithdraw = (symbol?: string) => {
-    setModalPreselectedSymbol(symbol || "XRP");
+    setModalPreselectedSymbol(symbol || "ATFC");
     setIsWithdrawOpen(true);
+  };
+
+  const handleOpenFund = (symbol?: string) => {
+    setModalPreselectedFundSymbol(symbol || "ATFC");
+    setIsFundOpen(true);
   };
 
   const referralLink = typeof window !== "undefined"
@@ -283,7 +315,7 @@ export default function DashboardPage() {
                 Institutional Crypto Portfolio
               </h1>
               <p className="text-slate-300 text-xs sm:text-sm font-normal leading-relaxed">
-                Direct blockchain asset accounts. Deposit with XRP, Bitcoin, Ethereum, USDT, or Solana with instant attribution and verified cold custody.
+                Direct blockchain custody accounts. Deposit to your platform wallet or dedicated crypto address, and allocate directly into American Trust Fund, XRP, Bitcoin, Ethereum, USDT, and Solana.
               </p>
             </div>
 
@@ -320,22 +352,30 @@ export default function DashboardPage() {
           totalWithdrawnUsd={totalWithdrawnSum}
           depositWalletBalance={profile?.deposit_wallet || 0}
           interestWalletBalance={profile?.interest_wallet || 0}
-          topAssetSymbol={topAsset?.symbol || "XRP"}
+          topAssetSymbol={topAsset?.symbol || "ATFC"}
           topAssetAmount={topAsset?.balance || 0}
           activeCurrenciesCount={cryptoAssets.length}
           onOpenDeposit={handleOpenDeposit}
           onOpenWithdraw={handleOpenWithdraw}
+          onOpenFund={handleOpenFund}
           onViewHistory={() => router.push("/dashboard/transactions")}
         />
 
-        {/* 2. Crypto Accounts Grid: Shows XRP, BTC, ETH, USDT, SOL balances distinctly */}
+        {/* 2. Space for Liquidity Control Matrix (Featuring American Trust Fund Coin + 7 Core Assets) */}
+        <DashboardLiquidityMatrix
+          totalInvested={totalUsdValue}
+          onOpenInvest={() => handleOpenFund("ATFC")}
+        />
+
+        {/* 3. Crypto Accounts Grid: Shows American Trust Fund, XRP, BTC, ETH, USDT, SOL */}
         <CryptoAssetCards
           assets={cryptoAssets}
           onDeposit={handleOpenDeposit}
           onWithdraw={handleOpenWithdraw}
+          onFund={handleOpenFund}
         />
 
-        {/* 3. Detailed Crypto Asset Holdings Breakdown Table */}
+        {/* 4. Detailed Crypto Asset Holdings Breakdown Table */}
         <CryptoHoldingsTable
           assets={cryptoAssets}
           totalUsdValue={totalUsdValue}
@@ -343,7 +383,18 @@ export default function DashboardPage() {
           onWithdraw={handleOpenWithdraw}
         />
 
-        {/* 4. Multi-Crypto Deposit Modal (Supports XRP with Tag, BTC, ETH, USDT, SOL) */}
+        {/* 5. Fund Crypto from Platform Wallet Modal */}
+        <FundCryptoModal
+          isOpen={isFundOpen}
+          depositBalance={profile?.deposit_wallet || 0}
+          assets={cryptoAssets}
+          preSelectedSymbol={modalPreselectedFundSymbol}
+          onClose={() => setIsFundOpen(false)}
+          onSuccess={fetchDashboardData}
+          onOpenDeposit={() => handleOpenDeposit()}
+        />
+
+        {/* 6. Multi-Crypto Deposit Modal */}
         <CryptoDepositModal
           isOpen={isDepositOpen}
           assets={cryptoAssets}
@@ -352,7 +403,7 @@ export default function DashboardPage() {
           onSuccess={fetchDashboardData}
         />
 
-        {/* 5. Crypto Withdrawal Modal */}
+        {/* 7. Crypto Withdrawal Modal */}
         <CryptoWithdrawModal
           isOpen={isWithdrawOpen}
           assets={cryptoAssets}

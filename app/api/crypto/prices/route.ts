@@ -12,6 +12,7 @@ const FALLBACK_PRICES: Record<string, PriceData> = {
   ETH: { usd: 3480.0, change24h: 2.15 },
   USDT: { usd: 1.0, change24h: 0.01 },
   SOL: { usd: 154.5, change24h: 4.65 },
+  ATFC: { usd: 1.0, change24h: 0.0 },
 };
 
 let cachedPrices: { timestamp: number; data: Record<string, PriceData> } | null = null;
@@ -55,6 +56,10 @@ export async function GET() {
         SOL: {
           usd: Number(data.solana?.usd || FALLBACK_PRICES.SOL.usd),
           change24h: Number(data.solana?.usd_24h_change || FALLBACK_PRICES.SOL.change24h),
+        },
+        ATFC: {
+          usd: 1.0,
+          change24h: 0.0,
         },
       };
 

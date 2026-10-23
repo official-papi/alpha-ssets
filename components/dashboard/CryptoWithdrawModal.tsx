@@ -157,7 +157,7 @@ export default function CryptoWithdrawModal({
           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
             Select Asset to Withdraw
           </label>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {assets.map((coin) => {
               const isSelected = coin.symbol === selectedSymbol;
               return (

@@ -12,6 +12,9 @@ const COIN_ICONS: Record<string, string> = {
   ETH: "/images/crypto/eth.svg",
   USDT: "/images/crypto/usdt.svg",
   SOL: "/images/crypto/sol.svg",
+  ATFC: "/images/crypto/atfc.svg",
+  "AMERICAN TRUST FUND COIN": "/images/crypto/atfc.svg",
+  "AMERICAN TRUST FUND": "/images/crypto/atfc.svg",
 };
 
 export function CryptoCoinIcon({ symbol, className = "w-6 h-6", size = 24 }: { symbol: string; className?: string; size?: number }) {
@@ -56,3 +59,8 @@ export function UsdtIcon({ className = "w-6 h-6", size = 24 }: IconProps) {
 export function SolIcon({ className = "w-6 h-6", size = 24 }: IconProps) {
   return <CryptoCoinIcon symbol="SOL" className={className} size={size} />;
 }
+
+export function AtfcIcon({ className = "w-6 h-6", size = 24 }: IconProps) {
+  return <CryptoCoinIcon symbol="ATFC" className={className} size={size} />;
+}
+

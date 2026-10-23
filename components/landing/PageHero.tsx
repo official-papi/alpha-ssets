@@ -108,10 +108,10 @@ export default function PageHero({
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                href="/plans"
+                href="/dashboard"
                 className="px-6 py-3 rounded-xl text-xs font-medium bg-white border border-zinc-200 text-zinc-800 hover:bg-zinc-50 transition-all shadow-xs"
               >
-                View Investment Tiers
+                View Portfolio Dashboard
               </Link>
             </div>
 

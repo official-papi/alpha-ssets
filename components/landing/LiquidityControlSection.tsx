@@ -287,10 +287,10 @@ export default function LiquidityControlSection() {
 
           <div className="flex items-center gap-3 w-full md:w-auto shrink-0">
             <Link
-              href="/plans"
+              href="/dashboard"
               className="px-6 py-3 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white border border-[#3AAFB9]/40 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all hover:border-[#3AAFB9] w-full md:w-auto"
             >
-              <span>View Plans</span>
+              <span>Access Custody Console</span>
             </Link>
 
             <Link

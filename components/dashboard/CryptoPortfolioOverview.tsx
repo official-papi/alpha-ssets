@@ -13,6 +13,7 @@ interface CryptoPortfolioOverviewProps {
   activeCurrenciesCount: number;
   onOpenDeposit: (symbol?: string) => void;
   onOpenWithdraw: (symbol?: string) => void;
+  onOpenFund?: (symbol?: string) => void;
   onViewHistory: () => void;
 }
 
@@ -26,6 +27,7 @@ export default function CryptoPortfolioOverview({
   activeCurrenciesCount = 5,
   onOpenDeposit,
   onOpenWithdraw,
+  onOpenFund,
   onViewHistory,
 }: CryptoPortfolioOverviewProps) {
   const fmt = (n: number) =>
@@ -69,12 +71,24 @@ export default function CryptoPortfolioOverview({
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-3">
+            {onOpenFund && (
+              <button
+                onClick={() => onOpenFund()}
+                className="py-3 px-5 rounded-2xl bg-gradient-to-r from-[#3AAFB9] to-[#5cb4be] hover:from-[#4bc7d2] hover:to-[#6ec7d0] text-[#001011] text-xs font-black flex items-center gap-2 shadow-lg shadow-[#3AAFB9]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <div className="w-6 h-6 rounded-lg bg-[#001011]/15 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-[#001011]" />
+                </div>
+                <span>Fund Coin with Wallet</span>
+              </button>
+            )}
+
             <button
               onClick={() => onOpenDeposit()}
-              className="py-3 px-5 rounded-2xl bg-[#3AAFB9] hover:bg-[#4bc7d2] text-[#001011] text-xs font-black flex items-center gap-2 shadow-lg shadow-[#3AAFB9]/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+              className="py-3 px-5 rounded-2xl bg-[#093A3E] hover:bg-[#0c4e53] text-white border border-[#3AAFB9]/40 text-xs font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-md"
             >
-              <div className="w-6 h-6 rounded-lg bg-[#001011]/15 flex items-center justify-center">
-                <ArrowDownRight className="w-4 h-4 text-[#001011]" />
+              <div className="w-6 h-6 rounded-lg bg-black/20 flex items-center justify-center">
+                <ArrowDownRight className="w-4 h-4 text-[#3AAFB9]" />
               </div>
               <span>Deposit Crypto</span>
             </button>

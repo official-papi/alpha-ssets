@@ -58,6 +58,8 @@ export default function CryptoDepositModal({
       ? "0x71C83d3b7da5F23e098a5F38A88950d81745Fe1e"
       : selectedSymbol === "SOL"
       ? "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+      : selectedSymbol === "ATFC"
+      ? "0x892aF75dE163B8d6263B2dD6C9eA75d5032F5e71"
       : "T9yD14Nj9j7x8kL2m1n0PqRsTuVwXyZ3aB");
 
   const tagValue = currentAsset?.tagValue || "583921";
@@ -184,7 +186,7 @@ export default function CryptoDepositModal({
           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
             Select Asset to Deposit
           </label>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {assets.map((coin) => {
               const isSelected = coin.symbol === selectedSymbol;
               return (

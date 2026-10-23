@@ -70,7 +70,6 @@ export default function Footer() {
               {[
                 { label: t.nav.home,         href: "/" },
                 { label: t.nav.about,        href: "/about" },
-                { label: t.nav.plans,        href: "/plans" },
                 { label: t.nav.howItWorks,   href: "/how-it-works" },
                 { label: t.nav.faq,          href: "/faq" },
                 { label: t.nav.contact,      href: "/contact" },

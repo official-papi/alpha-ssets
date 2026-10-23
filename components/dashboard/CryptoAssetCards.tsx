@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Sparkles } from "lucide-react";
 import { CryptoCoinIcon } from "@/components/crypto/CryptoIcons";
 
 export interface CryptoAssetItem {
@@ -20,11 +20,19 @@ interface CryptoAssetCardsProps {
   assets: CryptoAssetItem[];
   onDeposit: (symbol: string) => void;
   onWithdraw: (symbol: string) => void;
+  onFund?: (symbol: string) => void;
 }
 
-export default function CryptoAssetCards({ assets, onDeposit, onWithdraw }: CryptoAssetCardsProps) {
+export default function CryptoAssetCards({ assets, onDeposit, onWithdraw, onFund }: CryptoAssetCardsProps) {
   const getThemeStyles = (symbol: string) => {
     switch (symbol.toUpperCase()) {
+      case "ATFC":
+        return {
+          borderHover: "hover:border-[#3AAFB9]",
+          cardBg: "hover:bg-gradient-to-b hover:from-white hover:to-[#f0f8f9]/60",
+          accentBar: "bg-gradient-to-r from-[#001011] via-[#093A3E] to-[#3AAFB9]",
+          tagBg: "bg-[#3AAFB9]/10 text-[#093A3E]",
+        };
       case "XRP":
         return {
           borderHover: "hover:border-[#3AAFB9]",
@@ -170,24 +178,37 @@ export default function CryptoAssetCards({ assets, onDeposit, onWithdraw }: Cryp
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => onDeposit(asset.symbol)}
-                  className="py-2.5 px-3 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs hover:shadow-md"
-                >
-                  <ArrowDownRight className="w-3.5 h-3.5 text-[#3AAFB9]" />
-                  <span>Deposit</span>
-                </button>
+              <div className="pt-3 border-t border-slate-100 space-y-2">
+                {onFund && (
+                  <button
+                    type="button"
+                    onClick={() => onFund(asset.symbol)}
+                    className="w-full py-2 px-3 rounded-xl bg-[#3AAFB9] hover:bg-[#4bc7d2] text-[#001011] text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-[#001011]" />
+                    <span>Fund with Wallet</span>
+                  </button>
+                )}
 
-                <button
-                  type="button"
-                  onClick={() => onWithdraw(asset.symbol)}
-                  className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-                >
-                  <ArrowUpRight className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Withdraw</span>
-                </button>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onDeposit(asset.symbol)}
+                    className="py-2 px-2.5 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer shadow-xs"
+                  >
+                    <ArrowDownRight className="w-3.5 h-3.5 text-[#3AAFB9]" />
+                    <span>Deposit</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => onWithdraw(asset.symbol)}
+                    className="py-2 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer"
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Withdraw</span>
+                  </button>
+                </div>
               </div>
             </div>
           );

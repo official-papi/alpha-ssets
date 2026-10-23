@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getActiveUser } from "@/lib/auth/activeUser";
 
 const DEFAULT_SUPPORTED_CRYPTO: CryptoAssetItem[] = [
+  { symbol: "ATFC", name: "American Trust Fund", network: "Sovereign Trust Escrow", balance: 0, priceUsd: 1.0, change24h: 0.0, requiresTag: false, walletAddress: "0x892aF75dE163B8d6263B2dD6C9eA75d5032F5e71" },
   { symbol: "XRP", name: "Ripple", network: "XRPL", balance: 0, priceUsd: 0.584, change24h: 3.42, requiresTag: true, tagValue: "583921", walletAddress: "rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh" },
   { symbol: "BTC", name: "Bitcoin", network: "Bitcoin Network", balance: 0, priceUsd: 67850, change24h: 1.85, requiresTag: false, walletAddress: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh" },
   { symbol: "ETH", name: "Ethereum", network: "ERC-20", balance: 0, priceUsd: 3480, change24h: 2.15, requiresTag: false, walletAddress: "0x71C83d3b7da5F23e098a5F38A88950d81745Fe1e" },
@@ -81,7 +82,7 @@ export default function DepositPage() {
         </div>
 
         {/* Quick Deposit Selectors */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {cryptoAssets.map((asset) => (
             <div
               key={asset.symbol}
