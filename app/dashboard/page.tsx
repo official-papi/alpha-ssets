@@ -180,6 +180,13 @@ export default function DashboardPage() {
       });
     }
 
+    // Ensure ATFC (American Trust Fund) reflects any deposit_wallet funds so money is explicitly displayed in ATFC
+    const profileDepWallet = Number(profileRes.data?.deposit_wallet || 0);
+    const existingAtfcBal = userBalancesMap.get("ATFC") || 0;
+    if (profileDepWallet > existingAtfcBal) {
+      userBalancesMap.set("ATFC", profileDepWallet);
+    }
+
     // 2. If a coin is not yet in user_crypto_balances, check approved deposits as fallback (prevents double-counting)
     if (depositsRes.data && depositsRes.data.length > 0) {
       depositsRes.data.forEach((dep: any) => {
@@ -248,11 +255,10 @@ export default function DashboardPage() {
     return cryptoAssets.reduce((acc, curr) => acc + (curr.balance * (curr.priceUsd || 0)), 0);
   }, [cryptoAssets]);
 
-  // Total Portfolio Net Worth calculation (Crypto Assets + Cash Wallets)
+  // Total Portfolio Net Worth calculation (Sum of all crypto coin holdings in USD)
   const totalUsdValue = useMemo(() => {
-    const cashTotal = (profile?.deposit_wallet || 0) + (profile?.interest_wallet || 0);
-    return cryptoTotalUsd + cashTotal;
-  }, [cryptoTotalUsd, profile]);
+    return cryptoAssets.reduce((acc, curr) => acc + (curr.balance * (curr.priceUsd || 0)), 0);
+  }, [cryptoAssets]);
 
   // Top asset determination
   const topAsset = useMemo(() => {
@@ -311,8 +317,8 @@ export default function DashboardPage() {
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
                 Institutional Crypto Portfolio
               </h1>
-              <p className="text-slate-300 text-xs sm:text-sm font-normal leading-relaxed">
-                Direct blockchain custody accounts. Deposit to your platform wallet or dedicated crypto address, and allocate directly into American Trust Fund, XRP, Bitcoin, Ethereum, USDT, and Solana.
+              <p className="text-slate-300 text-xs sm:text-sm font-normal leading-relaxed hidden sm:block">
+                Direct blockchain custody accounts. Deposit into American Trust Fund (ATFC), XRP, Bitcoin, Ethereum, USDT, and Solana with live on-chain balances.
               </p>
             </div>
 
@@ -343,34 +349,30 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 1. Hero Portfolio Overview Card (Total Net Worth, Quick Actions) */}
+        {/* 1. Hero Portfolio Overview Card (Total Net Worth, Active Coin Holdings, Quick Actions) */}
         <CryptoPortfolioOverview
           totalUsdValue={totalUsdValue}
           totalWithdrawnUsd={totalWithdrawnSum}
-          depositWalletBalance={profile?.deposit_wallet || 0}
-          interestWalletBalance={profile?.interest_wallet || 0}
-          cryptoTotalUsd={cryptoTotalUsd}
-          topAssetSymbol={topAsset?.symbol || "ATFC"}
-          topAssetAmount={topAsset?.balance || 0}
           activeCurrenciesCount={cryptoAssets.length}
+          assets={cryptoAssets}
           onOpenDeposit={handleOpenDeposit}
           onOpenWithdraw={handleOpenWithdraw}
-          onOpenFund={handleOpenFund}
           onViewHistory={() => router.push("/dashboard/transactions")}
         />
 
-        {/* 2. Space for Liquidity Control Matrix (Featuring American Trust Fund Coin + 7 Core Assets) */}
-        <DashboardLiquidityMatrix
-          totalInvested={totalUsdValue}
-          onOpenInvest={() => handleOpenFund("ATFC")}
-        />
+        {/* 2. Space for Liquidity Control Matrix - Displayed on desktop, hidden on mobile for clean focus */}
+        <div className="hidden lg:block">
+          <DashboardLiquidityMatrix
+            totalInvested={totalUsdValue}
+            onOpenInvest={() => handleOpenDeposit("ATFC")}
+          />
+        </div>
 
         {/* 3. Dedicated Crypto Custody Accounts Grid: Shows ATFC, XRP, BTC, ETH, USDT, SOL */}
         <CryptoAssetCards
           assets={cryptoAssets}
           onDeposit={handleOpenDeposit}
           onWithdraw={handleOpenWithdraw}
-          onFund={handleOpenFund}
         />
 
         {/* 4. Fund Crypto from Platform Wallet Modal */}
