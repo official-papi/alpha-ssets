@@ -172,17 +172,15 @@ export default function DashboardPage() {
       });
     }
 
-    // Dynamic balance aggregation from approved deposits & user_crypto_balances
+    // 1. Primary Source of Truth: user_crypto_balances
     const userBalancesMap = new Map<string, number>();
-    
-    // 1. From user_crypto_balances table if present
     if (balancesRes.data && balancesRes.data.length > 0) {
       balancesRes.data.forEach((b: any) => {
         userBalancesMap.set(b.symbol.toUpperCase(), Number(b.balance || 0));
       });
     }
 
-    // 2. Aggregate from approved deposits by coin
+    // 2. If a coin is not yet in user_crypto_balances, check approved deposits as fallback (prevents double-counting)
     if (depositsRes.data && depositsRes.data.length > 0) {
       depositsRes.data.forEach((dep: any) => {
         const gName = String(dep.gateway_name || "").toUpperCase();
@@ -194,7 +192,7 @@ export default function DashboardPage() {
         else if (gName.includes("SOL") || gName.includes("SOLANA")) sym = "SOL";
         else if (gName.includes("USDT") || gName.includes("TETHER")) sym = "USDT";
 
-        if (sym && sym !== "USDT") {
+        if (sym && !userBalancesMap.has(sym)) {
           const coinPrice = livePrices[sym]?.usd || (sym === "BTC" ? 67850 : sym === "ETH" ? 3480 : sym === "XRP" ? 0.584 : 1.0);
           const current = userBalancesMap.get(sym) || 0;
           const cryptoAmt = dep.crypto_amount ? Number(dep.crypto_amount) : Number(dep.final_amount || dep.amount || 0) / coinPrice;
@@ -202,11 +200,6 @@ export default function DashboardPage() {
         }
       });
     }
-
-    // 3. User's liquid cash in deposit_wallet + interest_wallet is mapped to USDT (1 USDT = $1 USD)
-    const liquidCash = Number(profileRes.data?.deposit_wallet || 0) + Number(profileRes.data?.interest_wallet || 0);
-    const existingUsdt = userBalancesMap.get("USDT") || 0;
-    userBalancesMap.set("USDT", Math.max(existingUsdt, liquidCash));
 
     // Merge currencies, user balances, and live prices
     let dbCurrencies = currenciesRes.data && currenciesRes.data.length > 0 ? [...currenciesRes.data] : null;
@@ -250,12 +243,16 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, [fetchDashboardData]);
 
-  // Total Portfolio Net Worth calculation (Crypto + Liquid Wallets)
+  // Total Crypto Assets Valuation in USD
+  const cryptoTotalUsd = useMemo(() => {
+    return cryptoAssets.reduce((acc, curr) => acc + (curr.balance * (curr.priceUsd || 0)), 0);
+  }, [cryptoAssets]);
+
+  // Total Portfolio Net Worth calculation (Crypto Assets + Cash Wallets)
   const totalUsdValue = useMemo(() => {
-    const cryptoTotal = cryptoAssets.reduce((acc, curr) => acc + (curr.balance * (curr.priceUsd || 0)), 0);
-    const walletTotal = (profile?.deposit_wallet || 0) + (profile?.interest_wallet || 0);
-    return Math.max(cryptoTotal, walletTotal);
-  }, [cryptoAssets, profile]);
+    const cashTotal = (profile?.deposit_wallet || 0) + (profile?.interest_wallet || 0);
+    return cryptoTotalUsd + cashTotal;
+  }, [cryptoTotalUsd, profile]);
 
   // Top asset determination
   const topAsset = useMemo(() => {
@@ -352,6 +349,7 @@ export default function DashboardPage() {
           totalWithdrawnUsd={totalWithdrawnSum}
           depositWalletBalance={profile?.deposit_wallet || 0}
           interestWalletBalance={profile?.interest_wallet || 0}
+          cryptoTotalUsd={cryptoTotalUsd}
           topAssetSymbol={topAsset?.symbol || "ATFC"}
           topAssetAmount={topAsset?.balance || 0}
           activeCurrenciesCount={cryptoAssets.length}
@@ -367,7 +365,7 @@ export default function DashboardPage() {
           onOpenInvest={() => handleOpenFund("ATFC")}
         />
 
-        {/* 3. Crypto Accounts Grid: Shows American Trust Fund, XRP, BTC, ETH, USDT, SOL */}
+        {/* 3. Dedicated Crypto Custody Accounts Grid: Shows ATFC, XRP, BTC, ETH, USDT, SOL */}
         <CryptoAssetCards
           assets={cryptoAssets}
           onDeposit={handleOpenDeposit}
@@ -375,15 +373,7 @@ export default function DashboardPage() {
           onFund={handleOpenFund}
         />
 
-        {/* 4. Detailed Crypto Asset Holdings Breakdown Table */}
-        <CryptoHoldingsTable
-          assets={cryptoAssets}
-          totalUsdValue={totalUsdValue}
-          onDeposit={handleOpenDeposit}
-          onWithdraw={handleOpenWithdraw}
-        />
-
-        {/* 5. Fund Crypto from Platform Wallet Modal */}
+        {/* 4. Fund Crypto from Platform Wallet Modal */}
         <FundCryptoModal
           isOpen={isFundOpen}
           depositBalance={profile?.deposit_wallet || 0}

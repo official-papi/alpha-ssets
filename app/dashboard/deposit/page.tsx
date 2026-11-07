@@ -54,6 +54,38 @@ export default function DepositPage() {
 
   useEffect(() => {
     fetchDepositData();
+
+    // Setup Supabase Realtime listener for live crediting updates
+    const supabase = createClient();
+    let channel: any;
+
+    getActiveUser(supabase).then((activeUser) => {
+      if (activeUser) {
+        channel = supabase
+          .channel(`user-deposits-sync-${activeUser.id}`)
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "deposits", filter: `user_id=eq.${activeUser.id}` },
+            () => {
+              fetchDepositData();
+            }
+          )
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "user_crypto_balances", filter: `user_id=eq.${activeUser.id}` },
+            () => {
+              fetchDepositData();
+            }
+          )
+          .subscribe();
+      }
+    });
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
   }, []);
 
   return (
@@ -113,7 +145,8 @@ export default function DepositPage() {
             <span>Cryptocurrency Deposit Ledger</span>
           </h3>
 
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-400 uppercase text-[10px] tracking-wider">
@@ -172,6 +205,60 @@ export default function DepositPage() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card Stack View */}
+          <div className="block sm:hidden space-y-3">
+            {depositLogs.length === 0 ? (
+              <div className="py-8 text-center text-slate-400 text-xs font-medium">
+                No deposit records found. Click &quot;Make New Deposit&quot; to transfer crypto.
+              </div>
+            ) : (
+              depositLogs.map((log) => {
+                const sym = log.crypto_symbol || log.gateway_name?.split(" ")[0] || "USD";
+                return (
+                  <div key={log.id} className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/60 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <CryptoCoinIcon symbol={sym} className="w-4 h-4" />
+                        <span className="font-extrabold text-[#001011] text-xs uppercase">{log.gateway_name || sym}</span>
+                      </div>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
+                          log.status === "approved"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : log.status === "rejected"
+                            ? "bg-rose-50 text-rose-700 border border-rose-200"
+                            : "bg-amber-50 text-amber-700 border border-amber-200"
+                        }`}
+                      >
+                        {log.status}
+                      </span>
+                    </div>
+
+                    <div className="flex items-baseline justify-between pt-1">
+                      <div>
+                        <div className="text-[10px] text-slate-400 font-bold uppercase">Amount Credited</div>
+                        <div className="text-sm font-mono font-black text-[#093A3E]">
+                          {log.crypto_amount ? `${Number(log.crypto_amount).toFixed(4)} ${sym}` : `$${Number(log.final_amount || log.amount || 0).toFixed(2)}`}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[10px] text-slate-400 font-bold uppercase">USD Valuation</div>
+                        <div className="text-xs font-mono font-bold text-slate-600">
+                          ${Number(log.final_amount || log.amount || 0).toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1 border-t border-slate-200/50 text-[10px] text-slate-400 font-mono">
+                      <span className="truncate max-w-[170px]">{log.tx_hash || log.trx_id || "Ref: -"}</span>
+                      <span>{new Date(log.created_at).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
 

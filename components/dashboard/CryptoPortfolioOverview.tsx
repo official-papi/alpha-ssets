@@ -8,6 +8,7 @@ interface CryptoPortfolioOverviewProps {
   totalWithdrawnUsd: number;
   depositWalletBalance?: number;
   interestWalletBalance?: number;
+  cryptoTotalUsd?: number;
   topAssetSymbol?: string;
   topAssetAmount?: number;
   activeCurrenciesCount: number;
@@ -22,7 +23,8 @@ export default function CryptoPortfolioOverview({
   totalWithdrawnUsd = 0,
   depositWalletBalance = 0,
   interestWalletBalance = 0,
-  topAssetSymbol = "XRP",
+  cryptoTotalUsd = 0,
+  topAssetSymbol = "ATFC",
   topAssetAmount = 0,
   activeCurrenciesCount = 5,
   onOpenDeposit,
@@ -49,7 +51,7 @@ export default function CryptoPortfolioOverview({
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] animate-pulse" />
                 Live Multi-Asset Portfolio
               </span>
-              <span className="text-[11px] text-slate-400 font-medium">Auto-synced</span>
+              <span className="text-[11px] text-slate-400 font-medium">Real-Time Sync</span>
             </div>
 
             <p className="text-[12px] uppercase font-bold tracking-wider text-slate-300">
@@ -61,37 +63,39 @@ export default function CryptoPortfolioOverview({
               </h2>
               <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
-                Live
+                Live Valuation
               </span>
             </div>
             <p className="text-xs text-slate-300/80 mt-2 max-w-md">
-              Aggregate valuation across all your crypto balances and account wallets.
+              Complete aggregate valuation across your dedicated crypto accounts and cash wallet.
             </p>
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-3">
-            {onOpenFund && (
-              <button
-                onClick={() => onOpenFund()}
-                className="py-3 px-5 rounded-2xl bg-gradient-to-r from-[#3AAFB9] to-[#5cb4be] hover:from-[#4bc7d2] hover:to-[#6ec7d0] text-[#001011] text-xs font-black flex items-center gap-2 shadow-lg shadow-[#3AAFB9]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
-              >
-                <div className="w-6 h-6 rounded-lg bg-[#001011]/15 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-[#001011]" />
-                </div>
-                <span>Fund Coin with Wallet</span>
-              </button>
-            )}
-
             <button
               onClick={() => onOpenDeposit()}
-              className="py-3 px-5 rounded-2xl bg-[#093A3E] hover:bg-[#0c4e53] text-white border border-[#3AAFB9]/40 text-xs font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-md"
+              className="py-3 px-5 rounded-2xl bg-gradient-to-r from-[#3AAFB9] to-[#5cb4be] hover:from-[#4bc7d2] hover:to-[#6ec7d0] text-[#001011] text-xs font-black flex items-center gap-2 shadow-lg shadow-[#3AAFB9]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
             >
-              <div className="w-6 h-6 rounded-lg bg-black/20 flex items-center justify-center">
-                <ArrowDownRight className="w-4 h-4 text-[#3AAFB9]" />
+              <div className="w-6 h-6 rounded-lg bg-[#001011]/15 flex items-center justify-center">
+                <ArrowDownRight className="w-4 h-4 text-[#001011]" />
               </div>
               <span>Deposit Crypto</span>
             </button>
+
+            {onOpenFund && (
+              <button
+                onClick={() => onOpenFund()}
+                className="py-3 px-5 rounded-2xl bg-[#093A3E] hover:bg-[#0c4e53] text-white border border-[#3AAFB9]/40 text-xs font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-md"
+              >
+                <div className="w-6 h-6 rounded-lg bg-black/20 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-[#3AAFB9]" />
+                </div>
+                <span>
+                  {depositWalletBalance > 0 ? `Allocate Cash ($${fmt(depositWalletBalance)})` : "Allocate Cash to Coins"}
+                </span>
+              </button>
+            )}
 
             <button
               onClick={() => onOpenWithdraw()}
@@ -106,7 +110,7 @@ export default function CryptoPortfolioOverview({
             <button
               onClick={onViewHistory}
               className="py-3 px-4 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs font-medium flex items-center gap-2 transition-all cursor-pointer"
-              title="View Blockchain Ledger"
+              title="View Ledger"
             >
               <History className="w-4 h-4 text-slate-400" />
               <span className="hidden sm:inline">Activity</span>
@@ -114,23 +118,23 @@ export default function CryptoPortfolioOverview({
           </div>
         </div>
 
-        {/* Bottom Pill Indicators: Showing Liquid Balances & Stats */}
+        {/* Bottom Breakdown Indicators: Showing Exactly Where Funds Are */}
         <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-white/10 text-xs">
-          <div>
-            <span className="text-slate-400 block text-[11px]">Deposit Wallet</span>
-            <span className="font-bold text-white font-mono text-sm">${fmt(depositWalletBalance)}</span>
+          <div className="bg-white/5 rounded-xl p-2.5 border border-white/5">
+            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Crypto Assets</span>
+            <span className="font-extrabold text-white font-mono text-sm">${fmt(cryptoTotalUsd)}</span>
           </div>
-          <div>
-            <span className="text-slate-400 block text-[11px]">Interest Earnings</span>
-            <span className="font-bold text-emerald-400 font-mono text-sm">${fmt(interestWalletBalance)}</span>
+          <div className="bg-white/5 rounded-xl p-2.5 border border-white/5">
+            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Platform Cash</span>
+            <span className="font-extrabold text-white font-mono text-sm">${fmt(depositWalletBalance)}</span>
           </div>
-          <div>
-            <span className="text-slate-400 block text-[11px]">Active Custody Coins</span>
-            <span className="font-bold text-white">{activeCurrenciesCount} Currencies</span>
+          <div className="bg-white/5 rounded-xl p-2.5 border border-white/5">
+            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Interest Earnings</span>
+            <span className="font-extrabold text-emerald-400 font-mono text-sm">${fmt(interestWalletBalance)}</span>
           </div>
-          <div>
-            <span className="text-slate-400 block text-[11px]">Total Realized Payouts</span>
-            <span className="font-bold text-slate-300 font-mono text-sm">${fmt(totalWithdrawnUsd)}</span>
+          <div className="bg-white/5 rounded-xl p-2.5 border border-white/5">
+            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Total Payouts</span>
+            <span className="font-extrabold text-slate-300 font-mono text-sm">${fmt(totalWithdrawnUsd)}</span>
           </div>
         </div>
       </div>

@@ -13,7 +13,8 @@ export default function AdminUsersPage() {
   
   // Balance modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [targetWallet, setTargetWallet] = useState<"deposit_wallet" | "interest_wallet">("deposit_wallet");
+  const [targetWallet, setTargetWallet] = useState<string>("ATFC");
+  const [userCryptoBals, setUserCryptoBals] = useState<Record<string, number>>({});
   const [action, setAction] = useState<"add" | "subtract">("add");
   const [amount, setAmount] = useState("");
   const [remark, setRemark] = useState("");
@@ -39,12 +40,30 @@ export default function AdminUsersPage() {
     if (data) setUsers(data);
   };
 
-  const handleOpenBalanceModal = (user: any) => {
+  const handleOpenBalanceModal = async (user: any) => {
     setSelectedUser(user);
     setAmount("");
     setRemark("");
     setMsg(null);
+    setTargetWallet("ATFC");
     setIsModalOpen(true);
+
+    // Fetch user's current crypto balances
+    const supabase = createClient();
+    const { data: cryptoData } = await supabase
+      .from("user_crypto_balances")
+      .select("symbol, balance")
+      .eq("user_id", user.id);
+
+    if (cryptoData) {
+      const bMap: Record<string, number> = {};
+      cryptoData.forEach((c: any) => {
+        bMap[c.symbol.toUpperCase()] = Number(c.balance || 0);
+      });
+      setUserCryptoBals(bMap);
+    } else {
+      setUserCryptoBals({});
+    }
   };
 
   const handleToggleFreezeUser = async (userId: string, currentBanned: boolean) => {
@@ -74,25 +93,31 @@ export default function AdminUsersPage() {
     setSubmitting(true);
     setMsg(null);
 
-    const supabase = createClient();
-    const { data, error } = await supabase.rpc("admin_adjust_balance_rpc", {
-      p_user_id: selectedUser.id,
-      p_target_wallet: targetWallet,
-      p_action: action,
-      p_amount: Number(amount),
-      p_remark: remark || `Admin balance adjustment (${action})`,
-    });
+    try {
+      const res = await fetch("/api/admin/users/adjust-balance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: selectedUser.id,
+          targetWallet,
+          action,
+          amount: Number(amount),
+          remark: remark || `Admin balance adjustment (${action})`,
+        }),
+      });
 
-    if (error) {
-      setMsg({ text: error.message, type: "error" });
-    } else if (data && !data.success) {
-      setMsg({ text: data.message, type: "error" });
-    } else {
-      setMsg({ text: "User balance updated successfully!", type: "success" });
-      setTimeout(() => {
-        setIsModalOpen(false);
-        fetchUsers();
-      }, 1200);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setMsg({ text: data.error || "Failed to adjust balance.", type: "error" });
+      } else {
+        setMsg({ text: data.message || "User balance updated successfully!", type: "success" });
+        setTimeout(() => {
+          setIsModalOpen(false);
+          fetchUsers();
+        }, 1200);
+      }
+    } catch (err: any) {
+      setMsg({ text: err.message || "Network error while adjusting balance.", type: "error" });
     }
 
     setSubmitting(false);
@@ -248,15 +273,46 @@ export default function AdminUsersPage() {
 
             <form onSubmit={handleAdjustBalance} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Target Wallet</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">
+                  Target Account / Asset
+                </label>
                 <select
                   value={targetWallet}
                   onChange={(e: any) => setTargetWallet(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 font-semibold focus:outline-none focus:border-indigo-600"
                 >
-                  <option value="deposit_wallet">Deposit Wallet (${Number(selectedUser.deposit_wallet || 0).toFixed(2)})</option>
-                  <option value="interest_wallet">Interest Wallet (${Number(selectedUser.interest_wallet || 0).toFixed(2)})</option>
+                  <optgroup label="Dedicated Crypto Custody Accounts">
+                    <option value="ATFC">
+                      ⭐ American Trust Fund (ATFC) — Current: {userCryptoBals["ATFC"]?.toFixed(2) ?? "0.00"} ATFC
+                    </option>
+                    <option value="XRP">
+                      Ripple (XRP) — Current: {userCryptoBals["XRP"]?.toFixed(2) ?? "0.00"} XRP
+                    </option>
+                    <option value="BTC">
+                      Bitcoin (BTC) — Current: {userCryptoBals["BTC"]?.toFixed(4) ?? "0.00"} BTC
+                    </option>
+                    <option value="ETH">
+                      Ethereum (ETH) — Current: {userCryptoBals["ETH"]?.toFixed(4) ?? "0.00"} ETH
+                    </option>
+                    <option value="USDT">
+                      Tether USD (USDT) — Current: {userCryptoBals["USDT"]?.toFixed(2) ?? "0.00"} USDT
+                    </option>
+                    <option value="SOL">
+                      Solana (SOL) — Current: {userCryptoBals["SOL"]?.toFixed(2) ?? "0.00"} SOL
+                    </option>
+                  </optgroup>
+                  <optgroup label="Platform Cash Wallets (Fiat USD)">
+                    <option value="deposit_wallet">
+                      Platform Cash / Deposit Wallet — ${Number(selectedUser.deposit_wallet || 0).toFixed(2)} USD
+                    </option>
+                    <option value="interest_wallet">
+                      Interest Earnings Wallet — ${Number(selectedUser.interest_wallet || 0).toFixed(2)} USD
+                    </option>
+                  </optgroup>
                 </select>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Selecting a coin (e.g. ATFC or XRP) credits the user&apos;s exact coin custody account directly.
+                </p>
               </div>
 
               <div>
@@ -270,7 +326,7 @@ export default function AdminUsersPage() {
                     }`}
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
-                    <span>Add Funds</span>
+                    <span>Credit / Add Funds</span>
                   </button>
 
                   <button
@@ -281,22 +337,24 @@ export default function AdminUsersPage() {
                     }`}
                   >
                     <MinusCircle className="w-3.5 h-3.5" />
-                    <span>Subtract Funds</span>
+                    <span>Deduct / Subtract</span>
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Amount ($)</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">
+                  Amount {targetWallet === "deposit_wallet" || targetWallet === "interest_wallet" ? "($ USD)" : `(${targetWallet})`}
+                </label>
                 <input
                   type="number"
-                  step="0.01"
-                  min="0.01"
+                  step="any"
+                  min="0.000001"
                   required
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="100.00"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+                  placeholder={targetWallet === "deposit_wallet" || targetWallet === "interest_wallet" ? "100.00" : `e.g. 1000 ${targetWallet}`}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 font-mono font-bold focus:outline-none focus:border-indigo-600"
                 />
               </div>
 

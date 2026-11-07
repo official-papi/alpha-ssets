@@ -122,6 +122,23 @@ export async function POST(req: Request) {
       trx_ref: `DEP-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
     });
 
+    // Record in-app notification
+    try {
+      const cryptoDetail = depObj.crypto_symbol && depObj.crypto_amount
+        ? `${depObj.crypto_amount} ${depObj.crypto_symbol} ($${depositAmount.toFixed(2)} USD)`
+        : `$${depositAmount.toFixed(2)} USD`;
+
+      await supabase.from("notifications").insert({
+        user_id: userId,
+        title: "Deposit Credited",
+        message: `Your deposit of ${cryptoDetail} has been verified, approved, and credited to your account!`,
+        type: "success",
+        is_read: false,
+      });
+    } catch (notifErr) {
+      console.warn("Could not insert deposit approval notification:", notifErr);
+    }
+
     return NextResponse.json({
       success: true,
       message: `Deposit of $${depositAmount.toFixed(2)} approved and credited to investor wallet successfully!`,

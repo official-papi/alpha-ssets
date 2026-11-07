@@ -30,6 +30,7 @@ export default function CryptoDepositModal({
   const [proofPreviewUrl, setProofPreviewUrl] = useState<string | null>(null);
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [copiedTag, setCopiedTag] = useState(false);
+  const [showQr, setShowQr] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -225,22 +226,58 @@ export default function CryptoDepositModal({
 
           {/* Deposit Address */}
           <div>
-            <span className="text-[10px] font-bold uppercase text-slate-400 block mb-1">
-              Your {selectedSymbol} Deposit Address:
-            </span>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-bold uppercase text-slate-400">
+                Your {selectedSymbol} Deposit Address:
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowQr(!showQr)}
+                className="text-[10px] font-bold text-[#093A3E] hover:text-[#3AAFB9] flex items-center gap-1 cursor-pointer transition-colors"
+              >
+                <QrCode className="w-3.5 h-3.5" />
+                <span>{showQr ? "Hide QR Code" : "Show QR Code"}</span>
+              </button>
+            </div>
+
             <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
               <span className="text-[11px] font-mono text-[#001011] font-bold flex-1 break-all select-all">
                 {depositAddress}
               </span>
-              <button
-                type="button"
-                onClick={handleCopyAddress}
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer flex-shrink-0"
-                title="Copy Address"
-              >
-                {copiedAddress ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-              </button>
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowQr(!showQr)}
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
+                  title="Toggle QR Code"
+                >
+                  <QrCode className="w-4 h-4 text-[#093A3E]" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCopyAddress}
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
+                  title="Copy Address"
+                >
+                  {copiedAddress ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
+
+            {/* QR Code Container */}
+            {showQr && (
+              <div className="mt-3 p-4 rounded-xl bg-white border border-slate-200 flex flex-col items-center justify-center space-y-2 text-center animate-fade-in">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(depositAddress)}`}
+                  alt={`${selectedSymbol} Deposit QR Code`}
+                  className="w-36 h-36 object-contain rounded-lg border border-slate-100 p-1.5 bg-white shadow-2xs"
+                />
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Scan with your wallet app to transfer {selectedSymbol} directly.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Destination Tag for XRP */}
