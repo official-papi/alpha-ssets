@@ -8,7 +8,6 @@ import CryptoAssetCards, { CryptoAssetItem } from "@/components/dashboard/Crypto
 import CryptoHoldingsTable from "@/components/dashboard/CryptoHoldingsTable";
 import CryptoDepositModal from "@/components/dashboard/CryptoDepositModal";
 import CryptoWithdrawModal from "@/components/dashboard/CryptoWithdrawModal";
-import DashboardLiquidityMatrix from "@/components/dashboard/DashboardLiquidityMatrix";
 import FundCryptoModal from "@/components/dashboard/FundCryptoModal";
 import { Copy, Check, Sparkles, RefreshCw } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -333,15 +332,7 @@ export default function DashboardPage() {
           onViewHistory={() => router.push("/dashboard/transactions")}
         />
 
-        {/* 2. Space for Liquidity Control Matrix - Displayed on desktop, hidden on mobile for clean focus */}
-        <div className="hidden lg:block">
-          <DashboardLiquidityMatrix
-            totalInvested={totalUsdValue}
-            onOpenInvest={() => handleOpenDeposit("ATFC")}
-          />
-        </div>
-
-        {/* 3. Dedicated Crypto Custody Accounts Grid: Shows ATFC, XRP, BTC, ETH, USDT, SOL */}
+        {/* 2. Dedicated Crypto Custody Accounts Grid: Shows ATFC, XRP, BTC, ETH, USDT, SOL */}
         <CryptoAssetCards
           assets={cryptoAssets}
           onDeposit={handleOpenDeposit}

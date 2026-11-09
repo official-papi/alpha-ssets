@@ -5,9 +5,7 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import TradingViewTicker from "@/components/landing/TradingViewTicker";
 import CoreValueBanner from "@/components/landing/CoreValueBanner";
-import FeaturesGrid from "@/components/landing/FeaturesGrid";
 import TopInvestors from "@/components/landing/TopInvestors";
-import LiquidityControlSection from "@/components/landing/LiquidityControlSection";
 import RoiCalculator from "@/components/landing/RoiCalculator";
 import HowItWorks from "@/components/landing/HowItWorks";
 import ReferralSection from "@/components/landing/ReferralSection";
@@ -243,89 +241,6 @@ export default function Home() {
 
         {/* ── 3. How It Works (3-Step Section) ── */}
         <HowItWorks />
-
-        {/* ── 4. Key Features Grid ── */}
-        <FeaturesGrid />
-
-        {/* ── Liquidity Channels & Vault Coverage ── */}
-        <LiquidityControlSection />
-
-        {/* ── Unified Institutional Performance & Security Console ────── */}
-        <section className="py-12 bg-[#001011] border-b border-[#093A3E]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="bg-[#001011] border border-[#093A3E] rounded-2xl shadow-xl overflow-hidden">
-              
-              {/* Terminal HUD Header */}
-              <div className="px-6 py-3.5 bg-[#041819] border-b border-[#093A3E] flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 rounded-full bg-[#3AAFB9] animate-pulse" />
-                  <span className="font-bold text-white tracking-tight">On-Chain Smart Escrow Reserves & Cryptographic Proofs</span>
-                </div>
-                <div className="flex items-center space-x-3 text-[11px] font-mono text-[#b5dfe3]">
-                  <span>AUDIT STATUS: <strong className="text-[#3AAFB9] font-bold">100% FORMALLY VERIFIED</strong></span>
-                  <span className="hidden sm:inline text-[#093A3E]">|</span>
-                  <span className="hidden sm:inline">SETTLEMENT: NON-CUSTODIAL</span>
-                </div>
-              </div>
-
-              {/* 4 Quantitative Metrics Columns with Dividers */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#093A3E]">
-                {[
-                  { label: "Total Protected Assets", value: "$256,400,000+", sub: "In User Vaults", icon: TrendingUp },
-                  { label: "Preserved Capital",      value: "$734,180,000+", sub: "Downturn Swaps", icon: Zap },
-                  { label: "Connected Vaults",       value: "124,500+",       sub: "Global Wallets", icon: Sparkles },
-                  { label: "Non-Custodial Escrow",    value: "100.0%",         sub: "Zero Private Key Access", icon: ShieldCheck },
-                ].map((m, i) => {
-                  const Icon = m.icon;
-                  return (
-                    <div key={i} className="bg-[#001011] p-6 text-center lg:text-left flex flex-col justify-between hover:bg-[#093A3E]/30 transition-colors">
-                      <div className="flex items-center justify-center lg:justify-between mb-3">
-                        <span className="text-[11px] font-bold text-[#b5dfe3] uppercase tracking-wider">{m.label}</span>
-                        <div className="hidden lg:flex w-7 h-7 rounded-lg bg-[#093A3E] text-[#3AAFB9] border border-[#3AAFB9]/30 items-center justify-center">
-                          <Icon className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                      <div className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-white tabular-nums">
-                        {m.value}
-                      </div>
-                      <div className="mt-2 flex items-center justify-center lg:justify-start">
-                        <span className="text-[10px] font-semibold text-[#3AAFB9] bg-[#093A3E] px-2 py-0.5 rounded-md border border-[#3AAFB9]/40 inline-flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9]" />
-                          {m.sub}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Integrated Security & Custody Footer */}
-              <div className="px-6 py-4 bg-[#041819] border-t border-[#093A3E] grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  { icon: ShieldCheck, title: "100% Non-Custodial Vaults", desc: "Your keys, your crypto. We never hold withdrawal rights." },
-                  { icon: Lock,        title: "Deterministic Smart Escrow", desc: "Transparent execution enforced by verified on-chain code" },
-                  { icon: Zap,         title: "Millisecond AI Re-Entry", desc: "Automated recovery conversions back to targeted assets" },
-                ].map((b, i) => {
-                  const BIcon = b.icon;
-                  return (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#093A3E] border border-[#3AAFB9]/30 text-[#3AAFB9] flex items-center justify-center flex-shrink-0 shadow-2xs">
-                        <BIcon className="w-4 h-4 text-[#3AAFB9]" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-white">{b.title}</div>
-                        <div className="text-[11px] text-[#86cbd1] font-normal leading-tight">{b.desc}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-            </div>
-
-          </div>
-        </section>
 
         <TopInvestors />
         <RoiCalculator />
