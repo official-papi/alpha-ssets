@@ -10,6 +10,7 @@ import { CryptoAssetItem } from "@/components/dashboard/CryptoAssetCards";
 import { ArrowDownRight, History, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { getActiveUser } from "@/lib/auth/activeUser";
+import { resolveUserCryptoBalances } from "@/lib/cryptoBalances";
 
 const DEFAULT_SUPPORTED_CRYPTO: CryptoAssetItem[] = [
   { symbol: "ATFC", name: "American Trust Fund", network: "Sovereign Trust Escrow", balance: 0, priceUsd: 1.0, change24h: 0.0, requiresTag: false, walletAddress: "0x892aF75dE163B8d6263B2dD6C9eA75d5032F5e71" },
@@ -32,23 +33,26 @@ export default function DepositPage() {
     const activeUser = await getActiveUser(supabase);
     if (activeUser) {
       setUserEmail(activeUser.email);
-      const [logsRes, balancesRes] = await Promise.all([
+      const [logsRes, balancesRes, profileRes] = await Promise.all([
         supabase.from("deposits").select("*").eq("user_id", activeUser.id).order("created_at", { ascending: false }),
         supabase.from("user_crypto_balances").select("*").eq("user_id", activeUser.id),
+        supabase.from("profiles").select("deposit_wallet").eq("id", activeUser.id).single(),
       ]);
 
       if (logsRes.data) setDepositLogs(logsRes.data);
 
-      if (balancesRes.data && balancesRes.data.length > 0) {
-        const balMap = new Map<string, number>();
-        balancesRes.data.forEach((b: any) => balMap.set(b.symbol.toUpperCase(), Number(b.balance || 0)));
-        setCryptoAssets((prev) =>
-          prev.map((c) => ({
-            ...c,
-            balance: balMap.get(c.symbol) ?? c.balance,
-          }))
-        );
-      }
+      const balMap = resolveUserCryptoBalances({
+        profileDepositWallet: Number(profileRes.data?.deposit_wallet || 0),
+        cryptoBalances: balancesRes.data,
+        approvedDeposits: logsRes.data,
+      });
+
+      setCryptoAssets((prev) =>
+        prev.map((c) => ({
+          ...c,
+          balance: balMap.get(c.symbol.toUpperCase()) ?? 0,
+        }))
+      );
     }
   };
 

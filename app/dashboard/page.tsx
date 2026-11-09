@@ -12,6 +12,7 @@ import DashboardLiquidityMatrix from "@/components/dashboard/DashboardLiquidityM
 import FundCryptoModal from "@/components/dashboard/FundCryptoModal";
 import { Copy, Check, Sparkles, RefreshCw } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { resolveUserCryptoBalances } from "@/lib/cryptoBalances";
 
 interface UserProfile {
   id: string;
@@ -172,41 +173,13 @@ export default function DashboardPage() {
       });
     }
 
-    // 1. Primary Source of Truth: user_crypto_balances
-    const userBalancesMap = new Map<string, number>();
-    if (balancesRes.data && balancesRes.data.length > 0) {
-      balancesRes.data.forEach((b: any) => {
-        userBalancesMap.set(b.symbol.toUpperCase(), Number(b.balance || 0));
-      });
-    }
-
-    // Ensure ATFC (American Trust Fund) reflects any deposit_wallet funds so money is explicitly displayed in ATFC
-    const profileDepWallet = Number(profileRes.data?.deposit_wallet || 0);
-    const existingAtfcBal = userBalancesMap.get("ATFC") || 0;
-    if (profileDepWallet > existingAtfcBal) {
-      userBalancesMap.set("ATFC", profileDepWallet);
-    }
-
-    // 2. If a coin is not yet in user_crypto_balances, check approved deposits as fallback (prevents double-counting)
-    if (depositsRes.data && depositsRes.data.length > 0) {
-      depositsRes.data.forEach((dep: any) => {
-        const gName = String(dep.gateway_name || "").toUpperCase();
-        let sym = "";
-        if (gName.includes("ATFC") || gName.includes("AMERICAN TRUST")) sym = "ATFC";
-        else if (gName.includes("XRP") || gName.includes("RIPPLE")) sym = "XRP";
-        else if (gName.includes("BTC") || gName.includes("BITCOIN")) sym = "BTC";
-        else if (gName.includes("ETH") || gName.includes("ETHEREUM")) sym = "ETH";
-        else if (gName.includes("SOL") || gName.includes("SOLANA")) sym = "SOL";
-        else if (gName.includes("USDT") || gName.includes("TETHER")) sym = "USDT";
-
-        if (sym && !userBalancesMap.has(sym)) {
-          const coinPrice = livePrices[sym]?.usd || (sym === "BTC" ? 67850 : sym === "ETH" ? 3480 : sym === "XRP" ? 0.584 : 1.0);
-          const current = userBalancesMap.get(sym) || 0;
-          const cryptoAmt = dep.crypto_amount ? Number(dep.crypto_amount) : Number(dep.final_amount || dep.amount || 0) / coinPrice;
-          userBalancesMap.set(sym, current + cryptoAmt);
-        }
-      });
-    }
+    // Resolve user crypto balances cleanly without double-counting
+    const userBalancesMap = resolveUserCryptoBalances({
+      profileDepositWallet: Number(profileRes.data?.deposit_wallet || 0),
+      cryptoBalances: balancesRes.data,
+      approvedDeposits: depositsRes.data,
+      livePrices,
+    });
 
     // Merge currencies, user balances, and live prices
     let dbCurrencies = currenciesRes.data && currenciesRes.data.length > 0 ? [...currenciesRes.data] : null;
