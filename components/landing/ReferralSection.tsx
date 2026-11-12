@@ -1,230 +1,133 @@
 "use client";
 
-import { ArrowRight, Share2, Users, DollarSign, CheckCircle2, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
-import Image from "next/image";
+import { ArrowUpRight, Share2, Users, DollarSign, Check, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface ReferralTier {
   level: string;
   tag: string;
   rate: string;
-  sharePct: number;
   title: string;
   subtitle: string;
-  bonus: string;
   example: string;
+  bg: string;
+  accent: string;
+  borderColor: string;
 }
 
 const LEVELS: ReferralTier[] = [
   {
-    level: "1",
-    tag: "Level 1",
+    level: "01",
+    tag: "Level 1 · Direct",
     rate: "5%",
-    sharePct: 55,
     title: "Direct Invited Investors",
-    subtitle: "Immediate 1st-degree referrals registering via your link",
-    bonus: "+$50.00 per $1,000",
-    example: "Earn $500 on $10,000 volume",
+    subtitle: "Immediate 1st-degree referrals registering through your personal link.",
+    example: "Earn $500 on $10,000 deposit volume",
+    bg: "#e3f2c9",
+    accent: "#416735",
+    borderColor: "#cbe59d",
   },
   {
-    level: "2",
-    tag: "Level 2",
+    level: "02",
+    tag: "Level 2 · Secondary",
     rate: "3%",
-    sharePct: 33,
-    title: "Secondary Network Referrals",
-    subtitle: "2nd-degree investors invited by your direct referrals",
-    bonus: "+$30.00 per $1,000",
-    example: "Earn $300 on $10,000 volume",
+    title: "Secondary Downline",
+    subtitle: "2nd-degree investors invited by your direct network members.",
+    example: "Earn $300 on $10,000 deposit volume",
+    bg: "#eae6f2",
+    accent: "#5b4e8c",
+    borderColor: "#d8d0e7",
   },
   {
-    level: "3",
-    tag: "Level 3",
+    level: "03",
+    tag: "Level 3 · Extended",
     rate: "1%",
-    sharePct: 12,
-    title: "Tertiary Network Referrals",
-    subtitle: "3rd-degree extended downline network volume",
-    bonus: "+$10.00 per $1,000",
-    example: "Earn $100 on $10,000 volume",
+    title: "Tertiary Network",
+    subtitle: "3rd-degree extended downline volume generating recursive rewards.",
+    example: "Earn $100 on $10,000 deposit volume",
+    bg: "#efeee7",
+    accent: "#8a5a12",
+    borderColor: "#e0ded3",
   },
 ];
 
 export default function ReferralSection() {
   return (
-    <section id="referral" className="py-24 border-b border-[#d4e7e9] relative bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
-          {/* Left Column (5 Cols) */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border border-[#c8e2e5] bg-[#f0f8f9] text-[#093A3E] shadow-2xs">
-              <Share2 className="w-3.5 h-3.5 text-[#3AAFB9]" />
-              <span>Affiliate Commission Protocol</span>
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#001011] leading-tight tracking-tight">
-              Earn Lifetime Multi-Tier Referral Commissions
-            </h2>
-            
-            <p className="text-[#2f494c] text-sm leading-relaxed font-normal">
-              Invite friends, institutional partners, and network members to Alpha Assets using your private referral URL. Earn recursive instant cash commissions whenever your downline deploys capital into investment packages.
-            </p>
-
-            {/* Value Propositions */}
-            <div className="space-y-3 pt-1">
-              {[
-                {
-                  title: "Instant Interest Wallet Credit",
-                  desc: "Commissions are automatically credited to your Interest Wallet upon package deposit approval with zero waiting period.",
-                },
-                {
-                  title: "No Active Capital Requirement",
-                  desc: "Earn referral commissions immediately after registration without being required to maintain an active deposit.",
-                },
-                {
-                  title: "Cumulative 9.0% Downline Yield",
-                  desc: "Capture multi-tier affiliate rewards across 3 concentric network depths on unlimited volume.",
-                },
-              ].map((b, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-[#d4e7e9] shadow-xs hover:border-[#3AAFB9] transition-colors"
-                >
-                  <div className="w-5 h-5 rounded-md bg-[#093A3E] text-[#3AAFB9] flex items-center justify-center flex-shrink-0 text-[11px] font-bold mt-0.5 shadow-2xs">
-                    ✓
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-[#001011]">{b.title}</h4>
-                    <p className="text-[11px] text-[#2f494c] font-normal mt-0.5 leading-snug">{b.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Downline Yield Simulation Pill */}
-            <div className="p-3.5 rounded-xl bg-[#f0f8f9] border border-[#c8e2e5] flex items-center justify-between text-xs">
-              <div>
-                <span className="text-[#5e7e83] text-[10px] block uppercase font-mono tracking-wider font-semibold">Example Volume</span>
-                <span className="font-bold text-[#001011] font-mono text-sm">$10,000 Downline</span>
-              </div>
-              <div className="text-right">
-                <span className="text-[#5e7e83] text-[10px] block uppercase font-mono tracking-wider font-semibold">Total Commission</span>
-                <span className="font-extrabold text-[#093A3E] font-mono text-sm">
-                  +$900.00 Instant <span className="text-[#3AAFB9]">✓</span>
-                </span>
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-2 bg-[#093A3E] hover:bg-[#001011] text-white px-7 py-3.5 rounded-xl text-xs font-semibold shadow-xs hover:shadow-lg hover:shadow-[#3AAFB9]/20 transition-all active:scale-[0.99] cursor-pointer"
-              >
-                <span>Get Your Referral Link</span>
-                <ArrowRight className="w-4 h-4 text-[#3AAFB9]" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Column — Network Graphic & Elevated Tier Cards (7 Cols) */}
-          <div className="lg:col-span-7 space-y-4">
-            
-            {/* Visual Network Header Banner */}
-            <div className="relative rounded-2xl overflow-hidden border border-[#d4e7e9] shadow-sm bg-[#001011] aspect-[21/9] sm:aspect-[24/9] group">
-              <Image
-                src="/images/network-art.jpg"
-                alt="Global Referral Liquidity Mesh"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#001011]/95 via-[#093A3E]/40 to-transparent pointer-events-none" />
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs text-white">
-                <div>
-                  <div className="font-semibold text-white flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-[#3AAFB9]" />
-                    Multi-Tier Liquidity Mesh
-                  </div>
-                  <div className="text-[11px] text-[#d9eef0] font-normal">
-                    Automated capital routing across 3 downline generation depths
-                  </div>
-                </div>
-                <span className="font-mono text-[#3AAFB9] font-bold text-[11px] bg-[#001011]/90 border border-[#3AAFB9]/60 px-2.5 py-1 rounded-full shadow-xs">
-                  9.0% Max Yield
-                </span>
-              </div>
-            </div>
-
-            {/* Elevated Referral Tier Cards */}
-            <div className="space-y-3">
-              {LEVELS.map((lvl) => (
-                <div
-                  key={lvl.level}
-                  className="bg-white border border-[#d4e7e9] rounded-2xl p-5 shadow-xs hover:border-[#3AAFB9] hover:shadow-md transition-all duration-150 group"
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    
-                    {/* Left: Level Pill + Info */}
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      
-                      {/* Prominent Level Pill Badge (Never wraps!) */}
-                      <div className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#093A3E] text-white shadow-xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] animate-pulse" />
-                        <span className="font-mono font-bold text-xs whitespace-nowrap tracking-wide text-white">
-                          {lvl.tag}
-                        </span>
-                      </div>
-
-                      {/* Text Details */}
-                      <div className="min-w-0">
-                        <h4 className="text-sm font-bold text-[#001011] truncate group-hover:text-[#093A3E] transition-colors">
-                          {lvl.title}
-                        </h4>
-                        <p className="text-[11px] text-[#2f494c] font-normal truncate mt-0.5">
-                          {lvl.subtitle}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-[11px] text-[#093A3E] font-bold font-mono bg-[#f0f8f9] border border-[#b5dfe3] px-2 py-0.5 rounded-md">
-                            {lvl.bonus}
-                          </span>
-                          <span className="text-[10px] text-[#5e7e83] font-mono hidden sm:inline">
-                            • {lvl.example}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right: Big Percentage & Instant Payout Tag */}
-                    <div className="text-right flex-shrink-0">
-                      <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight text-[#001011]">
-                        {lvl.rate}
-                      </div>
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#3AAFB9] font-bold block mt-0.5">
-                        Instant Credit
-                      </span>
-                    </div>
-
-                  </div>
-
-                  {/* Visual Allocation Share Bar */}
-                  <div className="mt-3.5 pt-3 border-t border-[#d4e7e9]/60 flex items-center gap-3">
-                    <div className="flex-1 h-1.5 bg-[#f0f8f9] rounded-full overflow-hidden border border-[#d4e7e9]/60">
-                      <div
-                        style={{ width: `${lvl.sharePct}%` }}
-                        className="h-full bg-gradient-to-r from-[#093A3E] to-[#3AAFB9] rounded-full transition-all duration-300"
-                      />
-                    </div>
-                    <span className="text-[10px] font-mono text-[#5e7e83] whitespace-nowrap font-medium">
-                      Network Weight: {lvl.sharePct}%
-                    </span>
-                  </div>
-
-                </div>
-              ))}
-            </div>
-
-          </div>
-
+    <section id="referral" className="py-24 border-t border-[#e4e7dc] bg-[#fafaf5] text-[#20281f]">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-6">
+        
+        {/* Header */}
+        <div className="mb-14 max-w-2xl">
+          <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.14em] uppercase text-[#20281f] mb-3">
+            <span className="text-[#86a951] text-sm">✳</span>
+            <span>Affiliate Rewards · 3 Concentric Tiers</span>
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.04em] text-[#20281f] leading-[1.06]">
+            Earn lifetime multi-tier referral commissions.
+          </h2>
+          <p className="text-base sm:text-lg text-[#60695b] mt-4 leading-relaxed font-normal">
+            Invite partners, traders, and community members. Receive instant automated commission payouts whenever your network deploys capital.
+          </p>
         </div>
+
+        {/* 3 Stelsuite Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch mb-10">
+          {LEVELS.map((lvl) => (
+            <div
+              key={lvl.level}
+              style={{ backgroundColor: lvl.bg, borderColor: lvl.borderColor }}
+              className="flex flex-col justify-between rounded-[14px] border p-7 text-[#20281f] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span
+                    className="text-[11px] font-mono font-bold uppercase tracking-[0.12em] px-2.5 py-0.5 rounded-full bg-white/80 border border-white"
+                    style={{ color: lvl.accent }}
+                  >
+                    {lvl.tag}
+                  </span>
+                  <span className="font-mono text-sm font-bold text-[#60695b]">
+                    {lvl.level}
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-[10px] bg-white border border-black/5 mb-4 flex items-baseline justify-between shadow-2xs">
+                  <span className="text-4xl font-bold font-mono text-[#20281f]">{lvl.rate}</span>
+                  <span className="text-xs text-[#60695b] font-mono font-semibold">Commission</span>
+                </div>
+
+                <h3 className="text-xl font-bold text-[#20281f] mb-1.5 tracking-tight">{lvl.title}</h3>
+                <p className="text-xs sm:text-[13px] text-[#60695b] leading-relaxed mb-4 font-normal">{lvl.subtitle}</p>
+              </div>
+
+              <div className="pt-3 border-t border-black/5 text-xs font-mono font-semibold text-[#20281f] flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5" style={{ color: lvl.accent }} />
+                <span>{lvl.example}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Action Callout */}
+        <div className="bg-white border border-[#dde2d1] rounded-[14px] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="space-y-1 text-center sm:text-left">
+            <h4 className="text-base font-bold text-[#20281f] flex items-center justify-center sm:justify-start gap-2">
+              <span>Ready to start earning referral rewards?</span>
+            </h4>
+            <p className="text-xs sm:text-sm text-[#60695b]">
+              Zero active capital deposit required. Generate your unique link inside the dashboard immediately.
+            </p>
+          </div>
+
+          <Link
+            href="/dashboard/referral"
+            className="px-6 py-3 rounded-[7px] bg-[#20281f] hover:bg-[#343e32] text-white text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-xs shrink-0"
+          >
+            <span>Get Referral Link</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
       </div>
     </section>
   );

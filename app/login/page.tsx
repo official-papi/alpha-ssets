@@ -5,10 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
-  BarChart2, Lock, Mail, ArrowRight, AlertCircle, Loader2,
-  Eye, EyeOff, TrendingUp, ShieldCheck, Zap
+  Lock, Mail, ArrowRight, AlertCircle, Loader2,
+  Eye, EyeOff, ShieldCheck, TrendingUp, Zap, ArrowUpRight
 } from "lucide-react";
-import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,93 +32,106 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-[#fafaf5] text-[#20281f]">
 
-      {/* ── Left Brand Panel ── */}
-      <div className="hidden lg:flex w-[42%] bg-[#001011] flex-col justify-between p-12 relative overflow-hidden border-r border-[#093A3E]/40">
+      {/* ── Left Brand Showcase Panel (Stelsuite Dark Band) ── */}
+      <div className="hidden lg:flex w-[44%] bg-[#20281f] text-white flex-col justify-between p-12 relative overflow-hidden">
         
-        {/* Ambient fintech geometric artwork */}
-        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-          <Image
-            src="/images/auth-bg.jpg"
-            alt="Fintech telemetry background"
-            fill
-            priority
-            className="object-cover object-center opacity-55 filter contrast-115 mix-blend-screen"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#001011] via-[#001011]/80 to-[#001011]/50" />
+        {/* Subtle radial glow */}
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#d1f18b]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#86a951]/10 blur-3xl pointer-events-none" />
+
+        {/* Brand Logo */}
+        <div className="relative z-10 flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5 text-white no-underline group">
+            <span
+              className="grid h-[36px] w-[36px] place-items-center rounded-[10px] bg-[#fafaf5] text-[#20281f] shadow-xs group-hover:scale-105 transition-transform"
+              aria-hidden="true"
+            >
+              <svg width="21" height="21" viewBox="0 0 32 32">
+                <circle cx="16" cy="9" r="4" fill="currentColor" />
+                <circle cx="22.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.75" />
+                <circle cx="9.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.5" />
+              </svg>
+            </span>
+            <span className="whitespace-nowrap text-[23px] font-bold tracking-[-1.1px]">
+              Alpha<span className="font-normal opacity-90">assets</span><span className="font-black text-[#d1f18b]">.</span>
+            </span>
+          </Link>
         </div>
 
-        {/* Subtle dot matrix texture */}
-        <div className="absolute inset-0 bg-[radial-gradient(#093A3E_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
-
-        {/* Logo */}
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#093A3E] border border-[#3AAFB9]/30 flex items-center justify-center text-[#3AAFB9]">
-            <BarChart2 className="w-4.5 h-4.5" />
-          </div>
-          <span className="text-[18px] font-bold text-white tracking-tight">
-            Alpha<span className="text-[#3AAFB9]">@</span>ssets
-          </span>
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 space-y-8">
+        {/* Center Pitch */}
+        <div className="relative z-10 space-y-8 my-auto py-12">
           <div>
-            <h2 className="text-3xl font-bold text-white leading-tight tracking-tight">
-              Invest Smarter.<br />Earn Daily.<br />Withdraw Freely.
+            <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.15em] uppercase text-[#d1f18b] mb-4">
+              <span>✳</span>
+              <span>Investor Portal Access</span>
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold leading-[1.08] tracking-[-0.03em]">
+              Autonomous wealth.<br />
+              Settled in real-time.<br />
+              Protected 24/7.
             </h2>
-            <p className="text-zinc-400 text-sm mt-4 leading-relaxed font-normal">
-              Join 124,500+ investors earning automated daily returns through our structured yield platform.
+            <p className="text-[#a4aca0] text-sm mt-4 leading-relaxed font-normal max-w-md">
+              Log in to manage your crypto portfolio, monitor Plan A & B yields, disburse instant payouts, and review sovereign trust escrow guarantees.
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 pt-2">
             {[
-              { icon: TrendingUp,  label: "Up to 5% daily ROI on investments" },
-              { icon: ShieldCheck, label: "256-bit SSL encrypted transactions" },
-              { icon: Zap,         label: "Instant crypto & bank withdrawals" },
+              { icon: TrendingUp,  label: "Automated daily ROI compounding & yield telemetry" },
+              { icon: ShieldCheck, label: "Smart contract audited & cold storage segregated" },
+              { icon: Zap,         label: "Instant ATFC, BTC, ETH & multi-chain transfers" },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-[#093A3E]/30 border border-[#093A3E]/50 flex items-center justify-center flex-shrink-0 text-[#3AAFB9]">
+                <div className="w-7 h-7 rounded-[7px] bg-white/10 flex items-center justify-center flex-shrink-0 text-[#d1f18b]">
                   <Icon className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-zinc-300 text-xs font-normal">{label}</span>
+                <span className="text-sm text-[#d8ded4]">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Bottom trust */}
-        <div className="relative z-10 pt-6 border-t border-zinc-850">
-          <div className="flex items-center gap-2 text-zinc-400 text-xs font-normal">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Regulated platform · Ledger audited · Cold storage custody</span>
-          </div>
+        {/* Bottom Trust Badge */}
+        <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-[#a4aca0]">
+          <span className="inline-flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#86a951] animate-pulse" />
+            AI Sovereign Engine Online
+          </span>
+          <span className="font-mono text-[11px] opacity-75">v3.2 Audited</span>
         </div>
       </div>
 
-      {/* ── Right Form Panel ── */}
-      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 bg-[#fafafa]">
-        <div className="w-full max-w-[380px]">
+      {/* ── Right Form Container ── */}
+      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12">
+        <div className="w-full max-w-[400px]">
 
-          {/* Mobile logo */}
-          <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-xl bg-[#093A3E] flex items-center justify-center text-[#3AAFB9]">
-              <BarChart2 className="w-4 h-4" />
-            </div>
-            <span className="text-[16px] font-bold tracking-tight text-zinc-950">
-              Alpha<span className="text-[#3AAFB9]">@</span>ssets
+          {/* Mobile brand header */}
+          <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden no-underline">
+            <span className="grid h-[34px] w-[34px] place-items-center rounded-[10px] bg-[#20281f] text-[#d1f18b]">
+              <svg width="20" height="20" viewBox="0 0 32 32">
+                <circle cx="16" cy="9" r="4" fill="currentColor" />
+                <circle cx="22.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.75" />
+                <circle cx="9.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.5" />
+              </svg>
+            </span>
+            <span className="text-[20px] font-bold tracking-tight text-[#20281f]">
+              Alpha<span className="font-normal">assets</span><span className="text-[#81ab41]">.</span>
             </span>
           </Link>
 
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-zinc-950 tracking-tight">Welcome back</h1>
-            <p className="text-zinc-500 text-xs mt-1.5 font-normal">Sign in to your investor portal</p>
+          <div className="mb-7">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#20281f] tracking-tight">
+              Sign in to account
+            </h1>
+            <p className="text-[#60695b] text-sm mt-1.5 font-normal">
+              Enter your investor credentials to access your dashboard
+            </p>
           </div>
 
           {error && (
-            <div className="mb-5 bg-red-50 border border-red-200 rounded-xl p-3.5 flex items-start gap-2.5 text-red-600 text-xs font-normal">
+            <div className="mb-5 bg-red-50 border border-red-200 rounded-[8px] p-3.5 flex items-start gap-2.5 text-red-600 text-xs font-normal">
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
@@ -128,16 +140,19 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-[11px] font-semibold text-zinc-700 mb-1.5 uppercase tracking-wider">
+              <label htmlFor="email" className="block text-[11px] font-bold text-[#20281f] uppercase tracking-wider mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7d8573] pointer-events-none" />
                 <input
-                  id="email" type="email" required value={email}
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="investor@example.com"
-                  className="hm-input hm-input-with-icon-left"
+                  className="w-full h-11 pl-10 pr-3.5 rounded-[8px] border border-[#e4e7dc] bg-white text-[#20281f] text-sm placeholder:text-[#9ea697] focus:outline-hidden focus:border-[#20281f] focus:ring-1 focus:ring-[#20281f] transition-colors"
                 />
               </div>
             </div>
@@ -145,41 +160,60 @@ export default function LoginPage() {
             {/* Password */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="password" className="text-[11px] font-semibold text-zinc-700 uppercase tracking-wider">
+                <label htmlFor="password" className="text-[11px] font-bold text-[#20281f] uppercase tracking-wider">
                   Password
                 </label>
-                <a href="#" className="text-xs text-zinc-600 hover:text-zinc-950 font-medium">Forgot password?</a>
+                <Link href="/faq" className="text-xs text-[#60695b] hover:text-[#20281f] font-medium no-underline">
+                  Forgot password?
+                </Link>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7d8573] pointer-events-none" />
                 <input
-                  id="password" type={showPw ? "text" : "password"} required value={password}
+                  id="password"
+                  type={showPw ? "text" : "password"}
+                  required
+                  value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="hm-input hm-input-with-icon-left hm-input-with-icon-right"
+                  className="w-full h-11 pl-10 pr-10 rounded-[8px] border border-[#e4e7dc] bg-white text-[#20281f] text-sm placeholder:text-[#9ea697] focus:outline-hidden focus:border-[#20281f] focus:ring-1 focus:ring-[#20281f] transition-colors"
                 />
-                <button type="button" onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() => setShowPw(!showPw)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#7d8573] hover:text-[#20281f] cursor-pointer"
+                >
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            <button type="submit" disabled={loading}
-              className="hm-btn hm-btn-primary w-full py-3 text-xs mt-2 cursor-pointer font-medium">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full min-h-[44px] rounded-[7px] bg-[#20281f] hover:bg-[#343e32] text-white text-sm font-bold flex items-center justify-center gap-2 shadow-xs active:scale-[0.99] transition-all cursor-pointer mt-2"
+            >
               {loading ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /><span>Signing in…</span></>
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#d1f18b]" />
+                  <span>Signing in…</span>
+                </>
               ) : (
-                <><span>Sign In to Account</span><ArrowRight className="w-4 h-4" /></>
+                <>
+                  <span>Sign In to Account</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-zinc-200 text-center">
-            <p className="text-xs text-zinc-500 font-normal">
+          {/* Create Account Link */}
+          <div className="mt-8 pt-6 border-t border-[#e4e7dc] text-center">
+            <p className="text-sm text-[#60695b] font-normal">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="font-semibold text-zinc-950 hover:underline transition-colors">
-                Create an account
+              <Link href="/register" className="font-bold text-[#20281f] hover:underline transition-colors no-underline">
+                Create an account <span aria-hidden="true">→</span>
               </Link>
             </p>
           </div>

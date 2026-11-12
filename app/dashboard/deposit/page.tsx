@@ -94,25 +94,25 @@ export default function DepositPage() {
 
   return (
     <DashboardLayout userEmail={userEmail}>
-      <div className="space-y-6">
+      <div className="space-y-6 text-[#20281f]">
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-extrabold text-[#001011]">Deposit Cryptocurrency</h1>
-            <p className="text-xs text-slate-500 mt-1">
-              Transfer XRP, Bitcoin, Ethereum, USDT, or Solana directly into your dedicated asset accounts.
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#20281f]">Deposit Cryptocurrency</h1>
+            <p className="text-xs sm:text-sm text-[#60695b] mt-1">
+              Transfer ATFC, XRP, Bitcoin, Ethereum, USDT, or Solana directly into your dedicated custody vaults.
             </p>
           </div>
 
           <button
             type="button"
             onClick={() => {
-              setSelectedSymbol("XRP");
+              setSelectedSymbol("ATFC");
               setIsDepositOpen(true);
             }}
-            className="py-2.5 px-4 rounded-xl bg-[#093A3E] hover:bg-[#001011] text-white text-xs font-bold flex items-center space-x-2 cursor-pointer shadow-xs transition-all self-start sm:self-auto"
+            className="min-h-[42px] px-5 rounded-[7px] bg-[#20281f] hover:bg-[#343e32] text-white text-xs font-bold flex items-center space-x-2 cursor-pointer shadow-xs transition-all self-start sm:self-auto hover:-translate-y-0.5 active:translate-y-0.5"
           >
-            <Plus className="w-4 h-4 text-[#3AAFB9]" />
+            <Plus className="w-4 h-4 text-[#d1f18b]" />
             <span>Make New Deposit</span>
           </button>
         </div>
@@ -126,26 +126,26 @@ export default function DepositPage() {
                 setSelectedSymbol(asset.symbol);
                 setIsDepositOpen(true);
               }}
-              className="bg-white border border-[#d4e7e9] hover:border-[#3AAFB9] rounded-2xl p-4 cursor-pointer transition-all hover:shadow-sm group"
+              className="bg-white border border-[#e4e7dc] hover:border-[#20281f] rounded-[10px] p-4 cursor-pointer transition-all hover:shadow-2xs group"
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700 group-hover:scale-105 transition-transform">
+                <div className="w-8 h-8 rounded-[7px] bg-[#fafaf5] border border-[#e4e7dc] flex items-center justify-center text-[#20281f] group-hover:scale-105 transition-transform">
                   <CryptoCoinIcon symbol={asset.symbol} className="w-4 h-4" />
                 </div>
-                <span className="font-extrabold text-xs text-[#001011]">{asset.symbol}</span>
+                <span className="font-bold text-xs text-[#20281f]">{asset.symbol}</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium">{asset.network}</p>
-              <p className="text-sm font-black font-mono text-[#093A3E] mt-1">
-                {asset.balance.toFixed(2)} <span className="text-[10px] text-slate-400">{asset.symbol}</span>
+              <p className="text-[10px] text-[#7d8573] font-medium truncate">{asset.network}</p>
+              <p className="text-sm font-bold font-mono text-[#20281f] mt-1">
+                {asset.balance.toFixed(2)} <span className="text-[10px] text-[#7d8573]">{asset.symbol}</span>
               </p>
             </div>
           ))}
         </div>
 
         {/* Deposit Logs Table */}
-        <div className="bg-white border border-[#d4e7e9] rounded-2xl p-6 shadow-xs">
-          <h3 className="text-sm font-extrabold text-[#001011] mb-4 flex items-center space-x-2">
-            <History className="w-4 h-4 text-[#093A3E]" />
+        <div className="bg-white border border-[#e4e7dc] rounded-[10px] p-6 shadow-2xs">
+          <h3 className="text-sm font-bold text-[#20281f] mb-4 flex items-center space-x-2">
+            <History className="w-4 h-4 text-[#86a951]" />
             <span>Cryptocurrency Deposit Ledger</span>
           </h3>
 
@@ -153,7 +153,7 @@ export default function DepositPage() {
           <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-400 uppercase text-[10px] tracking-wider">
+                <tr className="border-b border-[#e4e7dc] text-[#7d8573] uppercase text-[10px] font-mono tracking-wider">
                   <th className="pb-3 pl-2">Asset / Gateway</th>
                   <th className="pb-3">Crypto Amount</th>
                   <th className="pb-3">Valuation (USD)</th>
@@ -162,10 +162,10 @@ export default function DepositPage() {
                   <th className="pb-3">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#f0f2eb]">
                 {depositLogs.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400 text-xs font-medium">
+                    <td colSpan={6} className="py-8 text-center text-[#7d8573] text-xs font-medium">
                       No deposit records found. Click &quot;Make New Deposit&quot; to transfer crypto.
                     </td>
                   </tr>
@@ -173,36 +173,36 @@ export default function DepositPage() {
                   depositLogs.map((log) => {
                     const sym = log.crypto_symbol || log.gateway_name?.split(" ")[0] || "USD";
                     return (
-                      <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
+                      <tr key={log.id} className="hover:bg-[#fafaf5] transition-colors">
                         <td className="py-3 pl-2">
                           <div className="flex items-center gap-2">
                             <CryptoCoinIcon symbol={sym} className="w-4 h-4" />
-                            <span className="font-extrabold text-[#001011] uppercase">{log.gateway_name || sym}</span>
+                            <span className="font-bold text-[#20281f] uppercase">{log.gateway_name || sym}</span>
                           </div>
                         </td>
-                        <td className="py-3 font-mono font-extrabold text-[#093A3E]">
+                        <td className="py-3 font-mono font-bold text-[#20281f]">
                           {log.crypto_amount ? `${Number(log.crypto_amount).toFixed(4)} ${sym}` : "-"}
                         </td>
-                        <td className="py-3 font-mono font-bold text-slate-600">
+                        <td className="py-3 font-mono font-bold text-[#60695b]">
                           ${Number(log.final_amount || log.amount || 0).toFixed(2)}
                         </td>
-                        <td className="py-3 font-mono text-slate-500 text-[11px] truncate max-w-[150px]">
+                        <td className="py-3 font-mono text-[#7d8573] text-[11px] truncate max-w-[150px]">
                           {log.tx_hash || log.trx_id || "-"}
                         </td>
                         <td className="py-3">
                           <span
-                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                            className={`px-2.5 py-0.5 rounded-[5px] text-[10px] font-bold uppercase ${
                               log.status === "approved"
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                ? "bg-[#e3f2c9] text-[#476b1b] border border-[#c4ee70]"
                                 : log.status === "rejected"
                                 ? "bg-rose-50 text-rose-700 border border-rose-200"
-                                : "bg-amber-50 text-amber-700 border border-amber-200"
+                                : "bg-amber-50 text-amber-800 border border-amber-200"
                             }`}
                           >
                             {log.status}
                           </span>
                         </td>
-                        <td className="py-3 text-slate-500 text-[11px]">{new Date(log.created_at).toLocaleDateString()}</td>
+                        <td className="py-3 text-[#7d8573] text-[11px] font-mono">{new Date(log.created_at).toLocaleDateString()}</td>
                       </tr>
                     );
                   })
@@ -214,26 +214,26 @@ export default function DepositPage() {
           {/* Mobile Card Stack View */}
           <div className="block sm:hidden space-y-3">
             {depositLogs.length === 0 ? (
-              <div className="py-8 text-center text-slate-400 text-xs font-medium">
+              <div className="py-8 text-center text-[#7d8573] text-xs font-medium">
                 No deposit records found. Click &quot;Make New Deposit&quot; to transfer crypto.
               </div>
             ) : (
               depositLogs.map((log) => {
                 const sym = log.crypto_symbol || log.gateway_name?.split(" ")[0] || "USD";
                 return (
-                  <div key={log.id} className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/60 space-y-2">
+                  <div key={log.id} className="p-3.5 rounded-[8px] border border-[#e4e7dc] bg-[#fafaf5] space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <CryptoCoinIcon symbol={sym} className="w-4 h-4" />
-                        <span className="font-extrabold text-[#001011] text-xs uppercase">{log.gateway_name || sym}</span>
+                        <span className="font-bold text-[#20281f] text-xs uppercase">{log.gateway_name || sym}</span>
                       </div>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
+                        className={`px-2 py-0.5 rounded-[5px] text-[9px] font-bold uppercase ${
                           log.status === "approved"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            ? "bg-[#e3f2c9] text-[#476b1b] border border-[#c4ee70]"
                             : log.status === "rejected"
                             ? "bg-rose-50 text-rose-700 border border-rose-200"
-                            : "bg-amber-50 text-amber-700 border border-amber-200"
+                            : "bg-amber-50 text-amber-800 border border-amber-200"
                         }`}
                       >
                         {log.status}
@@ -242,20 +242,20 @@ export default function DepositPage() {
 
                     <div className="flex items-baseline justify-between pt-1">
                       <div>
-                        <div className="text-[10px] text-slate-400 font-bold uppercase">Amount Credited</div>
-                        <div className="text-sm font-mono font-black text-[#093A3E]">
+                        <div className="text-[10px] text-[#7d8573] font-bold uppercase">Amount Credited</div>
+                        <div className="text-sm font-mono font-bold text-[#20281f]">
                           {log.crypto_amount ? `${Number(log.crypto_amount).toFixed(4)} ${sym}` : `$${Number(log.final_amount || log.amount || 0).toFixed(2)}`}
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] text-slate-400 font-bold uppercase">USD Valuation</div>
-                        <div className="text-xs font-mono font-bold text-slate-600">
+                        <div className="text-[10px] text-[#7d8573] font-bold uppercase">USD Valuation</div>
+                        <div className="text-xs font-mono font-bold text-[#60695b]">
                           ${Number(log.final_amount || log.amount || 0).toFixed(2)}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-1 border-t border-slate-200/50 text-[10px] text-slate-400 font-mono">
+                    <div className="flex items-center justify-between pt-1 border-t border-[#e4e7dc] text-[10px] text-[#7d8573] font-mono">
                       <span className="truncate max-w-[170px]">{log.tx_hash || log.trx_id || "Ref: -"}</span>
                       <span>{new Date(log.created_at).toLocaleDateString()}</span>
                     </div>

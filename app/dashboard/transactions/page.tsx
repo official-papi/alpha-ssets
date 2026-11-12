@@ -34,25 +34,25 @@ export default function TransactionsPage() {
 
   return (
     <DashboardLayout userEmail={userEmail}>
-      <div className="space-y-6">
+      <div className="space-y-6 text-[#20281f]">
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-extrabold text-[#001011]">Transaction Ledger Log</h1>
-            <p className="text-xs text-slate-500 mt-1">Immutable double-entry transaction record for deposits, yields, withdrawals, and referral rewards.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#20281f]">Transaction Ledger</h1>
+            <p className="text-xs sm:text-sm text-[#60695b] mt-1">Immutable ledger log for deposits, yields, withdrawals, and referral payouts.</p>
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center space-x-2 overflow-x-auto pb-1">
+          <div className="flex items-center space-x-1.5 overflow-x-auto pb-1">
             {["all", "deposit", "investment", "yield", "withdrawal", "referral"].map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => setFilterType(type)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                   filterType === type
-                    ? "bg-[#093A3E] text-white shadow-xs"
-                    : "bg-white border border-slate-200 text-slate-600 hover:border-[#3AAFB9]/50 hover:text-[#093A3E]"
+                    ? "bg-[#20281f] text-white shadow-2xs"
+                    : "bg-[#fafaf5] border border-[#e4e7dc] text-[#60695b] hover:text-[#20281f] hover:bg-[#e4e7dc]/50"
                 }`}
               >
                 {type}
@@ -62,12 +62,12 @@ export default function TransactionsPage() {
         </div>
 
         {/* Transactions Table */}
-        <div className="bg-white border border-[#d4e7e9] rounded-2xl p-6 shadow-xs">
+        <div className="bg-white border border-[#e4e7dc] rounded-[10px] p-6 shadow-2xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-400 uppercase text-[10px] tracking-wider">
-                  <th className="pb-3">Transaction Type</th>
+                <tr className="border-b border-[#e4e7dc] text-[#7d8573] uppercase text-[10px] font-mono tracking-wider">
+                  <th className="pb-3">Type</th>
                   <th className="pb-3">Amount</th>
                   <th className="pb-3">Description</th>
                   <th className="pb-3">Wallet</th>
@@ -75,10 +75,10 @@ export default function TransactionsPage() {
                   <th className="pb-3 text-right">Receipt</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#f0f2eb]">
                 {transactions.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400 text-xs font-medium">
+                    <td colSpan={6} className="py-8 text-center text-[#7d8573] text-xs font-medium">
                       No transaction entries found for this filter.
                     </td>
                   </tr>
@@ -86,27 +86,27 @@ export default function TransactionsPage() {
                   transactions.map((tx) => {
                     const isPositive = Number(tx.amount) > 0;
                     return (
-                      <tr key={tx.id} className="hover:bg-slate-50/80 transition-colors">
+                      <tr key={tx.id} className="hover:bg-[#fafaf5] transition-colors">
                         <td className="py-3">
-                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
-                            tx.type === "deposit" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
-                            tx.type === "withdraw" ? "bg-rose-50 text-rose-700 border border-rose-200" :
-                            "bg-[#093A3E]/8 text-[#093A3E] border border-[#093A3E]/20"
+                          <span className={`px-2.5 py-0.5 rounded-[5px] text-[10px] font-bold uppercase ${
+                            tx.type === "deposit" ? "bg-[#e3f2c9] text-[#476b1b] border border-[#c4ee70]" :
+                            tx.type === "withdrawal" || tx.type === "withdraw" ? "bg-rose-50 text-rose-700 border border-rose-200" :
+                            "bg-[#fafaf5] text-[#20281f] border border-[#e4e7dc]"
                           }`}>
                             {tx.type?.replace("_", " ")}
                           </span>
                         </td>
-                        <td className={`py-3 font-mono font-extrabold ${isPositive ? "text-emerald-600" : "text-rose-600"}`}>
+                        <td className={`py-3 font-mono font-bold ${isPositive ? "text-[#476b1b]" : "text-rose-700"}`}>
                           {isPositive ? "+" : ""}${Number(tx.amount).toFixed(2)}
                         </td>
-                        <td className="py-3 text-slate-700 text-xs max-w-xs truncate">{tx.description || "-"}</td>
-                        <td className="py-3 font-mono font-bold text-slate-500 uppercase text-[11px]">{tx.wallet_type || "deposit"}</td>
-                        <td className="py-3 text-slate-500 text-[11px]">{new Date(tx.created_at).toLocaleString()}</td>
+                        <td className="py-3 text-[#20281f] text-xs max-w-xs truncate">{tx.description || "-"}</td>
+                        <td className="py-3 font-mono font-semibold text-[#7d8573] uppercase text-[11px]">{tx.wallet_type || "deposit"}</td>
+                        <td className="py-3 text-[#7d8573] text-[11px] font-mono">{new Date(tx.created_at).toLocaleString()}</td>
                         <td className="py-3 text-right">
                           <button
                             type="button"
                             onClick={() => setReceiptTx(tx)}
-                            className="px-2.5 py-1 rounded-lg bg-[#093A3E]/8 text-[#093A3E] hover:bg-[#093A3E] hover:text-white text-[11px] font-bold transition-all cursor-pointer shadow-2xs"
+                            className="px-2.5 py-1 rounded-[6px] bg-[#fafaf5] text-[#20281f] hover:bg-[#e4e7dc] border border-[#20281f20] text-[11px] font-bold transition-all cursor-pointer shadow-2xs"
                           >
                             Receipt
                           </button>

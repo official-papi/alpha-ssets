@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import SettingsNavTabs from "@/components/dashboard/SettingsNavTabs";
 import { ShieldCheck, Upload, CheckCircle2, AlertCircle, Clock, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { getActiveUser } from "@/lib/auth/activeUser";
@@ -138,8 +139,8 @@ export default function KycPage() {
 
   return (
     <DashboardLayout userEmail={userEmail}>
-      <div className="space-y-8 max-w-4xl">
-        
+      <div className="space-y-6 max-w-4xl">
+        <SettingsNavTabs />
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900">KYC Verification</h1>
           <p className="text-xs text-slate-500 mt-1">Submit official identification documents to verify your investor account.</p>

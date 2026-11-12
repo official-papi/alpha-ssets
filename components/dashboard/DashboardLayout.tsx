@@ -92,36 +92,58 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
     router.push("/login");
   };
 
-  const navItems = [
-    { label: t.dashboard.overview,         href: "/dashboard",              icon: LayoutDashboard },
-    { label: t.dashboard.investments,      href: "/dashboard/investments",  icon: TrendingUp },
-    { label: t.dashboard.depositFunds,     href: "/dashboard/deposit",      icon: ArrowDownRight },
-    { label: t.dashboard.withdrawFunds,    href: "/dashboard/withdraw",     icon: ArrowUpRight },
-    { label: t.dashboard.transactions,     href: "/dashboard/transactions", icon: History },
-    { label: t.dashboard.referrals,        href: "/dashboard/referral",     icon: Users },
-    { label: t.dashboard.accountSettings,  href: "/dashboard/profile",      icon: User },
-    { label: t.dashboard.kycVerification,  href: "/dashboard/kyc",          icon: ShieldCheck },
-    { label: t.dashboard.twoFactor,        href: "/dashboard/two-factor",   icon: Key },
+  const navGroups = [
+    {
+      group: "Portfolio",
+      items: [
+        { label: t.dashboard.overview,         href: "/dashboard",              icon: LayoutDashboard },
+        { label: t.dashboard.investments,      href: "/dashboard/investments",  icon: TrendingUp },
+        { label: t.dashboard.transactions,     href: "/dashboard/transactions", icon: History },
+      ],
+    },
+    {
+      group: "Transfers",
+      items: [
+        { label: t.dashboard.depositFunds,     href: "/dashboard/deposit",      icon: ArrowDownRight },
+        { label: t.dashboard.withdrawFunds,    href: "/dashboard/withdraw",     icon: ArrowUpRight },
+      ],
+    },
+    {
+      group: "Account & Security",
+      items: [
+        { label: t.dashboard.accountSettings,  href: "/dashboard/profile",      icon: User },
+        { label: t.dashboard.kycVerification,  href: "/dashboard/kyc",          icon: ShieldCheck },
+        { label: t.dashboard.twoFactor,        href: "/dashboard/two-factor",   icon: Key },
+        { label: t.dashboard.referrals,        href: "/dashboard/referral",     icon: Users },
+      ],
+    },
   ];
 
   const userInitial = (fullName || userEmail || "U").charAt(0).toUpperCase();
 
   return (
-    <div className="h-screen overflow-hidden bg-[#fafafa] flex flex-col md:flex-row">
+    <div className="h-screen overflow-hidden bg-[#fafaf5] text-[#20281f] flex flex-col md:flex-row">
 
       {/* ── Mobile Top Bar ── */}
-      <div className="md:hidden bg-[#001011] border-b border-[#093A3E]/40 px-4 h-14 flex items-center justify-between flex-shrink-0 z-50 sticky top-0 text-white">
+      <div className="md:hidden bg-[#fafaf5] border-b border-[#e4e7dc] px-4 h-16 flex items-center justify-between flex-shrink-0 z-50 sticky top-0">
         <div className="flex items-center gap-2">
-          <Link href="/" className="p-1.5 rounded-lg border border-[#093A3E] text-slate-300 hover:text-white hover:bg-[#093A3E]/30 flex items-center gap-1 text-[11px] font-medium mr-1 transition-colors">
-            <Globe className="w-3.5 h-3.5 text-[#3AAFB9]" />
+          <Link
+            href="/"
+            className="p-1.5 rounded-[7px] border border-[#20281f20] text-[#60695b] hover:text-[#20281f] hover:bg-[#e4e7dc]/50 flex items-center gap-1 text-[11px] font-medium mr-1 transition-colors no-underline"
+          >
+            <Globe className="w-3.5 h-3.5 text-[#20281f]" />
             <span>Site</span>
           </Link>
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#093A3E] border border-[#3AAFB9]/30 flex items-center justify-center">
-              <Wallet className="w-3.5 h-3.5 text-[#3AAFB9]" />
-            </div>
-            <span className="text-[15px] font-bold tracking-tight text-white">
-              Alpha<span className="text-[#3AAFB9]">@</span>ssets
+          <Link href="/dashboard" className="flex items-center gap-2 no-underline">
+            <span className="grid h-[32px] w-[32px] place-items-center rounded-[8px] bg-[#20281f] text-[#d1f18b]">
+              <svg width="18" height="18" viewBox="0 0 32 32">
+                <circle cx="16" cy="9" r="4" fill="currentColor" />
+                <circle cx="22.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.75" />
+                <circle cx="9.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.5" />
+              </svg>
+            </span>
+            <span className="text-[17px] font-bold tracking-tight text-[#20281f]">
+              Alpha<span className="font-normal">assets</span><span className="text-[#81ab41]">.</span>
             </span>
           </Link>
         </div>
@@ -130,73 +152,85 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-1.5 rounded-lg border border-[#093A3E] text-slate-300 hover:bg-[#093A3E]/40 cursor-pointer"
+            className="p-2 rounded-[7px] border border-[#20281f20] text-[#20281f] hover:bg-[#e4e7dc]/60 cursor-pointer"
+            aria-label="Toggle Navigation"
           >
-            {mobileOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
+            {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
       {/* ── Sidebar ── */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-[#d4e7e9] flex flex-col flex-shrink-0 transition-transform duration-200 md:static md:translate-x-0 md:h-screen
+        fixed inset-y-0 left-0 z-40 w-64 bg-[#fafaf5] border-r border-[#e4e7dc] flex flex-col flex-shrink-0 transition-transform duration-200 md:static md:translate-x-0 md:h-screen
         ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
       `}>
-        {/* Logo Header */}
-        <div className="h-16 px-5 flex items-center justify-between border-b border-slate-100 flex-shrink-0 bg-white">
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-[#093A3E] border border-[#3AAFB9]/30 flex items-center justify-center shadow-xs text-[#3AAFB9] group-hover:scale-105 transition-transform">
-              <Wallet className="w-4.5 h-4.5" />
-            </div>
+        {/* Brand Header */}
+        <div className="h-20 px-5 flex items-center justify-between border-b border-[#e4e7dc] flex-shrink-0 bg-[#fafaf5]">
+          <Link href="/dashboard" className="flex items-center gap-2.5 group no-underline">
+            <span
+              className="grid h-[35px] w-[35px] place-items-center rounded-[10px] bg-[#20281f] text-[#d1f18b] shadow-2xs group-hover:scale-105 transition-transform"
+              aria-hidden="true"
+            >
+              <svg width="20" height="20" viewBox="0 0 32 32">
+                <circle cx="16" cy="9" r="4" fill="currentColor" />
+                <circle cx="22.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.75" />
+                <circle cx="9.5" cy="20.5" r="4" fill="currentColor" fillOpacity="0.5" />
+              </svg>
+            </span>
             <div>
-              <div className="text-[15px] font-extrabold tracking-tight text-[#001011] leading-none">
-                Alpha<span className="text-[#3AAFB9]">@</span>ssets
+              <div className="text-[17px] font-bold tracking-[-0.8px] text-[#20281f] leading-none">
+                Alpha<span className="font-normal">assets</span><span className="font-black text-[#81ab41]">.</span>
               </div>
-              <div className="text-[10px] text-[#093A3E] font-medium tracking-wide mt-1 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] inline-block animate-pulse" />
-                {t.dashboard.investorWorkspace}
+              <div className="text-[10px] text-[#60695b] font-medium tracking-wide mt-1 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#86a951] inline-block animate-pulse" />
+                AI Sovereign Rails
               </div>
             </div>
           </Link>
-          <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 text-slate-400 hover:text-slate-700">
+          <button onClick={() => setMobileOpen(false)} className="md:hidden p-1.5 text-[#60695b] hover:text-[#20281f] cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
-            Navigation
-          </div>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all border-l-[3px] ${
-                  isActive
-                    ? "bg-[#093A3E]/8 text-[#093A3E] font-bold border-l-[#3AAFB9] shadow-xs"
-                    : "text-slate-600 hover:bg-[#093A3E]/4 hover:text-[#093A3E] border-l-transparent"
-                }`}
-              >
-                <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-[#093A3E]" : "text-slate-400 group-hover:text-[#093A3E]"}`} />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+        {/* Navigation Items */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+          {navGroups.map((group, gIdx) => (
+            <div key={gIdx} className="space-y-1">
+              <div className="text-[10px] font-mono font-bold text-[#7d8573] uppercase tracking-wider px-3 mb-1.5">
+                {group.group}
+              </div>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-[8px] text-[13.5px] font-medium transition-colors no-underline ${
+                      isActive
+                        ? "bg-[#e3f2c9] text-[#20281f] font-bold shadow-2xs"
+                        : "text-[#60695b] hover:bg-[#e4e7dc]/50 hover:text-[#20281f]"
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-[#537722]" : "text-[#7d8573]"}`} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
-        {/* Footer */}
-        <div className="border-t border-slate-100 p-3 space-y-1.5 flex-shrink-0 bg-slate-50/50">
+        {/* Sidebar Footer */}
+        <div className="border-t border-[#e4e7dc] p-3 space-y-1.5 flex-shrink-0 bg-[#fafaf5]">
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-semibold text-slate-700 bg-white border border-slate-200 hover:border-[#3AAFB9]/40 hover:text-[#093A3E] transition-all shadow-2xs"
+            className="flex items-center gap-2 px-3 py-2 rounded-[7px] text-[12px] font-semibold text-[#20281f] bg-white border border-[#e4e7dc] hover:bg-[#f0f2eb] transition-all shadow-2xs no-underline"
           >
-            <Globe className="w-3.5 h-3.5 text-[#093A3E]" />
+            <Globe className="w-3.5 h-3.5 text-[#20281f]" />
             <span>{t.nav.backToSite}</span>
           </Link>
 
@@ -204,20 +238,22 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
             <Link
               href="/admin"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-bold text-white bg-[#001011] hover:bg-[#093A3E] transition-colors shadow-xs"
+              className="flex items-center gap-2 px-3 py-2 rounded-[7px] text-[12px] font-bold text-white bg-[#20281f] hover:bg-[#343e32] transition-colors shadow-xs no-underline"
             >
-              <ShieldAlert className="w-3.5 h-3.5 text-[#3AAFB9]" />
+              <ShieldAlert className="w-3.5 h-3.5 text-[#d1f18b]" />
               <span>{t.dashboard.adminPortal}</span>
             </Link>
           )}
+
           <div className="px-3 py-1.5">
-            <div className="text-[13px] font-bold text-slate-900 truncate">{fullName || "Investor"}</div>
-            <div className="text-[11px] text-slate-400 truncate">{userEmail}</div>
+            <div className="text-[13px] font-bold text-[#20281f] truncate">{fullName || "Investor"}</div>
+            <div className="text-[11px] text-[#7d8573] truncate font-mono">{userEmail}</div>
           </div>
+
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-[7px] text-[12px] font-medium text-[#60695b] hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>{t.dashboard.signOut}</span>
@@ -226,21 +262,21 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
       </aside>
 
       {/* ── Main Panel ── */}
-      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-[#fafaf5]">
 
         {/* Desktop Header */}
-        <header className="hidden md:flex items-center justify-between px-8 h-16 bg-white border-b border-[#d4e7e9] flex-shrink-0 z-40">
+        <header className="hidden md:flex items-center justify-between px-8 h-20 bg-[#fafaf5]/90 backdrop-blur-md border-b border-[#e4e7dc] flex-shrink-0 z-40">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="flex items-center gap-1.5 text-[12px] font-semibold text-slate-500 hover:text-[#093A3E] transition-colors"
+              className="flex items-center gap-1.5 text-[12px] font-semibold text-[#60695b] hover:text-[#20281f] transition-colors no-underline"
             >
-              <Globe className="w-3.5 h-3.5 text-[#093A3E]" />
+              <Globe className="w-3.5 h-3.5 text-[#20281f]" />
               <span>{t.nav.backToSite}</span>
             </Link>
-            <span className="text-slate-200">/</span>
-            <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#093A3E] bg-[#093A3E]/6 px-2.5 py-1 rounded-full border border-[#093A3E]/10">
-              <Sparkles className="w-3.5 h-3.5 text-[#3AAFB9]" />
+            <span className="text-[#c7cdbf]">/</span>
+            <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#627446] bg-[#f4f7ec] px-3 py-1 rounded-full border border-[#dfe6d2]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#86a951] animate-pulse" />
               <span>{t.dashboard.investorWorkspace}</span>
             </div>
           </div>
@@ -252,31 +288,32 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
             <div className="relative">
               <button
                 onClick={handleMarkNotificationsRead}
-                className="relative p-2 rounded-xl text-slate-500 hover:text-[#093A3E] hover:bg-[#093A3E]/6 transition-colors cursor-pointer"
+                className="relative p-2 rounded-[7px] border border-[#20281f20] text-[#20281f] hover:bg-[#e4e7dc]/50 transition-colors cursor-pointer"
+                aria-label="Notifications"
               >
-                <Bell className="w-4.5 h-4.5" />
+                <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#3AAFB9] text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#86a951] text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-[#fafaf5]">
                     {unreadCount}
                   </span>
                 )}
               </button>
 
               {notifOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-[#d4e7e9] rounded-2xl shadow-xl p-3 z-50 space-y-2">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <span className="text-[13px] font-bold text-slate-900">Notifications</span>
-                    <span className="text-[11px] text-[#3AAFB9] hover:text-[#093A3E] font-semibold cursor-pointer">Mark all read</span>
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-[#e4e7dc] rounded-[10px] shadow-xl p-3 z-50 space-y-2">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#e4e7dc]">
+                    <span className="text-[13px] font-bold text-[#20281f]">Notifications</span>
+                    <span className="text-[11px] text-[#537722] hover:underline font-semibold cursor-pointer">Mark all read</span>
                   </div>
                   <div className="space-y-1.5 max-h-64 overflow-y-auto">
                     {notifications.length === 0 ? (
-                      <div className="text-[13px] text-slate-400 py-4 text-center">No notifications yet.</div>
+                      <div className="text-[13px] text-[#7d8573] py-4 text-center">No notifications yet.</div>
                     ) : (
                       notifications.map((n: any) => (
-                        <div key={n.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                          <div className="text-[13px] font-semibold text-slate-900">{n.title}</div>
-                          <div className="text-[12px] text-slate-500 mt-0.5 leading-snug">{n.message}</div>
-                          <div className="text-[10px] text-slate-400 mt-1 text-right">{new Date(n.created_at).toLocaleTimeString()}</div>
+                        <div key={n.id} className="p-2.5 rounded-[7px] bg-[#fafaf5] border border-[#e4e7dc]">
+                          <div className="text-[13px] font-semibold text-[#20281f]">{n.title}</div>
+                          <div className="text-[12px] text-[#60695b] mt-0.5 leading-snug">{n.message}</div>
+                          <div className="text-[10px] text-[#7d8573] mt-1 text-right font-mono">{new Date(n.created_at).toLocaleTimeString()}</div>
                         </div>
                       ))
                     )}
@@ -285,21 +322,21 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
               )}
             </div>
 
-            {/* Profile */}
+            {/* Profile Avatar */}
             <Link
               href="/dashboard/profile"
-              className="flex items-center gap-2 pl-3 border-l border-slate-200 hover:opacity-85 transition-opacity"
+              className="flex items-center gap-2.5 pl-3 border-l border-[#e4e7dc] hover:opacity-85 transition-opacity no-underline"
             >
               {avatarUrl ? (
-                <img src={avatarUrl} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-[#3AAFB9]/40" />
+                <img src={avatarUrl} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-[#20281f20]" />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#093A3E] to-[#001011] text-[#3AAFB9] font-bold text-[12px] flex items-center justify-center shadow-xs">
+                <div className="w-8 h-8 rounded-full bg-[#20281f] text-[#d1f18b] font-bold text-[12px] flex items-center justify-center shadow-xs">
                   {userInitial}
                 </div>
               )}
               <div className="hidden lg:block text-left">
-                <div className="text-[13px] font-bold text-slate-900 leading-none truncate max-w-[120px]">{fullName || "Investor"}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5 truncate max-w-[120px]">{userEmail}</div>
+                <div className="text-[13px] font-bold text-[#20281f] leading-none truncate max-w-[120px]">{fullName || "Investor"}</div>
+                <div className="text-[11px] text-[#7d8573] mt-0.5 truncate max-w-[120px] font-mono">{userEmail}</div>
               </div>
             </Link>
           </div>
@@ -319,7 +356,7 @@ export default function DashboardLayout({ children, userEmail: initialEmail }: D
             <button
               type="button"
               onClick={exitImpersonation}
-              className="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
+              className="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-[7px] text-xs font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
             >
               Exit to Admin
             </button>

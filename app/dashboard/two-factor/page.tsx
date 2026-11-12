@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import SettingsNavTabs from "@/components/dashboard/SettingsNavTabs";
 import { Key, ShieldCheck, Copy, Check, QrCode, AlertCircle, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { getActiveUser } from "@/lib/auth/activeUser";
@@ -88,8 +89,8 @@ export default function TwoFactorPage() {
 
   return (
     <DashboardLayout userEmail={userEmail}>
-      <div className="space-y-8 max-w-3xl">
-        
+      <div className="space-y-6 max-w-3xl">
+        <SettingsNavTabs />
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900">Two-Factor Authentication (2FA)</h1>
           <p className="text-xs text-slate-500 mt-1">Add an extra layer of security to your investor account using Google Authenticator.</p>

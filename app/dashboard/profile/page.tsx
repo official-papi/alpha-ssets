@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import SettingsNavTabs from "@/components/dashboard/SettingsNavTabs";
 import { User, Mail, Phone, Lock, CheckCircle2, AlertCircle, QrCode, UploadCloud, Trash2, Eye, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { getActiveUser } from "@/lib/auth/activeUser";
@@ -203,8 +204,8 @@ export default function ProfilePage() {
 
   return (
     <DashboardLayout userEmail={userEmail}>
-      <div className="space-y-8 max-w-4xl">
-        
+      <div className="space-y-6 max-w-4xl">
+        <SettingsNavTabs />
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900">Profile Settings</h1>
           <p className="text-xs text-slate-500 mt-1">Manage your account information and security credentials.</p>

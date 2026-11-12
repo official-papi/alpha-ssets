@@ -39,11 +39,10 @@ export default function CryptoPortfolioOverview({
     return val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: decimals });
   };
 
-  // Filter coins that currently hold money
+  // Filter coins that currently hold balance
   const holdingCoins = assets.filter((a) => (a.balance || 0) > 0);
 
-  // If the user has coins with balance, display those.
-  // Otherwise, default to showing the primary platform coin (ATFC) with 0.00 balance.
+  // If the user has coins with balance, display those; otherwise default to ATFC
   const displayCoins =
     holdingCoins.length > 0
       ? holdingCoins
@@ -53,100 +52,97 @@ export default function CryptoPortfolioOverview({
 
   return (
     <div className="space-y-4">
-      {/* ── Main Net Worth & Coin Custody Card ── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#001011] via-[#093A3E] to-[#041a1c] text-white p-5 sm:p-8 shadow-xl border border-[#3AAFB9]/20">
-        {/* Glow ambient background circles */}
-        <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#3AAFB9]/15 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[#093A3E]/30 blur-3xl pointer-events-none" />
+      {/* ── Main Net Worth Card (Stelsuite Dark Band) ── */}
+      <div className="relative overflow-hidden rounded-[14px] bg-[#20281f] text-white p-6 sm:p-8 shadow-xl border border-[#20281f]">
+        
+        {/* Subtle ambient lighting */}
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#d1f18b]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#86a951]/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           {/* Balance Block */}
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#3AAFB9]/20 text-[#3AAFB9] border border-[#3AAFB9]/30">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3AAFB9] animate-pulse" />
-                Live Multi-Asset Portfolio
+            <div className="flex items-center gap-2 mb-2.5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#f4f7ec]/15 text-[#d1f18b] border border-white/10">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#86a951] animate-pulse" />
+                Live Portfolio Sync
               </span>
-              <span className="text-[11px] text-slate-400 font-medium">Real-Time Sync</span>
+              <span className="text-xs text-[#a4aca0] font-medium">Real-Time Ledger</span>
             </div>
 
-            <p className="text-[11px] sm:text-[12px] uppercase font-bold tracking-wider text-slate-300">
+            <p className="text-[11px] sm:text-[12px] uppercase font-bold tracking-wider text-[#a4aca0]">
               Total Portfolio Valuation
             </p>
-            <div className="flex flex-wrap items-baseline gap-3 mt-1">
+            <div className="flex flex-wrap items-baseline gap-3 mt-1.5">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-mono tracking-tight text-white">
                 ${fmt(totalUsdValue)}
               </h2>
-              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" />
+              <span className="text-xs font-bold text-[#d1f18b] bg-[#d1f18b]/15 px-2.5 py-0.5 rounded-[6px] border border-[#d1f18b]/20 flex items-center gap-1 font-mono">
+                <TrendingUp className="w-3.5 h-3.5" />
                 Live Valuation
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-300/80">
+            <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-[#d8ded4]">
               <span>
                 {holdingCoins.length > 0 ? (
-                  <span className="text-[#3AAFB9] font-semibold">
-                    Funds allocated across {holdingCoins.length} coin{holdingCoins.length > 1 ? "s" : ""}
+                  <span className="text-[#d1f18b] font-semibold">
+                    Funds allocated across {holdingCoins.length} active coin{holdingCoins.length > 1 ? "s" : ""}
                   </span>
                 ) : (
-                  <span>Ready for deposit into American Trust Fund (ATFC) or your preferred coin.</span>
+                  <span>Ready for deposit into American Trust Fund (ATFC) or your preferred asset.</span>
                 )}
               </span>
               {totalWithdrawnUsd > 0 && (
-                <span className="text-slate-400 border-l border-white/20 pl-3">
+                <span className="text-[#a4aca0] border-l border-white/20 pl-3">
                   Total Payouts: <strong className="text-white font-mono">${fmt(totalWithdrawnUsd)}</strong>
                 </span>
               )}
             </div>
           </div>
 
-          {/* Quick Primary Actions */}
+          {/* Quick Primary Actions (Stelsuite Buttons) */}
           <div className="flex items-center gap-2.5 sm:gap-3">
             <button
               onClick={() => onOpenDeposit()}
-              className="flex-1 sm:flex-initial py-3 px-5 rounded-2xl bg-gradient-to-r from-[#3AAFB9] to-[#5cb4be] hover:from-[#4bc7d2] hover:to-[#6ec7d0] text-[#001011] text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-[#3AAFB9]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+              className="min-h-[44px] px-6 rounded-[7px] bg-[#d1f18b] hover:bg-[#c4ee70] text-[#20281f] text-sm font-bold flex items-center justify-center gap-2 shadow-xs hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
             >
-              <div className="w-6 h-6 rounded-lg bg-[#001011]/15 flex items-center justify-center">
-                <ArrowDownRight className="w-4 h-4 text-[#001011]" />
-              </div>
+              <ArrowDownRight className="w-4 h-4 text-[#20281f]" />
               <span>Deposit</span>
             </button>
 
             <button
               onClick={() => onOpenWithdraw()}
-              className="flex-1 sm:flex-initial py-3 px-5 rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/15 text-xs font-bold flex items-center justify-center gap-2 backdrop-blur-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+              className="min-h-[44px] px-6 rounded-[7px] bg-transparent hover:bg-white/10 text-white border border-white/25 text-sm font-bold flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
             >
-              <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center">
-                <ArrowUpRight className="w-4 h-4 text-[#3AAFB9]" />
-              </div>
+              <ArrowUpRight className="w-4 h-4 text-[#d1f18b]" />
               <span>Withdraw</span>
             </button>
 
             <button
               onClick={onViewHistory}
-              className="py-3 px-3.5 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-              title="View History / Activity"
+              className="min-h-[44px] px-3.5 rounded-[7px] bg-white/5 hover:bg-white/10 text-[#d8ded4] hover:text-white border border-white/15 text-sm font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              title="View Activity History"
             >
-              <History className="w-4 h-4 text-slate-400" />
-              <span className="hidden sm:inline">Activity</span>
+              <History className="w-4 h-4" />
+              <span className="hidden sm:inline">Ledger</span>
             </button>
           </div>
         </div>
 
-        {/* ── Active Coin Holdings (Where Your Money Is) ── */}
+        {/* ── Active Coin Holdings Strip ── */}
         <div className="relative z-10 mt-6 pt-5 border-t border-white/10">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Coins className="w-4 h-4 text-[#3AAFB9]" />
-              <span className="text-[11px] sm:text-xs uppercase font-extrabold tracking-wider text-slate-200">
-                Where Your Money Is Held
+              <Coins className="w-4 h-4 text-[#d1f18b]" />
+              <span className="text-[11px] sm:text-xs uppercase font-bold tracking-wider text-[#d8ded4]">
+                Where Your Capital Is Stored
               </span>
             </div>
-            <span className="text-[11px] text-[#3AAFB9] font-mono">
+            <span className="text-[11px] text-[#d1f18b] font-mono">
               {holdingCoins.length > 0
                 ? `${holdingCoins.length} Active Asset${holdingCoins.length > 1 ? "s" : ""}`
-                : "Primary Account"}
+                : "Primary Sovereign Account"}
             </span>
           </div>
 
@@ -159,40 +155,40 @@ export default function CryptoPortfolioOverview({
               return (
                 <div
                   key={asset.symbol}
-                  className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                  className={`p-3.5 rounded-[10px] border transition-all flex items-center justify-between gap-3 ${
                     hasBalance
-                      ? "bg-[#3AAFB9]/10 border-[#3AAFB9]/50 shadow-md shadow-[#3AAFB9]/10"
+                      ? "bg-white/10 border-[#d1f18b]/40 shadow-xs"
                       : "bg-white/5 border-white/10"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center p-1.5 flex-shrink-0">
+                    <div className="w-10 h-10 rounded-[8px] bg-white/10 border border-white/10 flex items-center justify-center p-1.5 flex-shrink-0">
                       <CryptoCoinIcon symbol={asset.symbol} className="w-7 h-7" size={28} />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-black text-white">{asset.symbol}</span>
+                        <span className="text-sm font-bold text-white">{asset.symbol}</span>
                         {hasBalance && (
-                          <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                          <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-[#d1f18b]/20 text-[#d1f18b] border border-[#d1f18b]/30">
                             Active
                           </span>
                         )}
                       </div>
-                      <span className="text-[11px] text-slate-400 truncate block">
+                      <span className="text-xs text-[#a4aca0] truncate block">
                         {asset.name}
                       </span>
                     </div>
                   </div>
 
                   <div className="text-right flex-shrink-0 font-mono">
-                    <div className="text-sm font-extrabold text-white">
+                    <div className="text-sm font-bold text-white">
                       {fmtCrypto(asset.balance)} {asset.symbol}
                     </div>
-                    <div className="text-xs font-semibold text-[#3AAFB9]">
-                      ≈ ${fmt(usdVal)} <span className="text-[10px] text-slate-400 font-normal">USD</span>
+                    <div className="text-xs font-semibold text-[#d1f18b]">
+                      ≈ ${fmt(usdVal)} <span className="text-[10px] text-[#a4aca0] font-normal">USD</span>
                     </div>
                     {share > 0 && (
-                      <span className="text-[10px] text-emerald-400/90 font-mono">
+                      <span className="text-[10px] text-[#a4aca0] font-mono">
                         {share.toFixed(0)}% of total
                       </span>
                     )}
