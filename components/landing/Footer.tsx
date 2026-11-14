@@ -38,7 +38,7 @@ export default function Footer() {
             Good money moves, with automated AI intelligence.
           </h2>
           <p className="max-w-lg text-base sm:text-lg text-[#3d453b] mt-4 leading-relaxed font-normal">
-            Borrow with flexible collateral, compound with Plan A & B, and sleep easy with 24/7 liquidity crash protection.
+            Borrow with flexible collateral, allocate to our AI Cryptocurrency Management System, and sleep easy with 24/7 liquidity crash protection.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">

@@ -5,7 +5,7 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import TradingViewTicker from "@/components/landing/TradingViewTicker";
 import ServicesSection from "@/components/landing/ServicesSection";
-import InvestmentPlansLanding from "@/components/landing/InvestmentPlansLanding";
+import AiCryptoManagementSection from "@/components/landing/AiCryptoManagementSection";
 import AtfcDepositSection from "@/components/landing/AtfcDepositSection";
 import ReferralSection from "@/components/landing/ReferralSection";
 import TotalCapitalSection from "@/components/landing/TotalCapitalSection";
@@ -107,8 +107,8 @@ export default function Home() {
                   </div>
 
                   <div className="flex items-center gap-2 text-xs font-semibold text-[#20281f] bg-white border border-[#dde2d1] p-2.5 rounded-[8px] shadow-2xs">
-                    <span className="text-sm">📈</span>
-                    <span>2. Compounding Yield</span>
+                    <span className="text-sm">🤖</span>
+                    <span>2. AI Crypto Management</span>
                   </div>
 
                   <div className="flex items-center gap-2 text-xs font-semibold text-[#20281f] bg-white border border-[#dde2d1] p-2.5 rounded-[8px] shadow-2xs">
@@ -215,9 +215,9 @@ export default function Home() {
                       <li className="flex items-center justify-between p-2 rounded-lg bg-white border border-[#e4e7dc]">
                         <span className="flex items-center gap-2">
                           <span className="w-6 h-6 rounded-full bg-[#e3f2c9] text-[#416735] flex items-center justify-center font-bold text-xs">02</span>
-                          <span className="font-semibold text-[#20281f]">Compounding Yield</span>
+                          <span className="font-semibold text-[#20281f]">AI Crypto Management</span>
                         </span>
-                        <span className="font-mono font-bold text-[#416735]">+8.5% Weekly</span>
+                        <span className="font-mono font-bold text-[#416735]">Sub-Sec Rebalancing</span>
                       </li>
 
                       <li className="flex items-center justify-between p-2 rounded-lg bg-white border border-[#e4e7dc]">
@@ -243,19 +243,19 @@ export default function Home() {
             <span className="text-[#20281f] font-bold tracking-[0.14em] uppercase">THREE SERVICES. ONE UNIFIED PROTOCOL.</span>
             <span>⚡ AI Sub-Second Telemetry</span>
             <span>🏦 Collateralized Credit Lending</span>
-            <span>📈 Verified 5.0% - 8.5% Weekly Compounding</span>
+            <span>🤖 AI Cryptocurrency Management System</span>
             <span>🔒 100% Non-Custodial Escrow</span>
           </div>
         </div>
 
-        {/* ── 2. Three Services (1. Offer Loans, 2. Offer Investment Opportunity, 3. Protection Against Liquidity) ── */}
+        {/* ── 2. Three Services (1. Offer Loans, 2. AI Cryptocurrency Management System, 3. Protection Against Liquidity) ── */}
         <ServicesSection />
 
         {/* ── 3. TradingView Widget Ticker Tape ── */}
         <TradingViewTicker />
 
-        {/* ── 4. Investment Plans (Plan A & Plan B + ROI Simulator) ── */}
-        <InvestmentPlansLanding />
+        {/* ── 4. AI Cryptocurrency Management System ── */}
+        <AiCryptoManagementSection />
 
         {/* ── 5. ATF Deposit (American Trust Fund Coin Showcase) ── */}
         <AtfcDepositSection />

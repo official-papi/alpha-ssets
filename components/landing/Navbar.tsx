@@ -61,10 +61,10 @@ export default function Navbar() {
 
   // Primary desktop navigation: exactly 4 core offerings matching PromptSip / Stelsuite
   const navItems = [
-    { label: "Services",   href: "/#services" },
-    { label: "Plans",      href: "/#plans" },
-    { label: "ATFC Vault", href: "/#atfc-deposit" },
-    { label: "Affiliate",  href: "/#referral" },
+    { label: "Services",      href: "/#services" },
+    { label: "AI Management", href: "/#ai-management" },
+    { label: "ATFC Vault",    href: "/#atfc-deposit" },
+    { label: "Affiliate",     href: "/#referral" },
   ];
 
   // Extended links for mobile drawer

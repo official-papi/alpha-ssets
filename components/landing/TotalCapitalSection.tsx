@@ -46,7 +46,7 @@ export default function TotalCapitalSection() {
               Institutional scale, proven on-chain execution.
             </h2>
             <p className="text-sm sm:text-base text-white/75 mt-3 leading-relaxed font-normal">
-              Real-time telemetry aggregated across all deployed smart contracts, liquidity pools, and connected investor vaults.
+              Real-time telemetry aggregated across all deployed smart contracts, AI cryptocurrency management strategies, and connected investor vaults.
             </p>
           </div>
 

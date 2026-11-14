@@ -37,7 +37,7 @@ export const translations = {
       badge: "Next-Gen Quantitative Investment Protocol",
       titleStart: "Automate Your Wealth with",
       titleHighlight: "Institutional Alpha",
-      subtitle: "Experience high-frequency algorithmic yields, audited liquidity pools, and automated daily payouts. Empowering over 48,000+ smart investors worldwide.",
+      subtitle: "Experience high-frequency algorithmic yields, AI cryptocurrency management, and automated daily payouts. Empowering over 48,000+ smart investors worldwide.",
       startInvesting: "Start Investing",
       explorePlans: "Explore Plans",
       activeInvestors: "Active Investors",
